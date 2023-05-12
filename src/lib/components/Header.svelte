@@ -1,16 +1,14 @@
 <script>
     import logout from "$lib/assets/logout.svg?raw";
     import ColorScheme from "$lib/components/ColorScheme.svelte";
+    import LogoutButton from "./LogoutButton.svelte";
 </script>
 
 <header class="header">
-    <a href="/"><h1 class="title">K</h1></a>
+    <a href="/d"><h1 class="title">K</h1></a>
     <div class="wrapper">
         <ColorScheme />
-        <button class="button__signin btn" />
-        <button class="button__signout btn">
-            {@html logout}
-        </button>
+        <LogoutButton />
     </div>
 </header>
 
@@ -27,7 +25,12 @@
         align-items: center;
         gap: 2rem;
     }
-    .button__signin {
-        display: none;
+    .title {
+        font-size: var(--icon-size-large);
+    }
+    @media (max-width: 600px) {
+        .title {
+            font-size: var(--icon-size-small);
+        }
     }
 </style>

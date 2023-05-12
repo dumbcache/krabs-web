@@ -69,29 +69,15 @@
 </button>
 
 <style>
-    span {
-        width: 2.4rem;
-        height: 2.2rem;
-        border-radius: 50%;
-        padding: 0.2rem;
-    }
-    span :global(svg) {
-        fill: var(--theme-button-svg-fill);
-    }
     .color-scheme {
         display: flex;
         align-items: center;
         border-radius: 1.5rem;
-        width: 4.5rem;
-        height: 2.4rem;
+        width: calc(2 * var(--icon-size-small));
+        height: var(--icon-size-small);
         justify-content: space-between;
         border: 1px solid var(--theme-button-outline);
-    }
-    .icon {
-        background-color: var(--theme-button-background);
-    }
-    .dark-icon {
-        visibility: hidden;
+        overflow: hidden;
     }
     .color-scheme:hover {
         filter: none;
@@ -99,5 +85,33 @@
     }
     .color-scheme:hover .icon {
         background-color: var(--theme-button-hover-background);
+    }
+    .icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: var(--icon-size-small);
+        height: var(--icon-size-small);
+        border-radius: 50%;
+        background-color: var(--theme-button-background);
+    }
+    span :global(svg) {
+        fill: var(--theme-button-svg-fill);
+    }
+
+    .dark-icon {
+        visibility: hidden;
+    }
+
+    @media (max-width: 600px) {
+        .color-scheme {
+            border-radius: 1.5rem;
+            width: calc(2 * var(--icon-size-smaller));
+            height: var(--icon-size-smaller);
+        }
+        .icon {
+            width: var(--icon-size-smaller);
+            height: var(--icon-size-smaller);
+        }
     }
 </style>

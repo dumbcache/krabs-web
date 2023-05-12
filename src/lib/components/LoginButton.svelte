@@ -1,0 +1,22 @@
+<script lang="ts">
+    import { loadGSIScript } from "$lib/scripts/utils";
+    import { onMount } from "svelte";
+
+    onMount(() => {
+        try {
+            loadGSIScript();
+        } catch (error) {
+            console.warn(error);
+        }
+    });
+</script>
+
+<button class="button__signin btn" />
+
+<style>
+    .button__signin {
+        width: fit-content;
+        height: fit-content;
+        filter: none;
+    }
+</style>

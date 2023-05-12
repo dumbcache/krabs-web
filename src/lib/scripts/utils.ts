@@ -1,3 +1,10 @@
+import { goto } from "$app/navigation";
+import {
+    PUBLIC_KRAB_CLIENT_ID,
+    PUBLIC_KRAB_API,
+    PUBLIC_KRAB_NONCE_WEB,
+} from "$env/static/public";
+
 export const toggleColorMode = () => {
     const root = document.documentElement;
     let active = window.localStorage.getItem("krabColorScheme");
@@ -54,29 +61,28 @@ export const loadGSIScript = () => {
     script.src = src;
     script.onload = () => {
         window.google.accounts.id.initialize({
-            client_id: import.meta.env.VITE_CLIENT_ID,
-            nonce: import.meta.env.VITE_NONCE_WEB,
+            client_id: PUBLIC_KRAB_CLIENT_ID,
+            nonce: PUBLIC_KRAB_NONCE_WEB,
             auto_select: false,
             callback: handleGoogleSignIn,
         });
-        // window.google.accounts.id.prompt();
+        window.google.accounts.id.prompt();
         window.google.accounts.id.renderButton(
-            document.querySelector(".signin-button"),
+            header.querySelector(".button__signin"),
             {
                 type: "icon",
                 shape: "circle",
+                size: "medium",
             }
         );
     };
     script.onerror = (e) => console.log(e);
-
     header.append(script);
 };
 
 export const handleGoogleSignIn = async (googleRes: GoogleSignInPayload) => {
     const creds = googleRes?.credential;
-    const api = import.meta.env.VITE_API;
-    const res = await fetch(`${api}/login`, {
+    const res = await fetch(`${PUBLIC_KRAB_API}/login`, {
         method: "POST",
         headers: {
             "content-type": "application/json",
@@ -91,20 +97,19 @@ export const handleGoogleSignIn = async (googleRes: GoogleSignInPayload) => {
     localStorage.setItem("secret", token);
     localStorage.setItem("root", root);
     await getToken();
-    window.location.reload();
+    goto("/d");
 };
 
 export const getToken = async () => {
     const secret = window.localStorage.getItem("secret");
-    const api = import.meta.env.VITE_API;
-    const res = await fetch(`${api}/auth`, {
+    const res = await fetch(`${PUBLIC_KRAB_API}/auth`, {
         headers: {
             Authorization: `Bearer ${secret}`,
         },
     });
     if (res.status !== 200) {
         if (res.status === 401) {
-            console.log("session timeout. Logging off");
+            console.log("session timeout");
             signUserOut();
             return;
         }
@@ -116,11 +121,15 @@ export const getToken = async () => {
     return true;
 };
 
+export function isLoggedin() {
+    const secret = window.localStorage.getItem("secret");
+    return Boolean(secret);
+}
+
 export async function signUserOut(e?: Event) {
     e?.stopPropagation();
-    const api = import.meta.env.VITE_API;
     const secret = window.localStorage.getItem("secret");
-    const res = await fetch(`${api}/logout/WEB`, {
+    const res = await fetch(`${PUBLIC_KRAB_API}/logout/WEB`, {
         headers: {
             Authorization: `Bearer ${secret}`,
         },
@@ -133,8 +142,8 @@ export async function signUserOut(e?: Event) {
         console.warn(res.status, await res.text());
     }
     await clearFiles();
-    history.pushState({ dir: "root" }, "", "/");
-    window.location.reload();
+    console.log("logging user out");
+    goto("/");
 }
 export async function clearFiles() {
     window.localStorage.clear();

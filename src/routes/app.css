@@ -1,9 +1,18 @@
 :root {
     --font-default: system-ui, Avenir, Helvetica, Arial, sans-serif;
+    --font-size: 62.5%;
+    --font-size-default: 1.6rem;
+    --line-size-default: 1.6rem;
+    --icon-size-large: 3rem;
+    --icon-size-medium: 2.4rem;
+    --icon-size-small: 2rem;
+    --icon-size-smaller: 1.6rem;
+
     --color-black: #000;
     --color-black-light: #0002;
     --color-black-level-one: #111;
     --color-black-level-two: #222;
+    --color-black-level-three: #333;
     --color-black-level-four: #444;
     --color-black-level-five: #555;
     --color-black-level-six: #666;
@@ -29,8 +38,8 @@
     --header-border-color: var(--color-black-level-six);
 
     font-family: var(--font-default);
-    font-size: 62.5%;
-    line-height: 1.5;
+    font-size: var(--font-size);
+    line-height: var(--line-height-default);
 
     color-scheme: light dark;
     background-color: var(--primary-bg-color);
@@ -45,14 +54,13 @@
     box-sizing: border-box;
     scroll-behavior: smooth;
 }
-
 .dark {
     --primary-bg-color: var(--color-black-level-two);
     --primary-color: var(--color-white-level-two);
     --primary-svg-fill: var(--color-white-level-two);
     --theme-button-outline: var(--color-white-level-six);
     --theme-button-hover-outline: var(--color-black-level-five);
-    --theme-button-background: var(--color-black-level-six);
+    --theme-button-background: var(--color-white-level-four);
     --theme-button-hover-background: var(--color-black-level-five);
     --theme-button-svg-fill: var(--color-black);
     --header-border-color: var(--color-white-level-six);
@@ -70,7 +78,7 @@
 body,
 .app {
     height: 100%;
-    font-size: 1.6rem;
+    font-size: var(--font-size-default);
     overscroll-behavior-y: contain;
 }
 
@@ -99,8 +107,8 @@ button {
 }
 .btn {
     display: inline-block;
-    width: 2.4rem;
-    height: 2.4rem;
+    width: var(--icon-size-medium);
+    height: var(--icon-size-medium);
 }
 .btn svg,
 button svg {
@@ -144,8 +152,9 @@ a {
 }
 
 @media (max-width: 600px) {
-    button {
-        width: 2.4rem;
+    .btn {
+        /* width: var(--icon-size-small);
+        height: var(--icon-size-small); */
     }
 }
 @media (prefers-color-scheme: dark) {
