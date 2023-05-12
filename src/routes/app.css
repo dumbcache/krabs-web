@@ -2,26 +2,39 @@
     --font-default: system-ui, Avenir, Helvetica, Arial, sans-serif;
     --color-black: #000;
     --color-black-light: #0002;
+    --color-black-level-one: #111;
     --color-black-level-two: #222;
     --color-black-level-four: #444;
+    --color-black-level-five: #555;
+    --color-black-level-six: #666;
     --color-white: #fff;
+    --color-white-level-one: #eee;
     --color-white-level-two: #ddd;
+    --color-white-level-three: #ccc;
     --color-white-level-four: #bbb;
+    --color-white-level-five: #aaa;
+    --color-white-level-six: #999;
+    --color-blue-lightest: #cde;
     --color-bluegrey: #145;
     --color-lightgreen: #052;
 
-    --color-primary-light: var(--color-black-level-two);
-    --color-bg-light: var(--color-white);
-    --color-primary-dark: var(--color-white);
-    --color-bg-dark: var(--color-black);
+    --primary-bg-color: var(--color-white);
+    --primary-color: var(--color-black-level-two);
+    --primary-svg-fill: var(--color-black-level-two);
+    --theme-button-outline: var(--color-black-level-six);
+    --theme-button-hover-outline: var(--color-white-level-three);
+    --theme-button-background: var(--color-white-level-one);
+    --theme-button-hover-background: var(--color-white-level-two);
+    --theme-button-svg-fill: var(--color-black-level-two);
+    --header-border-color: var(--color-black-level-six);
 
     font-family: var(--font-default);
     font-size: 62.5%;
     line-height: 1.5;
 
     color-scheme: light dark;
-    background-color: var(--color-bg-light);
-    color: var(--color-primary-light);
+    background-color: var(--primary-bg-color);
+    color: var(--primary-color);
 
     font-synthesis: none;
     text-rendering: optimizeLegibility;
@@ -33,6 +46,18 @@
     scroll-behavior: smooth;
 }
 
+.dark {
+    --primary-bg-color: var(--color-black-level-two);
+    --primary-color: var(--color-white-level-two);
+    --primary-svg-fill: var(--color-white-level-two);
+    --theme-button-outline: var(--color-white-level-six);
+    --theme-button-hover-outline: var(--color-black-level-five);
+    --theme-button-background: var(--color-black-level-six);
+    --theme-button-hover-background: var(--color-black-level-five);
+    --theme-button-svg-fill: var(--color-black);
+    --header-border-color: var(--color-white-level-six);
+}
+
 *,
 *::before,
 *::after {
@@ -41,7 +66,7 @@
     box-sizing: inherit;
     scroll-behavior: inherit;
 }
-primary html,
+/* html, */
 body,
 .app {
     height: 100%;
@@ -74,11 +99,12 @@ button {
 }
 .btn {
     display: inline-block;
-    width: 3rem;
-    height: 3rem;
+    width: 2.4rem;
+    height: 2.4rem;
 }
-.btn svg {
-    fill: var(--color-black-level-four);
+.btn svg,
+button svg {
+    fill: var(--primary-svg-fill);
 }
 
 button:hover,
@@ -124,8 +150,12 @@ a {
 }
 @media (prefers-color-scheme: dark) {
     :root {
-        background-color: var(--color-bg-dark);
-        color: var(--color-primary-dark);
+        --primary-color: var(--color-white-level-two);
+        --primary-bg-color: var(--color-black-level-two);
+        --theme-button-outline: var(--color-black-level-six);
+        --theme-button-background: var(--color-black-level-four);
+        --theme-button-svg-fill: var(--color-black);
+        --primary-svg-fill: var(--color-white-level-four);
     }
     ::-webkit-scrollbar-thumb {
         background: var(--color-lightgreen);

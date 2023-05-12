@@ -1,14 +1,16 @@
 <script>
     import { page } from "$app/stores";
-    import logout from "$lib/assets/logout.svg?raw";
+    import logoutIcon from "$lib/assets/logout.svg?raw";
+    import ColorScheme from "$lib/components/ColorScheme.svelte";
 
     console.log($page);
 </script>
 
 <header class="header">
+    <ColorScheme />
     <button class="button__signin btn" />
     <button class="button__signout btn">
-        {@html logout}
+        {@html logoutIcon}
     </button>
 </header>
 <h1 class="home-title">Krabs</h1>
@@ -18,6 +20,9 @@
         width: fit-content;
         margin-left: auto;
         padding: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 2rem;
     }
     .home-title {
         position: absolute;
@@ -27,6 +32,7 @@
         font-weight: 900;
         font-size: 15rem;
     }
+
     .button__signout {
         display: none;
     }
