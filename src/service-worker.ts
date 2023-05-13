@@ -31,33 +31,34 @@ sw.addEventListener("activate", (e) => {
 
     e.waitUntil(deleteOldCaches());
 });
-sw.addEventListener("fetch", (e) => {
-    console.log(e);
-    if (e.request.method !== "GET") return;
+// sw.addEventListener("fetch", (e) => {
+//     if (e.request.method !== "GET") return;
 
-    async function respond() {
-        const url = new URL(e.request.url);
-        const cache = await caches.open(CACHE);
+//     async function respond() {
+//         const url = new URL(e.request.url);
+//         const cache = await caches.open(CACHE);
+//         console.log(url.pathname);
+//         if (url.host.startsWith("www.googleapis.com")) {
+//         }
 
-        // `build`/`files` can always be served from the cache
-        if (ASSETS.includes(url.pathname)) {
-            return cache.match(url.pathname);
-        }
+//         // // `build`/`files` can always be served from the cache
+//         if (ASSETS.includes(url.pathname)) {
+//             return cache.match(url.pathname);
+//         }
 
-        // for everything else, try the network first, but
-        // fall back to the cache if we're offline
-        try {
-            const response = await fetch(e.request);
+//         // // for everything else, try the network first, but
+//         // // fall back to the cache if we're offline
+//         try {
+//             const response = await fetch(e.request);
 
-            if (response.status === 200) {
-                cache.put(e.request, response.clone());
-            }
+//             if (response.status === 200) {
+//                 // cache.put(e.request, response.clone());
+//             }
 
-            return response;
-        } catch {
-            return cache.match(e.request);
-        }
-    }
-
-    e.respondWith(respond());
-});
+//             return response;
+//         } catch {
+//             return cache.match(e.request);
+//         }
+//     }
+//     e.respondWith(respond());
+// });

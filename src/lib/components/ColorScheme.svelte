@@ -35,7 +35,6 @@
                     .matches
                     ? "dark"
                     : "light";
-                console.log("auto");
                 if (current === "dark") {
                     root.classList.add("dark");
                     lightEle.style.visibility = "hidden";

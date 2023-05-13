@@ -1,12 +1,10 @@
 <script>
-    // import { page } from "$app/stores";
     import ColorScheme from "$lib/components/ColorScheme.svelte";
     import LoginButton from "$lib/components/LoginButton.svelte";
-    import LogoutButton from "$lib/components/LogoutButton.svelte";
 </script>
 
 <header class="header">
-    <!-- <ColorScheme /> -->
+    <ColorScheme />
     <LoginButton />
 </header>
 <h1 class="home-title">Krabs</h1>

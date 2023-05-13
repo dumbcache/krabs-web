@@ -4,6 +4,10 @@ import {
     PUBLIC_KRAB_API,
     PUBLIC_KRAB_NONCE_WEB,
 } from "$env/static/public";
+import { writable } from "svelte/store";
+import { browser } from "$app/environment";
+
+export let isLoggedin = writable(checkLoginStatus());
 
 export const toggleColorMode = () => {
     const root = document.documentElement;
@@ -98,6 +102,8 @@ export const handleGoogleSignIn = async (googleRes: GoogleSignInPayload) => {
     localStorage.setItem("secret", token);
     localStorage.setItem("root", root);
     await getToken();
+    isLoggedin.set(true);
+    console.log("before root");
     goto("/r");
 };
 
@@ -122,9 +128,11 @@ export const getToken = async () => {
     return true;
 };
 
-export function isLoggedin() {
-    const secret = window.localStorage.getItem("secret");
-    return Boolean(secret);
+export function checkLoginStatus() {
+    if (browser) {
+        const secret = window ? window.localStorage.getItem("secret") : false;
+        return Boolean(secret);
+    }
 }
 
 export async function signUserOut(e?: Event) {
@@ -143,6 +151,7 @@ export async function signUserOut(e?: Event) {
         console.warn(res.status, await res.text());
     }
     await clearFiles();
+    isLoggedin.set(false);
     console.log("logging user out");
     goto("/");
 }

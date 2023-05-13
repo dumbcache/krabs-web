@@ -34,6 +34,7 @@
     --theme-button-hover-background: var(--color-white-level-two);
     --theme-button-svg-fill: var(--color-black-level-two);
     --header-border-color: var(--color-black-level-six);
+    --content-background-color: var(--color-white-level-two);
 
     --font-size-default: 1.6rem;
     --line-size-default: 1.6rem;
@@ -56,6 +57,7 @@
     --theme-button-hover-background: var(--color-black-level-five);
     --theme-button-svg-fill: var(--color-black);
     --header-border-color: var(--color-white-level-six);
+    --content-background-color: var(--color-black-level-four);
 }
 
 :root {

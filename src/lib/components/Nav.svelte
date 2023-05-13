@@ -2,20 +2,12 @@
     import { page } from "$app/stores";
     import Tools from "./Tools.svelte";
     import beforeNavigate from "$lib/assets/beforeNavigate.svg?raw";
-    import { onMount } from "svelte";
-    import { goto, afterNavigate } from "$app/navigation";
-    import { base } from "$app/paths";
 
-    afterNavigate((e) => {
-        console.log(e);
-    });
     let id: string;
     $: id = $page.params.id ?? "";
     let backButton: HTMLButtonElement;
     $: backButton &&
         (backButton.style.visibility = id === "r" ? "hidden" : "initial");
-    // onMount(() => {
-    // });
 </script>
 
 <nav class="navigation">

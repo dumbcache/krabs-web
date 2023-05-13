@@ -1,11 +1,29 @@
 <script lang="ts">
-    export let pics: string[];
+    import { IMG_MIME_TYPE, getFiles } from "$lib/scripts/drive";
+
+    export let id: string;
+    let pics: GoogleFile[] = [];
+
+    $: (
+        getFiles(
+            id,
+            window.localStorage?.getItem("token")!,
+            IMG_MIME_TYPE,
+            3
+        ) as Promise<GoogleFileRes>
+    ).then(({ files }) => {
+        pics = files;
+    });
 </script>
 
 <div class="cover">
     {#if pics.length != 0}
         {#each pics as pic}
-            <img src={pic} alt="cover pic" referrerpolicy="no-referrer" />
+            <img
+                src={pic.thumbnailLink}
+                alt="cover pic"
+                referrerpolicy="no-referrer"
+            />
         {/each}
     {/if}
 </div>
@@ -24,7 +42,7 @@
         border-radius: 1rem;
         overflow: hidden;
         gap: 1px;
-        background-color: #ddd;
+        background-color: var(--content-background-color);
     }
 
     .cover:hover {

@@ -15,7 +15,7 @@
         width="200"
     />
     <a
-        href={img.appProperties.origin}
+        href={img.appProperties?.origin || ""}
         class="img-link"
         target="_blank"
         rel="external noopener noreferrer nofollow"
@@ -27,7 +27,7 @@
 <style>
     .img-card {
         position: relative;
-        background-color: #ddd;
+        background-color: var(--content-background-color);
         border-radius: 1rem;
         height: fit-content;
         border: none;

@@ -2,7 +2,6 @@
     import ImgCard from "./ImgCard.svelte";
 
     export let imgs: GoogleFile[];
-    $: console.log(imgs);
 </script>
 
 <div class="imgs">
