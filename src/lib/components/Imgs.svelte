@@ -1,0 +1,24 @@
+<script lang="ts">
+    import ImgCard from "./ImgCard.svelte";
+
+    export let imgs: GoogleFile[];
+    $: console.log(imgs);
+</script>
+
+<div class="imgs">
+    {#if imgs.length !== 0}
+        {#each imgs as img}
+            <ImgCard {img} />
+        {/each}
+    {/if}
+</div>
+
+<style>
+    .imgs {
+        display: flex;
+        flex-flow: row wrap;
+        gap: var(--content-gap);
+        padding: var(--content-padding);
+        justify-content: center;
+    }
+</style>

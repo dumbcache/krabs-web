@@ -3,20 +3,29 @@
     import Tools from "./Tools.svelte";
     import beforeNavigate from "$lib/assets/beforeNavigate.svg?raw";
     import { onMount } from "svelte";
+    import { goto, afterNavigate } from "$app/navigation";
+    import { base } from "$app/paths";
 
-    const { id } = $page.params;
-    let backButton: HTMLButtonElement;
-    onMount(() => {
-        backButton.style.visibility = id === "d" ? "hidden" : "initial";
+    afterNavigate((e) => {
+        console.log(e);
     });
+    let id: string;
+    $: id = $page.params.id ?? "";
+    let backButton: HTMLButtonElement;
+    $: backButton &&
+        (backButton.style.visibility = id === "r" ? "hidden" : "initial");
+    // onMount(() => {
+    // });
 </script>
 
 <nav class="navigation">
-    <!-- {#if id !== "d"} -->
-    <button class="back-button btn" bind:this={backButton}>
+    <button
+        class="back-button btn"
+        bind:this={backButton}
+        on:click={() => history.back()}
+    >
         {@html beforeNavigate} back
     </button>
-    <!-- {/if} -->
     <Tools />
 </nav>
 

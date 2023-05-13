@@ -3,6 +3,10 @@
     import Header from "$lib/components/Header.svelte";
 </script>
 
+<svelte:head>
+    <title>Karbs:root</title>
+</svelte:head>
+
 <Header />
 <Nav />
 <main class="main">

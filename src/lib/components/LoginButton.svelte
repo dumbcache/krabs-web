@@ -18,5 +18,7 @@
         width: fit-content;
         height: fit-content;
         filter: none;
+        overflow: hidden;
+        border-radius: 50%;
     }
 </style>

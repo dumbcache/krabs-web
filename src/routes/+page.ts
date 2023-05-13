@@ -3,6 +3,6 @@ import { redirect } from "@sveltejs/kit";
 
 export const load = () => {
     if (isLoggedin()) {
-        throw redirect(302, "/d");
+        throw redirect(302, "/r");
     }
 };

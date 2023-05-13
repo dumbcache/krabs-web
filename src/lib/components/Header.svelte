@@ -5,7 +5,7 @@
 </script>
 
 <header class="header">
-    <a href="/d"><h1 class="title">K</h1></a>
+    <a href="/r"><h1 class="title">K</h1></a>
     <div class="wrapper">
         <ColorScheme />
         <LogoutButton />
@@ -26,11 +26,6 @@
         gap: 2rem;
     }
     .title {
-        font-size: var(--icon-size-large);
-    }
-    @media (max-width: 600px) {
-        .title {
-            font-size: var(--icon-size-small);
-        }
+        font-size: var(--title-size);
     }
 </style>

@@ -35,6 +35,7 @@
                     .matches
                     ? "dark"
                     : "light";
+                console.log("auto");
                 if (current === "dark") {
                     root.classList.add("dark");
                     lightEle.style.visibility = "hidden";
@@ -73,8 +74,8 @@
         display: flex;
         align-items: center;
         border-radius: 1.5rem;
-        width: calc(2 * var(--icon-size-small));
-        height: var(--icon-size-small);
+        width: calc(2 * var(--secondary-icon-size));
+        height: var(--secondary-icon-size);
         justify-content: space-between;
         border: 1px solid var(--theme-button-outline);
         overflow: hidden;
@@ -90,8 +91,8 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        width: var(--icon-size-small);
-        height: var(--icon-size-small);
+        width: var(--secondary-icon-size);
+        height: var(--secondary-icon-size);
         border-radius: 50%;
         background-color: var(--theme-button-background);
     }
@@ -101,17 +102,5 @@
 
     .dark-icon {
         visibility: hidden;
-    }
-
-    @media (max-width: 600px) {
-        .color-scheme {
-            border-radius: 1.5rem;
-            width: calc(2 * var(--icon-size-smaller));
-            height: var(--icon-size-smaller);
-        }
-        .icon {
-            width: var(--icon-size-smaller);
-            height: var(--icon-size-smaller);
-        }
     }
 </style>

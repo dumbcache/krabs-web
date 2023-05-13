@@ -1,12 +1,10 @@
 :root {
     --font-default: system-ui, Avenir, Helvetica, Arial, sans-serif;
-    --font-size: 62.5%;
-    --font-size-default: 1.6rem;
-    --line-size-default: 1.6rem;
-    --icon-size-large: 3rem;
-    --icon-size-medium: 2.4rem;
-    --icon-size-small: 2rem;
-    --icon-size-smaller: 1.6rem;
+    --size-system: 62.5%;
+    --size-default: 1.6rem;
+    --size-small: 2rem;
+    --size-medium: 2.4rem;
+    --size-large: 3rem;
 
     --color-black: #000;
     --color-black-light: #0002;
@@ -37,8 +35,32 @@
     --theme-button-svg-fill: var(--color-black-level-two);
     --header-border-color: var(--color-black-level-six);
 
+    --font-size-default: 1.6rem;
+    --line-size-default: 1.6rem;
+    --title-size: var(--size-large);
+    --primary-icon-size: var(--size-medium);
+    --secondary-icon-size: var(--size-small);
+    --dir-width: 30rem;
+    --img-width: 20rem;
+    --cover-height: 20rem;
+    --content-gap: 2rem;
+    --content-padding: 3rem;
+}
+.dark {
+    --primary-bg-color: var(--color-black-level-two);
+    --primary-color: var(--color-white-level-two);
+    --primary-svg-fill: var(--color-white-level-two);
+    --theme-button-outline: var(--color-white-level-six);
+    --theme-button-hover-outline: var(--color-black-level-five);
+    --theme-button-background: var(--color-white-level-four);
+    --theme-button-hover-background: var(--color-black-level-five);
+    --theme-button-svg-fill: var(--color-black);
+    --header-border-color: var(--color-white-level-six);
+}
+
+:root {
     font-family: var(--font-default);
-    font-size: var(--font-size);
+    font-size: var(--size-system);
     line-height: var(--line-height-default);
 
     color-scheme: light dark;
@@ -53,17 +75,6 @@
 
     box-sizing: border-box;
     scroll-behavior: smooth;
-}
-.dark {
-    --primary-bg-color: var(--color-black-level-two);
-    --primary-color: var(--color-white-level-two);
-    --primary-svg-fill: var(--color-white-level-two);
-    --theme-button-outline: var(--color-white-level-six);
-    --theme-button-hover-outline: var(--color-black-level-five);
-    --theme-button-background: var(--color-white-level-four);
-    --theme-button-hover-background: var(--color-black-level-five);
-    --theme-button-svg-fill: var(--color-black);
-    --header-border-color: var(--color-white-level-six);
 }
 
 *,
@@ -80,6 +91,7 @@ body,
     height: 100%;
     font-size: var(--font-size-default);
     overscroll-behavior-y: contain;
+    background: inherit;
 }
 
 img,
@@ -107,8 +119,8 @@ button {
 }
 .btn {
     display: inline-block;
-    width: var(--icon-size-medium);
-    height: var(--icon-size-medium);
+    width: var(--primary-icon-size);
+    height: var(--primary-icon-size);
 }
 .btn svg,
 button svg {
@@ -129,6 +141,8 @@ h4,
 h5,
 h6 {
     overflow-wrap: break-word;
+    font-weight: unset;
+    font-size: unset;
 }
 
 a {
@@ -152,20 +166,26 @@ a {
 }
 
 @media (max-width: 600px) {
-    .btn {
-        /* width: var(--icon-size-small);
-        height: var(--icon-size-small); */
+    :root {
+        --title-size: var(--size-medium);
+        --primary-icon-size: var(--size-small);
+        --secondary-icon-size: var(--size-default);
+        --dir-width: 14rem;
+        --img-width: 9rem;
+        --cover-height: 9rem;
+        --content-gap: 1rem;
+        --content-padding: 1rem;
     }
 }
 @media (prefers-color-scheme: dark) {
-    :root {
+    /* :root {
         --primary-color: var(--color-white-level-two);
         --primary-bg-color: var(--color-black-level-two);
         --theme-button-outline: var(--color-black-level-six);
         --theme-button-background: var(--color-black-level-four);
         --theme-button-svg-fill: var(--color-black);
         --primary-svg-fill: var(--color-white-level-four);
-    }
+    } */
     ::-webkit-scrollbar-thumb {
         background: var(--color-lightgreen);
     }
