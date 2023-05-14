@@ -3,8 +3,13 @@
     import { fetchImgPreview, previewItem } from "$lib/scripts/utils";
     export let img: GoogleFile;
 
-    function handleImgclick() {
+    function handleImgclick(e) {
         if ($previewItem?.id !== img.id) {
+            const { url } = e.currentTarget.dataset;
+            if (url) {
+                $previewItem = { id: img.id, src: img.thumbnailLink!, url };
+                return;
+            }
             $previewItem = { id: img.id, src: img.thumbnailLink! };
             fetchImgPreview($previewItem.id);
         }
@@ -14,6 +19,7 @@
 <div
     class="img-card"
     data-id={img.id}
+    data-url=""
     on:click={handleImgclick}
     on:keypress={handleImgclick}
 >

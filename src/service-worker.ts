@@ -49,11 +49,7 @@ export const FILE_API = "https://www.googleapis.com/drive/v3/files";
 export const FIELDS_REQUIRED =
     "files(id,name,appProperties(origin),thumbnailLink)";
 
-function checkForImgLocal(
-    id: string,
-    token: string,
-    broadcast: BroadcastChannel
-) {
+function checkForImgLocal(id: string, token: string, broadcast: WindowClient) {
     const db = idbRequest.result;
     const objectStore = db.transaction("images").objectStore("images");
     const req = objectStore.get(id);
@@ -82,7 +78,6 @@ function checkForImgLocal(
             id,
             blob: result.blob,
         });
-        console.log("sent");
     };
 }
 
@@ -104,14 +99,22 @@ function downloadImage(id: string, token: string): Promise<Blob> {
 }
 
 /***************** Broadcast Channel ****************/
-const broadcast = new BroadcastChannel("krabs");
-broadcast.onmessage = (event) => {
+
+sw.addEventListener("message", (event) => {
     if (event.data && event.data.context === "IMG_PREVIEW") {
-        console.log(event.data);
-        const { id, token } = event.data;
-        checkForImgLocal(id, token, broadcast);
+        sw.clients
+            .matchAll({
+                includeUncontrolled: true,
+                type: "window",
+            })
+            .then((clients) => {
+                if (clients && clients.length) {
+                    const { id, token } = event.data;
+                    checkForImgLocal(id, token, clients[0]);
+                }
+            });
     }
-};
+});
 
 /***************** SW Event Listners****************/
 sw.addEventListener("install", (e) => {

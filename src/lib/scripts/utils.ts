@@ -216,23 +216,34 @@ function checkDirection(targetId: string) {
 
 export function fetchImgPreview(id: string) {
     const token = window.localStorage.getItem("token");
-    const broadcast = new BroadcastChannel("krabs");
-    broadcast.postMessage({ context: "IMG_PREVIEW", id, token });
-    broadcast.onmessage = (event) => {
+    navigator.serviceWorker.controller.postMessage({
+        context: "IMG_PREVIEW",
+        id,
+        token,
+    });
+    navigator.serviceWorker.onmessage = (event) => {
         if (event.data && event.data.context === "IMG_PREVIEW") {
-            console.trace(event.data);
             const { id, blob } = event.data;
-            const previewImg = document.querySelector(
-                ".preview-img"
-            ) as HTMLImageElement;
-            const target = document.querySelector(
-                `[data-id='${id}']`
-            ) as HTMLDivElement;
-            if (previewImg.dataset.id !== id) return;
-            const url = URL.createObjectURL(blob);
-            console.log(url);
-            previewImg.src = url;
-            target.dataset.url = url;
+            if (blob) {
+                const previewImg = document.querySelector(
+                    ".preview-img"
+                ) as HTMLImageElement;
+                const target = document.querySelector(
+                    `[data-id='${id}']`
+                ) as HTMLDivElement;
+                if (previewImg.dataset.id !== id) return;
+                const url = URL.createObjectURL(blob);
+                previewImg.src = url;
+                target.dataset.url = url;
+                previewItem.set({ ...get(previewItem), url });
+                return;
+            }
+        }
+        if (event.data.context === "IMG_PREVIEW_FAILED") {
+            if (event.data.status === 401) {
+                getToken();
+                return;
+            }
             return;
         }
     };
@@ -251,10 +262,8 @@ export function previewChange(targetId: string, type: "PREV" | "NEXT") {
     const { id, url } = latestTarget.dataset as { id: string; url: string };
     const latestImg = latestTarget?.firstElementChild as HTMLImageElement;
     previewItem.set({ id, url, src: latestImg.src });
-    if (url) {
-        console.log("returned");
-        return;
-    }
+    if (url) return;
+
     fetchImgPreview(id);
 }
 
