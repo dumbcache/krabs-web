@@ -214,6 +214,30 @@ function checkDirection(targetId: string) {
     }
 }
 
+export function fetchImgPreview(id: string) {
+    const token = window.localStorage.getItem("token");
+    const broadcast = new BroadcastChannel("krabs");
+    broadcast.postMessage({ context: "IMG_PREVIEW", id, token });
+    broadcast.onmessage = (event) => {
+        if (event.data && event.data.context === "IMG_PREVIEW") {
+            console.trace(event.data);
+            const { id, blob } = event.data;
+            const previewImg = document.querySelector(
+                ".preview-img"
+            ) as HTMLImageElement;
+            const target = document.querySelector(
+                `[data-id='${id}']`
+            ) as HTMLDivElement;
+            if (previewImg.dataset.id !== id) return;
+            const url = URL.createObjectURL(blob);
+            console.log(url);
+            previewImg.src = url;
+            target.dataset.url = url;
+            return;
+        }
+    };
+}
+
 export function previewChange(targetId: string, type: "PREV" | "NEXT") {
     const imgs = document.querySelector(".imgs") as HTMLDivElement;
     const target = imgs.querySelector(`[data-id='${targetId}']`);
@@ -227,6 +251,11 @@ export function previewChange(targetId: string, type: "PREV" | "NEXT") {
     const { id, url } = latestTarget.dataset as { id: string; url: string };
     const latestImg = latestTarget?.firstElementChild as HTMLImageElement;
     previewItem.set({ id, url, src: latestImg.src });
+    if (url) {
+        console.log("returned");
+        return;
+    }
+    fetchImgPreview(id);
 }
 
 export function previewShortcutHandler(e: KeyboardEvent, targetId: string) {

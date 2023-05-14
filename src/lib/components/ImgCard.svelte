@@ -1,11 +1,12 @@
 <script lang="ts">
     import linkIcon from "$lib/assets/link.svg?raw";
-    import { previewItem } from "$lib/scripts/utils";
+    import { fetchImgPreview, previewItem } from "$lib/scripts/utils";
     export let img: GoogleFile;
 
     function handleImgclick() {
         if ($previewItem?.id !== img.id) {
             $previewItem = { id: img.id, src: img.thumbnailLink! };
+            fetchImgPreview($previewItem.id);
         }
     }
 </script>

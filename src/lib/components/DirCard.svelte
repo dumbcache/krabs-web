@@ -3,16 +3,22 @@
     import DirCover from "./DirCover.svelte";
 
     export let dir: GoogleFile;
+    function dirNavigate(e) {
+        goto(`/${dir.id}`);
+    }
 </script>
 
 <div class="dir-card">
-    <a href={`/${dir.id}`}>
+    <button on:click={dirNavigate}>
         <DirCover id={dir.id} />
-    </a>
+    </button>
     <h2 class="dir-title">{dir.name}</h2>
 </div>
 
 <style>
+    button {
+        filter: none;
+    }
     .dir-card {
         width: var(--dir-width);
     }
