@@ -1,15 +1,26 @@
 <script lang="ts">
     import linkIcon from "$lib/assets/link.svg?raw";
+    import { previewItem } from "$lib/scripts/utils";
     export let img: GoogleFile;
+
+    function handleImgclick() {
+        if ($previewItem?.id !== img.id) {
+            $previewItem = { id: img.id, src: img.thumbnailLink! };
+        }
+    }
 </script>
 
-<div class="img-card">
+<div
+    class="img-card"
+    data-id={img.id}
+    on:click={handleImgclick}
+    on:keypress={handleImgclick}
+>
     <img
         src={img.thumbnailLink}
         alt="thumbnail to link"
         referrerpolicy="no-referrer"
         class="img"
-        data-id={img.id}
         loading="lazy"
         height="200"
         width="200"
@@ -19,6 +30,7 @@
         class="img-link"
         target="_blank"
         rel="external noopener noreferrer nofollow"
+        on:click|stopPropagation
     >
         {@html linkIcon}
     </a>

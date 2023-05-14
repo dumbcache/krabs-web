@@ -4,10 +4,13 @@ import {
     PUBLIC_KRAB_API,
     PUBLIC_KRAB_NONCE_WEB,
 } from "$env/static/public";
-import { writable } from "svelte/store";
+import { get, writable, type Writable } from "svelte/store";
 import { browser } from "$app/environment";
 
 export let isLoggedin = writable(checkLoginStatus());
+export let previewItem: Writable<PreviewItem | undefined> = writable(undefined);
+export let dropItems = writable([]);
+export let touchCoords: Writable<TouchCoords> = writable({});
 
 export const toggleColorMode = () => {
     const root = document.documentElement;
@@ -158,4 +161,70 @@ export async function clearFiles() {
     const krabsCache = await caches.open("krabs");
     const keys = await krabsCache.keys();
     keys.forEach((key) => krabsCache.delete(key));
+}
+
+export function handleTouchStart(e: TouchEvent) {
+    if (e.touches.length >= 2) return;
+    e.stopPropagation();
+    if (e.changedTouches.length === 0) return;
+    const { screenX, screenY } = e.changedTouches[0];
+    touchCoords.set({ startX: screenX, startY: screenY });
+}
+export function handleTouchEnd(e: TouchEvent, targetId: string) {
+    if (e.touches.length >= 2) return;
+    e.stopPropagation();
+    if (e.changedTouches.length === 0) return;
+    const { screenX, screenY } = e.changedTouches[0];
+    touchCoords.set({ ...get(touchCoords), endX: screenX, endY: screenY });
+    checkDirection(targetId);
+}
+export function handleTouchMouve(e: TouchEvent) {
+    if (e.touches.length >= 2) return;
+    e.preventDefault();
+    e.stopPropagation();
+}
+function checkDirection(targetId: string) {
+    console.log(get(touchCoords));
+    const { endX, endY, startX, startY } = get(touchCoords);
+    if (endX && endY && startX && startY) {
+        if (Math.abs(startX - endX) > 40) {
+            //swipe left
+            if (startX > endX) {
+                previewChange(targetId, "NEXT");
+                return;
+            }
+            //swipe right
+            if (startX < endX) {
+                previewChange(targetId, "PREV");
+                return;
+            }
+        }
+        if (Math.abs(startY - endY) > 40) {
+            // swipe down
+            if (startY < endY) {
+                previewItem.set(undefined);
+                return;
+            }
+            // swipe up
+            if (startY > endY) {
+                previewItem.set(undefined);
+                return;
+            }
+        }
+    }
+}
+
+export function previewChange(targetId: string, type: "PREV" | "NEXT") {
+    const imgs = document.querySelector(".imgs") as HTMLDivElement;
+    const target = imgs.querySelector(`[data-id='${targetId}']`);
+    const latestTarget = (
+        type === "NEXT"
+            ? target?.nextElementSibling
+            : target?.previousElementSibling
+    ) as HTMLDivElement;
+    if (!latestTarget) return;
+
+    const { id, url } = latestTarget.dataset as { id: string; url: string };
+    const latestImg = latestTarget?.firstElementChild as HTMLImageElement;
+    previewItem.set({ id, url, src: latestImg.src });
 }

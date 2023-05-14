@@ -51,6 +51,17 @@ declare global {
         mimeType: string;
     }
 
+    interface PreviewItem {
+        src: string;
+        id: string;
+        url?: string;
+    }
+    interface TouchCoords {
+        startX?: number;
+        startY?: number;
+        endX?: number;
+        endY?: number;
+    }
     interface DropItem {
         name: string;
         mimeType: string;
