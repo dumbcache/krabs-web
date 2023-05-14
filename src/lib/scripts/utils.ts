@@ -178,7 +178,7 @@ export function handleTouchEnd(e: TouchEvent, targetId: string) {
     touchCoords.set({ ...get(touchCoords), endX: screenX, endY: screenY });
     checkDirection(targetId);
 }
-export function handleTouchMouve(e: TouchEvent) {
+export function handleTouchMove(e: TouchEvent) {
     if (e.touches.length >= 2) return;
     e.preventDefault();
     e.stopPropagation();
@@ -227,4 +227,36 @@ export function previewChange(targetId: string, type: "PREV" | "NEXT") {
     const { id, url } = latestTarget.dataset as { id: string; url: string };
     const latestImg = latestTarget?.firstElementChild as HTMLImageElement;
     previewItem.set({ id, url, src: latestImg.src });
+}
+
+export function previewShortcutHandler(e: KeyboardEvent, targetId: string) {
+    if (!targetId) return;
+    if (e.altKey || e.metaKey || e.ctrlKey) {
+        return;
+    }
+    const preview = document.querySelector(".preview") as HTMLDivElement;
+    if (preview.hidden) return;
+    e.preventDefault();
+    e.stopPropagation();
+    switch (e.key) {
+        case "ArrowRight":
+            previewChange(targetId, "NEXT");
+            return;
+        case "ArrowLeft":
+            previewChange(targetId, "PREV");
+            return;
+        case "ArrowDown":
+            previewItem.set(undefined);
+            return;
+        case "ArrowUp":
+            const preview = document.querySelector(
+                ".preview"
+            ) as HTMLDivElement;
+            preview.classList.toggle("preview-full");
+            preview.classList.toggle("preview-half");
+            return;
+        case "Escape":
+            previewItem.set(undefined);
+            return;
+    }
 }

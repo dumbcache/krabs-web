@@ -25,6 +25,7 @@
         height="200"
         width="200"
     />
+    <button class="anchor">.</button>
     <a
         href={img.appProperties?.origin || ""}
         class="img-link"
@@ -77,6 +78,16 @@
     .img:hover {
         cursor: zoom-in;
     }
+    .anchor {
+        display: inline-block;
+        height: 5px;
+        /* width: 2px; */
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1;
+    }
+
     @media (max-width: 600px) {
         .img-link :global(svg) {
             opacity: unset;

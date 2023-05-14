@@ -38,12 +38,7 @@
     .main :global(.drop) {
         z-index: 1;
         min-width: 50%;
-        /* height: calc(100vh - 55.2px); */
         height: 100vh;
-        position: sticky;
-        top: 0;
-        align-self: start;
-        border-left: 1px solid var(--primary-color);
         background-color: #000a;
         backdrop-filter: blur(1rem);
         -webkit-backdrop-filter: blur(1rem);
