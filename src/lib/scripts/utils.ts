@@ -34,7 +34,6 @@ export const toggleColorMode = () => {
             schemeEle.ariaChecked = "false";
             return;
         case "auto":
-            console.log("auto");
             const current = window.matchMedia("(prefers-color-scheme: dark")
                 .matches
                 ? "dark"
@@ -103,7 +102,6 @@ export const handleGoogleSignIn = async (googleRes: GoogleSignInPayload) => {
     localStorage.setItem("root", root);
     await getToken();
     isLoggedin.set(true);
-    console.log("before root");
     goto("/r");
 };
 

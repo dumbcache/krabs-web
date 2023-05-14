@@ -1,3 +1,7 @@
+import { redirect } from "@sveltejs/kit";
+import { getToken, isLoggedin } from "./utils";
+import { get } from "svelte/store";
+
 export const DIR_MIME_TYPE = "application/vnd.google-apps.folder";
 export const IMG_MIME_TYPE = "image/";
 export const FILE_API = "https://www.googleapis.com/drive/v3/files";
@@ -109,4 +113,32 @@ export const uploadImg = async (
         return { status };
     }
     return { status };
+};
+
+const wait = (s: number) => new Promise((res) => setTimeout(res, s));
+
+export const loadMainContent = (
+    parent: string
+): Promise<{
+    dirs: GoogleFileRes | undefined;
+    imgs: GoogleFileRes | undefined;
+}> => {
+    const token = window.localStorage.getItem("token") as string;
+
+    return new Promise(async (resolve, reject) => {
+        const promises = [
+            getFiles(parent!, token, DIR_MIME_TYPE),
+            getFiles(parent!, token, IMG_MIME_TYPE),
+        ];
+        Promise.all(promises)
+            .then(([dirs, imgs]) => {
+                resolve({ dirs, imgs });
+            })
+            .catch(async (e) => {
+                if (e.status === 401) {
+                    await getToken();
+                }
+                console.warn(e);
+            });
+    });
 };

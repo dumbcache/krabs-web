@@ -31,7 +31,7 @@
 <style>
     .cover {
         border: 1px solid #000;
-        width: 100%;
+        width: var(--dir-width);
         height: var(--cover-height);
         display: grid;
         grid-template-rows: 60% 40%;

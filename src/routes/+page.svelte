@@ -1,13 +1,19 @@
 <script>
     import ColorScheme from "$lib/components/ColorScheme.svelte";
     import LoginButton from "$lib/components/LoginButton.svelte";
+    import { navigating } from "$app/stores";
+    import LoadIndicator from "$lib/components/LoadIndicator.svelte";
 </script>
 
-<header class="header">
-    <ColorScheme />
-    <LoginButton />
-</header>
-<h1 class="home-title">Krabs</h1>
+{#if $navigating}
+    <LoadIndicator />
+{:else}
+    <header class="header">
+        <ColorScheme />
+        <LoginButton />
+    </header>
+    <h1 class="home-title">Krabs</h1>
+{/if}
 
 <style>
     .header {
