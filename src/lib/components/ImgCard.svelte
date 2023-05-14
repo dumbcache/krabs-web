@@ -32,12 +32,11 @@
         height: fit-content;
         border: none;
     }
-    .img-card:hover img {
+    .img-card:hover .img {
         filter: brightness(0.5);
     }
     .img-card:hover .img-link :global(svg) {
-        visibility: visible;
-        filter: invert(1);
+        opacity: 1;
     }
 
     .img-link {
@@ -47,11 +46,12 @@
         max-width: fit-content;
     }
     .img-link :global(svg) {
-        visibility: hidden;
-        filter: invert(0.5);
+        opacity: 0;
         width: var(--primary-icon-size);
         height: var(--primary-icon-size);
-        transition: filter 0.3s linear;
+        transition: opacity 0.3s linear;
+        fill: var(--color-white);
+        filter: none;
     }
 
     .img {
@@ -64,5 +64,10 @@
     }
     .img:hover {
         cursor: zoom-in;
+    }
+    @media (max-width: 600px) {
+        .img-link :global(svg) {
+            opacity: unset;
+        }
     }
 </style>

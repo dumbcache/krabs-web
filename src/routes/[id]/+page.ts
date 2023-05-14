@@ -1,14 +1,9 @@
-import { error, redirect } from "@sveltejs/kit";
+import { redirect } from "@sveltejs/kit";
 import { browser } from "$app/environment";
 import type { PageLoad } from "./$types";
-import {
-    DIR_MIME_TYPE,
-    IMG_MIME_TYPE,
-    getFiles,
-    loadMainContent,
-} from "$lib/scripts/drive";
+import { loadMainContent } from "$lib/scripts/drive";
 import { get } from "svelte/store";
-import { getToken, isLoggedin } from "$lib/scripts/utils";
+import { isLoggedin } from "$lib/scripts/utils";
 
 export const load = (({ params, fetch }) => {
     if (browser) {
