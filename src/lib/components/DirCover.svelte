@@ -1,19 +1,14 @@
 <script lang="ts">
-    import { IMG_MIME_TYPE, getFiles } from "$lib/scripts/drive";
+    import { fetchFiles } from "$lib/scripts/drive";
 
     export let id: string;
     let pics: GoogleFile[] = [];
 
-    $: (
-        getFiles(
-            id,
-            window.localStorage?.getItem("token")!,
-            IMG_MIME_TYPE,
-            3
-        ) as Promise<GoogleFileRes>
-    ).then(({ files }) => {
-        pics = files;
-    });
+    $: (fetchFiles(id, "covers", 3) as Promise<GoogleFileRes>).then(
+        ({ files }) => {
+            pics = files;
+        }
+    );
 </script>
 
 <div class="cover">

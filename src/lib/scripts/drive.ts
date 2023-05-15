@@ -34,39 +34,6 @@ export async function downloadImage(id: string, token: string): Promise<Blob> {
     });
 }
 
-export async function getFiles(
-    parent: string,
-    token: string,
-    mimeType: string,
-    pageSize?: number
-): Promise<GoogleFileRes | undefined> {
-    try {
-        if (!pageSize) {
-            pageSize = mimeType === DIR_MIME_TYPE ? 1000 : 100;
-        }
-        return new Promise(async (resolve, reject) => {
-            let res = await fetch(constructAPI(parent, mimeType, pageSize), {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            if (res.status !== 200) {
-                if (res.status === 401) {
-                    reject({ status: 401 });
-                    return;
-                }
-                reject({ status: res.status });
-                return;
-            }
-            const data = (await res.json()) as GoogleFileRes;
-            resolve(data);
-        });
-    } catch (error) {
-        console.warn(error);
-    }
-}
-
 export const createImgMetadata = (
     imgMeta: ImgMeta,
     token: string
@@ -115,18 +82,87 @@ export const uploadImg = async (
 
 const wait = (s: number) => new Promise((res) => setTimeout(res, s));
 
+export async function fetchFromDrive(
+    parent: string,
+    token: string,
+    mimeType: string,
+    pageSize?: number
+): Promise<Response | undefined> {
+    try {
+        if (!pageSize) {
+            pageSize = mimeType === DIR_MIME_TYPE ? 1000 : 100;
+        }
+        return new Promise(async (resolve, reject) => {
+            let res = await fetch(constructAPI(parent, mimeType, pageSize), {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            if (res.status !== 200) {
+                if (res.status === 401) {
+                    reject({ status: 401 });
+                    return;
+                }
+                reject({ status: res.status });
+                return;
+            }
+            // const data = (await res.json()) as GoogleFileRes;
+            resolve(res);
+        });
+    } catch (error) {
+        console.warn(error);
+    }
+}
+
+export function localFetch(url: string, krabsCache: Cache) {
+    return krabsCache.match(url);
+}
+
+export function fetchFiles(
+    parent: string,
+    type: "dirs" | "imgs" | "covers",
+    pageSize: number = 1000
+): Promise<GoogleFileRes> {
+    // if (!pageSize) {
+    // pageSize = type === "dirs" ? 1000 : 100;
+    // }
+    return new Promise(async (resolve, reject) => {
+        const krabsCache = await caches.open("krabs");
+        const path = `/${parent}?type=${type}`;
+        const cacheData = await localFetch(path, krabsCache);
+        if (cacheData) {
+            resolve(cacheData.json());
+            return;
+        }
+        const token = window.localStorage.getItem("token")!;
+        fetchFromDrive(
+            parent,
+            token,
+            type == "dirs" ? DIR_MIME_TYPE : IMG_MIME_TYPE,
+            pageSize
+        )
+            .then((res) => {
+                krabsCache.put(path, res!.clone());
+                resolve(res!.json());
+            })
+            .catch((e) => {
+                reject(e);
+                return;
+            });
+    });
+}
+
 export const loadMainContent = (
     parent: string
 ): Promise<{
     dirs: GoogleFileRes | undefined;
     imgs: GoogleFileRes | undefined;
 }> => {
-    const token = window.localStorage.getItem("token") as string;
-
     return new Promise(async (resolve, reject) => {
         const promises = [
-            getFiles(parent!, token, DIR_MIME_TYPE),
-            getFiles(parent!, token, IMG_MIME_TYPE),
+            fetchFiles(parent!, "dirs"),
+            fetchFiles(parent!, "imgs"),
         ];
         Promise.all(promises)
             .then(([dirs, imgs]) => {
