@@ -1,8 +1,9 @@
 <script>
-    import { dropItems } from "$lib/scripts/utils";
+    import { dropItems, previewItem } from "$lib/scripts/utils";
     import DropItem from "./DropItem.svelte";
     import DropTools from "./DropTools.svelte";
     import doubleLeftIcon from "$lib/assets/doubleLeft.svg?raw";
+    import { fly } from "svelte/transition";
 
     let mini = false;
     function toggleMini(e) {
@@ -17,11 +18,12 @@
         <button
             class="drop-mini btn"
             on:click={() => {
+                $previewItem = undefined;
                 mini = !mini;
             }}>{@html doubleLeftIcon}</button
         >
     {:else}
-        <div class="drop">
+        <div class="drop" transition:fly={{ duration: 500, x: 500, y: 500 }}>
             <DropTools on:toggleMini={toggleMini} />
             <div class="drop-items">
                 {#each $dropItems as item}
@@ -38,7 +40,7 @@
         bottom: 1rem;
         right: 0;
         background-color: #043;
-        z-index: 1;
+        z-index: 2;
         filter: none;
         border-top-left-radius: 1rem;
         border-bottom-left-radius: 1rem;

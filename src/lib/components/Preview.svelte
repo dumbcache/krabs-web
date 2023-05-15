@@ -1,5 +1,5 @@
 <script>
-    import { fade } from "svelte/transition";
+    import { fly, fade } from "svelte/transition";
     import {
         handleTouchEnd,
         handleTouchMove,
@@ -24,14 +24,17 @@
         on:touchstart={handleTouchStart}
         on:touchend={(e) => handleTouchEnd(e, $previewItem?.id)}
         on:touchmove={handleTouchMove}
-        transition:fade={{ duration: 200 }}
+        transition:fly={{ duration: 200, x: 200 }}
     >
-        <img
-            src={`${$previewItem.url || $previewItem.src}`}
-            data-id={$previewItem.id}
-            alt=""
-            class="preview-img"
-        />
+        {#key $previewItem.id}
+            <img
+                src={`${$previewItem.url || $previewItem.src}`}
+                data-id={$previewItem.id}
+                alt=""
+                class="preview-img"
+                in:fade={{ duration: 200 }}
+            />
+        {/key}
         <div class="preview-tools">
             <button
                 class="close btn"

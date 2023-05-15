@@ -42,7 +42,7 @@
         background-color: inherit;
         width: 100%;
     }
-    @media (max-width: 600px) {
+    @media (max-width: 800px) {
         .main :global(.preview),
         .main :global(.drop) {
             position: fixed;
