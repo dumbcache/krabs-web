@@ -6,8 +6,51 @@ import {
 } from "$env/static/public";
 import { get, writable, type Writable } from "svelte/store";
 import { browser } from "$app/environment";
+import ChildWorker from "$lib/scripts/childWorker.ts?worker";
 
-export let isLoggedin = writable(checkLoginStatus());
+export let childWorker: Worker;
+if (browser) {
+    childWorker = new ChildWorker();
+    childWorker.onerror = (e) => console.warn(e);
+    childWorker.onmessage = ({ data }) => {
+        switch (data.context) {
+            case "IMG_PREVIEW":
+                const { id, blob } = data;
+                const previewImg = document.querySelector(
+                    ".preview-img"
+                ) as HTMLImageElement;
+                const target = document.querySelector(
+                    `[data-id='${id}']`
+                ) as HTMLDivElement;
+                if (previewImg.dataset.id !== id) return;
+                const url = URL.createObjectURL(blob);
+                previewImg.src = url;
+                target.dataset.url = url;
+                return;
+
+            case "IMG_PREVIEW_FAILED":
+                if (data.status === 401) {
+                    getToken();
+                    return;
+                }
+                return;
+            // case "DROP_SAVE":
+            //     dropResultHandler(data.id, 200);
+            //     return;
+            // case "DROP_SAVE_FAILED":
+            //     dropResultHandler(data.id, data.status);
+            //     if (data.status === 401) {
+            //         getToken();
+            //         return;
+            //     }
+            //     return;
+            case "IDB_RELOAD_REQUIRED":
+                return;
+        }
+    };
+}
+
+export let isLoggedin = writable(false);
 export let previewItem: Writable<PreviewItem | undefined> = writable(undefined);
 export let dropItems = writable([]);
 export let touchCoords: Writable<TouchCoords> = writable({});
@@ -216,37 +259,12 @@ function checkDirection(targetId: string) {
 
 export function fetchImgPreview(id: string) {
     const token = window.localStorage.getItem("token");
-    navigator.serviceWorker.controller.postMessage({
+
+    childWorker.postMessage({
         context: "IMG_PREVIEW",
         id,
         token,
     });
-    navigator.serviceWorker.onmessage = (event) => {
-        if (event.data && event.data.context === "IMG_PREVIEW") {
-            const { id, blob } = event.data;
-            if (blob) {
-                const previewImg = document.querySelector(
-                    ".preview-img"
-                ) as HTMLImageElement;
-                const target = document.querySelector(
-                    `[data-id='${id}']`
-                ) as HTMLDivElement;
-                if (previewImg.dataset.id !== id) return;
-                const url = URL.createObjectURL(blob);
-                previewImg.src = url;
-                target.dataset.url = url;
-                previewItem.set({ ...get(previewItem), url });
-                return;
-            }
-        }
-        if (event.data.context === "IMG_PREVIEW_FAILED") {
-            if (event.data.status === 401) {
-                getToken();
-                return;
-            }
-            return;
-        }
-    };
 }
 
 export function previewChange(targetId: string, type: "PREV" | "NEXT") {
