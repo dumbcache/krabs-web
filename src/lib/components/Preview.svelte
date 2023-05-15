@@ -77,6 +77,8 @@
         object-fit: contain;
         object-position: top;
         background-color: var(--preview-bg-color);
+        position: relative;
+        z-index: 0;
     }
     .preview-tools {
         position: absolute;
@@ -91,6 +93,7 @@
         cursor: pointer;
         border-radius: 0.5rem;
         transition: opacity 0.2s linear;
+        z-index: 1;
     }
     .preview-tools:hover {
         opacity: 1;
