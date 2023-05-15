@@ -2,6 +2,7 @@
     import { page } from "$app/stores";
     import Tools from "./Tools.svelte";
     import beforeNavigate from "$lib/assets/beforeNavigate.svg?raw";
+    import { previewItem } from "$lib/scripts/utils";
 
     let id: string;
     $: id = $page.params.id ?? "";
@@ -14,7 +15,10 @@
     <button
         class="back-button btn"
         bind:this={backButton}
-        on:click={() => history.back()}
+        on:click={() => {
+            history.back();
+            $previewItem = undefined;
+        }}
     >
         {@html beforeNavigate} back
     </button>

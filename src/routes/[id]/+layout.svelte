@@ -5,6 +5,7 @@
     import LoadIndicator from "$lib/components/LoadIndicator.svelte";
     import Preview from "$lib/components/Preview.svelte";
     import Drop from "$lib/components/Drop.svelte";
+    import { dropHandler } from "$lib/scripts/utils";
 </script>
 
 <svelte:head>
@@ -15,7 +16,14 @@
 {#if $navigating}
     <LoadIndicator />
 {:else}
-    <main class="main">
+    <main
+        class="main"
+        on:dragstart|preventDefault
+        on:dragover|preventDefault
+        on:dragenter
+        on:dragleave
+        on:drop={dropHandler}
+    >
         <div class="content">
             <Nav />
             <slot />
@@ -32,16 +40,7 @@
     }
     .content {
         background-color: inherit;
-        grid-area: content;
-    }
-    .main :global(.preview),
-    .main :global(.drop) {
-        z-index: 1;
-        min-width: 50%;
-        height: 100vh;
-        background-color: #000a;
-        backdrop-filter: blur(1rem);
-        -webkit-backdrop-filter: blur(1rem);
+        width: 100%;
     }
     @media (max-width: 600px) {
         .main :global(.preview),
@@ -52,6 +51,7 @@
             left: 0;
             right: 0;
             border: none;
+            max-width: 100%;
         }
     }
 </style>

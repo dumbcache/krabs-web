@@ -1,9 +1,11 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
+    import { previewItem } from "$lib/scripts/utils";
     import DirCover from "./DirCover.svelte";
 
     export let dir: GoogleFile;
     function dirNavigate(e) {
+        $previewItem = undefined;
         goto(`/${dir.id}`);
     }
 </script>

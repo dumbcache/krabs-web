@@ -10,7 +10,7 @@ import ChildWorker from "$lib/scripts/childWorker.ts?worker";
 
 export let isLoggedin = writable(false);
 export let previewItem: Writable<PreviewItem | undefined> = writable(undefined);
-export let dropItems = writable([]);
+export let dropItems: Writable<DropItem[]> = writable([]);
 export let touchCoords: Writable<TouchCoords> = writable({});
 
 export let childWorker: Worker;
@@ -213,7 +213,8 @@ export function handleTouchStart(e: TouchEvent) {
     const { screenX, screenY } = e.changedTouches[0];
     touchCoords.set({ startX: screenX, startY: screenY });
 }
-export function handleTouchEnd(e: TouchEvent, targetId: string) {
+export function handleTouchEnd(e: TouchEvent, targetId: string | undefined) {
+    if (!targetId) return;
     if (e.touches.length >= 2) return;
     e.stopPropagation();
     if (e.changedTouches.length === 0) return;
@@ -267,7 +268,11 @@ export function fetchImgPreview(id: string) {
     });
 }
 
-export function previewChange(targetId: string, type: "PREV" | "NEXT") {
+export function previewChange(
+    targetId: string | undefined,
+    type: "PREV" | "NEXT"
+) {
+    if (!targetId) return;
     const imgs = document.querySelector(".imgs") as HTMLDivElement;
     const target = imgs.querySelector(`[data-id='${targetId}']`);
     const latestTarget = (
@@ -285,7 +290,10 @@ export function previewChange(targetId: string, type: "PREV" | "NEXT") {
     fetchImgPreview(id);
 }
 
-export function previewShortcutHandler(e: KeyboardEvent, targetId: string) {
+export function previewShortcutHandler(
+    e: KeyboardEvent,
+    targetId: string | undefined
+) {
     if (!targetId) return;
     if (e.altKey || e.metaKey || e.ctrlKey) {
         return;
@@ -316,3 +324,54 @@ export function previewShortcutHandler(e: KeyboardEvent, targetId: string) {
             return;
     }
 }
+
+export function previewLoadDropItem(img: File, dropArea: HTMLDivElement) {
+    const dropParent = document.querySelector(
+        ".drop-parent"
+    ) as HTMLSpanElement;
+    dropParent.innerHTML = history.state?.dir || "root";
+    const id = Date.now();
+    const imgRef = URL.createObjectURL(img);
+    const dropItem = createDropItem(imgRef, id, img.name);
+    dropArea.insertAdjacentHTML("beforeend", dropItem);
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const result = e.target?.result! as ArrayBuffer;
+        const bytes = new Uint8Array(result);
+        dropItems[id] = { name: img.name, mimeType: img.type, bytes, imgRef };
+    };
+    reader.readAsArrayBuffer(img);
+}
+
+export function imgPickerHandler(e) {
+    e.preventDefault();
+    const target = e.target as HTMLInputElement;
+    previewItem.set(undefined);
+    for (let img of target.files!) {
+        if (img.type.match("image/")) {
+            // previewLoadDropItem(img, dropArea);
+            // dropZone.hidden = false;
+            const id = Date.now();
+            const imgRef = URL.createObjectURL(img);
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const result = e.target?.result! as ArrayBuffer;
+                const bytes = new Uint8Array(result);
+                dropItems.set([
+                    ...get(dropItems),
+                    {
+                        id,
+                        name: img.name,
+                        mimeType: img.type,
+                        bytes,
+                        imgRef,
+                    },
+                ]);
+            };
+            reader.readAsArrayBuffer(img);
+        }
+    }
+    console.log(dropItems);
+}
+
+export function dropHandler(e) {}

@@ -22,7 +22,7 @@
     <div
         class="preview {fullMode ? 'preview-full' : 'preview-half'}"
         on:touchstart={handleTouchStart}
-        on:touchend={(e) => handleTouchEnd(e, $previewItem.id)}
+        on:touchend={(e) => handleTouchEnd(e, $previewItem?.id)}
         on:touchmove={handleTouchMove}
         transition:fade={{ duration: 200 }}
     >
@@ -41,13 +41,13 @@
             </button>
             <button
                 class="before btn"
-                on:click={() => previewChange($previewItem.id, "PREV")}
+                on:click={() => previewChange($previewItem?.id, "PREV")}
             >
                 {@html beforeIcon}
             </button>
             <button
                 class="next btn"
-                on:click={() => previewChange($previewItem.id, "NEXT")}
+                on:click={() => previewChange($previewItem?.id, "NEXT")}
             >
                 {@html nextIcon}
             </button>
@@ -64,11 +64,18 @@
 {/if}
 
 <style>
+    .preview {
+        min-width: 50%;
+        height: 100vh;
+        backdrop-filter: blur(1rem);
+        -webkit-backdrop-filter: blur(1rem);
+    }
     .preview-img {
         width: 100%;
         height: 100%;
         object-fit: contain;
         object-position: top;
+        background-color: var(--preview-bg-color);
     }
     .preview-tools {
         position: absolute;
@@ -99,7 +106,7 @@
         bottom: 0;
         right: 0;
         left: 0;
-        z-index: 3;
+        z-index: 4;
     }
     .preview-half {
         position: sticky;

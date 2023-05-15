@@ -2,6 +2,7 @@
     import imgCreate from "$lib/assets/imgCreate.svg?raw";
     import folderCreate from "$lib/assets/folderCreate.svg?raw";
     import refresh from "$lib/assets/refresh.svg?raw";
+    import { imgPickerHandler } from "$lib/scripts/utils";
 </script>
 
 <div class="tools">
@@ -17,6 +18,7 @@
         id="img-picker"
         accept="image/*"
         multiple
+        on:change={imgPickerHandler}
     />
     <button class="button__create-folder btn">
         {@html folderCreate}
