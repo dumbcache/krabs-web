@@ -69,6 +69,7 @@
         height: 100vh;
         backdrop-filter: blur(1rem);
         -webkit-backdrop-filter: blur(1rem);
+        z-index: 2;
     }
     .preview-img {
         width: 100%;

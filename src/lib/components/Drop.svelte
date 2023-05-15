@@ -51,7 +51,7 @@
         overflow-y: scroll;
         padding: 0rem 1rem 1rem 1rem;
         max-width: 50%;
-        z-index: 3;
+        z-index: 2;
         min-width: 50%;
         height: 100vh;
         backdrop-filter: blur(1rem);
