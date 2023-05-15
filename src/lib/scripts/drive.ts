@@ -1,6 +1,4 @@
-import { redirect } from "@sveltejs/kit";
-import { getToken, isLoggedin } from "./utils";
-import { get } from "svelte/store";
+import { getToken } from "./utils";
 
 export const DIR_MIME_TYPE = "application/vnd.google-apps.folder";
 export const IMG_MIME_TYPE = "image/";
