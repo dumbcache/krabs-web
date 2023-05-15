@@ -8,6 +8,11 @@ import { get, writable, type Writable } from "svelte/store";
 import { browser } from "$app/environment";
 import ChildWorker from "$lib/scripts/childWorker.ts?worker";
 
+export let isLoggedin = writable(false);
+export let previewItem: Writable<PreviewItem | undefined> = writable(undefined);
+export let dropItems = writable([]);
+export let touchCoords: Writable<TouchCoords> = writable({});
+
 export let childWorker: Worker;
 if (browser) {
     childWorker = new ChildWorker();
@@ -49,11 +54,6 @@ if (browser) {
         }
     };
 }
-
-export let isLoggedin = writable(false);
-export let previewItem: Writable<PreviewItem | undefined> = writable(undefined);
-export let dropItems = writable([]);
-export let touchCoords: Writable<TouchCoords> = writable({});
 
 export const toggleColorMode = () => {
     const root = document.documentElement;
