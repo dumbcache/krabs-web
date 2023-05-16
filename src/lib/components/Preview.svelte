@@ -32,7 +32,7 @@
                 data-id={$previewItem.id}
                 alt=""
                 class="preview-img"
-                in:fade={{ duration: 200 }}
+                in:fade={{ duration: 300 }}
             />
         {/key}
         <div class="preview-tools">
@@ -70,6 +70,7 @@
     .preview {
         min-width: 50%;
         height: 100vh;
+        background-color: var(--primary-backdrop-color);
         backdrop-filter: blur(1rem);
         -webkit-backdrop-filter: blur(1rem);
         z-index: 2;
@@ -79,9 +80,9 @@
         height: 100%;
         object-fit: contain;
         object-position: top;
-        background-color: var(--preview-bg-color);
         position: relative;
         z-index: 0;
+        background: none;
     }
     .preview-tools {
         position: absolute;

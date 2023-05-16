@@ -27,6 +27,7 @@
 
     --primary-bg-color: var(--color-white);
     --primary-color: var(--color-black-level-two);
+    --primary-backdrop-color: #111a;
     --primary-svg-fill: var(--color-black-level-two);
     --theme-button-outline: var(--color-black-level-six);
     --theme-button-hover-outline: var(--color-white-level-three);
@@ -35,7 +36,6 @@
     --theme-button-svg-fill: var(--color-black-level-two);
     --header-border-color: var(--color-black-level-six);
     --content-background-color: var(--color-white-level-two);
-    --preview-bg-color: #000a;
 
     --font-size-default: 1.6rem;
     --line-size-default: 1.6rem;

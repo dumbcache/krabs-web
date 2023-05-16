@@ -119,23 +119,15 @@ export function localFetch(url: string, krabsCache: Cache) {
     return krabsCache.match(url);
 }
 
-export function fetchFiles(
+export async function refreshCache(
     parent: string,
     type: "dirs" | "imgs" | "covers",
     pageSize: number = 1000
 ): Promise<GoogleFileRes> {
-    // if (!pageSize) {
-    // pageSize = type === "dirs" ? 1000 : 100;
-    // }
-    return new Promise(async (resolve, reject) => {
-        const krabsCache = await caches.open("krabs");
-        const path = `/${parent}?type=${type}`;
-        const cacheData = await localFetch(path, krabsCache);
-        if (cacheData) {
-            resolve(cacheData.json());
-            return;
-        }
-        const token = window.localStorage.getItem("token")!;
+    const krabsCache = await caches.open("krabs");
+    const path = `/${parent}?type=${type}`;
+    const token = window.localStorage.getItem("token")!;
+    return new Promise((resolve, reject) => {
         fetchFromDrive(
             parent,
             token,
@@ -148,8 +140,29 @@ export function fetchFiles(
             })
             .catch((e) => {
                 reject(e);
-                return;
             });
+    });
+}
+
+export function fetchFiles(
+    parent: string,
+    type: "dirs" | "imgs" | "covers",
+    pageSize?: number
+): Promise<GoogleFileRes> {
+    // if (!pageSize) {
+    // pageSize = type === "dirs" ? 1000 : 100;
+    // }
+    return new Promise(async (resolve, reject) => {
+        const krabsCache = await caches.open("krabs");
+        const path = `/${parent}?type=${type}`;
+        const cacheData = await localFetch(path, krabsCache);
+        if (cacheData) {
+            resolve(cacheData.json());
+            return;
+        }
+        refreshCache(parent, type, pageSize)
+            .then((res) => resolve(res))
+            .catch((e) => reject(e));
     });
 }
 
@@ -167,6 +180,34 @@ export const loadMainContent = (
         Promise.all(promises)
             .then(([dirs, imgs]) => {
                 resolve({ dirs, imgs });
+            })
+            .catch(async (e) => {
+                if (e.status === 401) {
+                    await getToken();
+                }
+                console.warn(e);
+            });
+    });
+};
+export const refreshMainContent = (
+    parent: string
+): Promise<{
+    dirs: GoogleFileRes | undefined;
+    imgs: GoogleFileRes | undefined;
+}> => {
+    return new Promise(async (resolve, reject) => {
+        const promises = [
+            refreshCache(parent!, "dirs"),
+            refreshCache(parent!, "imgs"),
+        ];
+        Promise.all(promises)
+            .then(async ([dirs, imgs]) => {
+                resolve({ dirs, imgs });
+                for (let dir of dirs.files) {
+                    await refreshCache(dir.id, "covers", 3);
+                }
+                window.location.reload();
+                return;
             })
             .catch(async (e) => {
                 if (e.status === 401) {

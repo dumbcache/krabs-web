@@ -9,6 +9,7 @@ import { browser } from "$app/environment";
 import ChildWorker from "$lib/scripts/childWorker.ts?worker";
 
 export let isLoggedin = writable(false);
+export let activeParent = writable("");
 export let previewItem: Writable<PreviewItem | undefined> = writable(undefined);
 export let dropItems: Writable<DropItem[]> = writable([]);
 export let touchCoords: Writable<TouchCoords> = writable({});
