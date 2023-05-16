@@ -1,6 +1,8 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
     import doneIcon from "$lib/assets/done.svg?raw";
+    import { activeParent } from "$lib/scripts/utils";
+    import { createDir } from "$lib/scripts/drive";
 
     let dirName = "";
 
@@ -8,8 +10,9 @@
     function dispatchClose() {
         dispatch("dirCreateClose");
     }
-    function createDirHandler(e) {
-        console.log(dirName);
+    async function createDirHandler() {
+        const token = window.localStorage.getItem("token")!;
+        if (await createDir(dirName, $activeParent, token)) dispatchClose();
     }
 </script>
 
@@ -33,7 +36,12 @@
             autofocus
             on:click|stopPropagation
         />
-        <button type="submit" class="btn">{@html doneIcon}</button>
+        <button
+            type="submit"
+            class="btn"
+            disabled={dirName.trim() === "" ? true : false}
+            >{@html doneIcon}</button
+        >
     </label>
 </form>
 
@@ -50,6 +58,12 @@
         backdrop-filter: blur(1rem);
         -webkit-backdrop-filter: blur(1rem);
         z-index: 2;
+    }
+    .btn:disabled {
+        cursor: not-allowed;
+    }
+    .btn:disabled :global(svg) {
+        fill: red;
     }
     .wrapper {
         max-width: 25rem;

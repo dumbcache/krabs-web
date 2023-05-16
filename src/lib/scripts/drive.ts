@@ -1,4 +1,4 @@
-import { getToken } from "./utils";
+import { activeParent, getToken, newCreatedDir } from "./utils";
 
 export const DIR_MIME_TYPE = "application/vnd.google-apps.folder";
 export const IMG_MIME_TYPE = "image/";
@@ -33,6 +33,46 @@ export async function downloadImage(id: string, token: string): Promise<Blob> {
         resolve(data);
     });
 }
+
+export const createDir = async (
+    name: string,
+    parent: string,
+    token: string
+) => {
+    const url = "https://www.googleapis.com/drive/v3/files/";
+    let req = await fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+            name,
+            mimeType: "application/vnd.google-apps.folder",
+            parents: [parent],
+        }),
+    });
+    let { status, statusText } = req;
+    let data = (await req.json()) as CreateResourceResponse;
+    if (status !== 200) {
+        console.log(
+            `error while creating root dir ${status} ${statusText}`,
+            data
+        );
+        if (status === 401) {
+            await getToken();
+
+            return createDir(
+                name,
+                parent,
+                window.localStorage.getItem("token")!
+            );
+        }
+    }
+    refreshCache(parent, "dirs");
+    newCreatedDir.set(data);
+    return true;
+};
 
 export const createImgMetadata = (
     imgMeta: ImgMeta,

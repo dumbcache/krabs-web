@@ -2,6 +2,7 @@ import { browser } from "$app/environment";
 import type { PageLoad } from "./$types";
 import { loadMainContent } from "$lib/scripts/drive";
 import { activeParent } from "$lib/scripts/utils";
+import { get } from "svelte/store";
 
 export const load = (({ params, fetch }) => {
     if (browser) {
