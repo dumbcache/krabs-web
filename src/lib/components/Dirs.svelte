@@ -1,11 +1,7 @@
 <script lang="ts">
-    import { newCreatedDir } from "$lib/scripts/utils";
     import DirCard from "./DirCard.svelte";
 
     export let dirs: GoogleFile[];
-    $: if ($newCreatedDir) {
-        dirs = [$newCreatedDir as GoogleFile, ...dirs];
-    }
 </script>
 
 <div class="dirs">

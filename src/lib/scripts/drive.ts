@@ -1,4 +1,4 @@
-import { activeParent, getToken, newCreatedDir } from "./utils";
+import { activeParent, getToken } from "./utils";
 
 export const DIR_MIME_TYPE = "application/vnd.google-apps.folder";
 export const IMG_MIME_TYPE = "image/";
@@ -69,9 +69,7 @@ export const createDir = async (
             );
         }
     }
-    refreshCache(parent, "dirs");
-    newCreatedDir.set(data);
-    return true;
+    refreshCache(parent, "dirs").then(() => window.location.reload());
 };
 
 export const createImgMetadata = (

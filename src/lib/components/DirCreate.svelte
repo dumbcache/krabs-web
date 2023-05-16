@@ -12,6 +12,10 @@
     }
     async function createDirHandler() {
         const token = window.localStorage.getItem("token")!;
+        dirName = dirName
+            .split(" ")
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(" ");
         if (await createDir(dirName, $activeParent, token)) dispatchClose();
     }
 </script>
