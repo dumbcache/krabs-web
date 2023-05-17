@@ -6,11 +6,9 @@
     import { fly } from "svelte/transition";
 
     let mini = false;
-    function toggleMini(e) {
-        console.log(e);
+    function toggleMini() {
         mini = !mini;
     }
-    $: console.log($dropItems);
 </script>
 
 {#if $dropItems.length !== 0}
@@ -25,9 +23,12 @@
     {:else}
         <div class="drop" transition:fly={{ duration: 500, x: 500, y: 500 }}>
             <DropTools on:toggleMini={toggleMini} />
+
             <div class="drop-items">
                 {#each $dropItems as item}
-                    <DropItem {item} />
+                    {#key item.id}
+                        <DropItem {item} />
+                    {/key}
                 {/each}
             </div>
         </div>
@@ -64,6 +65,8 @@
         display: flex;
         flex-flow: row wrap;
         align-self: start;
+        align-items: center;
+        justify-content: space-evenly;
         gap: 2rem 1rem;
     }
     .drop :global(input) {
@@ -88,5 +91,13 @@
     }
     .drop :global(input:hover) {
         background-color: #ccc;
+    }
+    .btn :global(svg) {
+        fill: var(--color-white);
+    }
+    @media (max-width: 600px) {
+        .drop-items {
+            gap: 1rem;
+        }
     }
 </style>

@@ -70,8 +70,8 @@
         fill: red;
     }
     .wrapper {
-        max-width: 25rem;
-        padding: 5rem;
+        max-width: 30rem;
+        padding: 5rem 4rem;
         background-color: var(--primary-backdrop-color);
         border-radius: 1rem;
         display: flex;
@@ -82,7 +82,7 @@
     }
     input {
         padding: 0.5rem;
-        max-width: 100%;
+        max-width: 70%;
         border-radius: 0.5rem;
         border: none;
         outline: none;

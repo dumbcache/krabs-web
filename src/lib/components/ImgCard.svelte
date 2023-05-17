@@ -33,15 +33,17 @@
         width="200"
     />
     <button class="anchor">.</button>
-    <a
-        href={img.appProperties?.origin || ""}
-        class="img-link"
-        target="_blank"
-        rel="external noopener noreferrer nofollow"
-        on:click|stopPropagation
-    >
-        {@html linkIcon}
-    </a>
+    {#if img.appProperties?.origin}
+        <a
+            href={img.appProperties?.origin}
+            class="img-link"
+            target="_blank"
+            rel="external noopener noreferrer nofollow"
+            on:click|stopPropagation
+        >
+            {@html linkIcon}
+        </a>
+    {/if}
 </div>
 
 <style>

@@ -1,28 +1,44 @@
 <script lang="ts">
     import closeIcon from "$lib/assets/close.svg?raw";
     import doneIcon from "$lib/assets/done.svg?raw";
+    import clearIcon from "$lib/assets/clear.svg?raw";
     import doubleRightIcon from "$lib/assets/doubleRight.svg?raw";
-    import { dropItems } from "$lib/scripts/utils";
+    import {
+        dropItems,
+        dropOkHandler,
+        // clearDropItems,
+    } from "$lib/scripts/utils";
     import { createEventDispatcher } from "svelte";
 
     const dispatch = createEventDispatcher();
     function toggleMini() {
         dispatch("toggleMini");
     }
+    export function clearDropItems() {
+        const a = $dropItems.filter((item) => item.progress !== "success");
+        dropItems.set(a);
+    }
 </script>
 
 <div class="drop-tools">
     <span>
-        <button class="drop-cancel btn" on:click={() => ($dropItems = [])}>
+        <button
+            class="drop-cancel btn"
+            title="close"
+            on:click={() => ($dropItems = [])}
+        >
             {@html closeIcon}
         </button>
-        <button class="btn" on:click={toggleMini}>
+        <button class="btn" title="minimize to right" on:click={toggleMini}>
             {@html doubleRightIcon}
         </button>
+        <button class="btn" title="clear completed" on:click={clearDropItems}>
+            {@html clearIcon}
+        </button>
     </span>
-    <span class="drop-parent">parent</span>
+    <!-- <span class="drop-parent">parent</span> -->
     <input type="text" class="common-url" placeholder="common-url" value="" />
-    <button class="drop-ok btn">
+    <button class="drop-ok btn" on:click={dropOkHandler}>
         {@html doneIcon}
     </button>
 </div>
@@ -48,5 +64,14 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
+    }
+    .btn {
+        width: var(--secondary-icon-size);
+        height: var(--secondary-icon-size);
+    }
+    @media (max-width: 600px) {
+        .common-url {
+            max-width: 15rem;
+        }
     }
 </style>

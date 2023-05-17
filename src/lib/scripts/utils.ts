@@ -40,16 +40,28 @@ if (browser) {
                     return;
                 }
                 return;
-            // case "DROP_SAVE":
-            //     dropResultHandler(data.id, 200);
-            //     return;
-            // case "DROP_SAVE_FAILED":
-            //     dropResultHandler(data.id, data.status);
-            //     if (data.status === 401) {
-            //         getToken();
-            //         return;
-            //     }
-            //     return;
+            case "DROP_SAVE":
+                // dropResultHandler(data.id, 200);
+                dropItems.set(
+                    get(dropItems).map((item) => {
+                        item.id === data.id && (item.progress = "success");
+                        return item;
+                    })
+                );
+                return;
+            case "DROP_SAVE_FAILED":
+                // dropResultHandler(data.id, data.status);
+                dropItems.set(
+                    get(dropItems).map((item) => {
+                        item.id === data.id && (item.progress = "failure");
+                        return item;
+                    })
+                );
+                if (data.status === 401) {
+                    getToken();
+                    return;
+                }
+                return;
             case "IDB_RELOAD_REQUIRED":
                 return;
         }
@@ -326,26 +338,60 @@ export function previewShortcutHandler(
     }
 }
 
-export function previewLoadDropItem(img: File, dropArea: HTMLDivElement) {
-    const dropParent = document.querySelector(
-        ".drop-parent"
-    ) as HTMLSpanElement;
-    dropParent.innerHTML = history.state?.dir || "root";
-    const id = Date.now();
-    const imgRef = URL.createObjectURL(img);
-    const dropItem = createDropItem(imgRef, id, img.name);
-    dropArea.insertAdjacentHTML("beforeend", dropItem);
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        const result = e.target?.result! as ArrayBuffer;
-        const bytes = new Uint8Array(result);
-        dropItems[id] = { name: img.name, mimeType: img.type, bytes, imgRef };
-    };
-    reader.readAsArrayBuffer(img);
+export function clearDropItems() {
+    const a = get(dropItems).filter((item) => item.progress !== "success");
+    dropItems.set(a);
 }
 
-export function imgPickerHandler(e) {
+export function dropOkHandler() {
+    const droppeditems = document.querySelector(
+        ".drop-items"
+    ) as HTMLDivElement;
+    const commonUrl = (
+        document.querySelector(".common-url") as HTMLInputElement
+    ).value;
+    const tempDirItems = [];
+    for (let item of get(dropItems)) {
+        if (item.progress === "success") return;
+        const id = item.id;
+        const dropItem = droppeditems.querySelector(
+            `[data-id='${id}']`
+        ) as HTMLDivElement;
+        let dropImg = dropItem.querySelector(".drop-img") as HTMLImageElement;
+        dropImg.classList.toggle("drop-item-uploading");
+        // let dropProgress = dropItem.querySelector(
+        //     ".drop-progress"
+        // ) as HTMLImageElement;
+        // dropProgress.hidden = false;
+        let name = dropItem.querySelector(".name") as HTMLInputElement;
+        item.name = name.value.trim();
+        let url = dropItem.querySelector(".url") as HTMLInputElement;
+        if (commonUrl.trim() === "") {
+            item.url = url.value.trim();
+        } else {
+            item.url = commonUrl.trim();
+        }
+        item.progress = "uploading";
+        tempDirItems.push(item);
+    }
+    dropItems.set(tempDirItems);
+    const { pathname } = window.location;
+    const parent =
+        pathname === "/"
+            ? window.localStorage.getItem("root")!
+            : pathname.substring(1);
+    const token = window.localStorage.getItem("token");
+    childWorker.postMessage({
+        context: "DROP_SAVE",
+        dropItems: get(dropItems),
+        parent,
+        token,
+    });
+}
+
+export function imgPickerHandler(e: InputEvent) {
     e.preventDefault();
+    // clearDropItems();
     const target = e.target as HTMLInputElement;
     previewItem.set(undefined);
     for (let img of target.files!) {
@@ -372,7 +418,6 @@ export function imgPickerHandler(e) {
             reader.readAsArrayBuffer(img);
         }
     }
-    console.log(dropItems);
 }
 
 export function dropHandler(e) {}

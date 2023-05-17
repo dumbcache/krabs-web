@@ -136,9 +136,9 @@ function checkForImgLocal(id: string, token: string) {
     };
 }
 
-async function dropSave(dropItems: DropItems, parent: string, token: string) {
-    for (let id in dropItems) {
-        const { name, url, mimeType, bytes } = dropItems[id];
+async function dropSave(dropItems: DropItem[], parent: string, token: string) {
+    for (let item of dropItems) {
+        const { id, name, url, mimeType, bytes } = item;
         const imgMeta: ImgMeta = {
             name: name || id,
             mimeType,

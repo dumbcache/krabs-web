@@ -69,6 +69,7 @@ declare global {
         url?: string;
         bytes: Uint8Array;
         imgRef: string;
+        progress?: string;
     }
 
     interface DropItems {
