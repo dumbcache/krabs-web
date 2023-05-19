@@ -60,6 +60,7 @@
         backdrop-filter: blur(1rem);
         -webkit-backdrop-filter: blur(1rem);
     }
+
     .drop-items {
         width: 100%;
         display: flex;

@@ -389,12 +389,9 @@ export function dropOkHandler() {
     });
 }
 
-export function imgPickerHandler(e: InputEvent) {
-    e.preventDefault();
-    // clearDropItems();
-    const target = e.target as HTMLInputElement;
+export function previewAndSetDropItems(files: FileList) {
     previewItem.set(undefined);
-    for (let img of target.files!) {
+    for (let img of files!) {
         if (img.type.match("image/")) {
             // previewLoadDropItem(img, dropArea);
             // dropZone.hidden = false;
@@ -419,5 +416,3 @@ export function imgPickerHandler(e: InputEvent) {
         }
     }
 }
-
-export function dropHandler(e) {}

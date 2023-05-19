@@ -2,12 +2,25 @@
     import imgCreate from "$lib/assets/imgCreate.svg?raw";
     import folderCreate from "$lib/assets/folderCreate.svg?raw";
     import refresh from "$lib/assets/refresh.svg?raw";
-    import { activeParent, imgPickerHandler } from "$lib/scripts/utils";
+    import {
+        activeParent,
+        previewItem,
+        previewAndSetDropItems,
+    } from "$lib/scripts/utils";
     import DirCreate from "./DirCreate.svelte";
     import { refreshMainContent } from "$lib/scripts/drive";
 
     let dirCreateToggle = false;
     let refreshClicked = false;
+    function imgPickerHandler(e: InputEvent) {
+        e.preventDefault();
+        // clearDropItems();
+        const target = e.target as HTMLInputElement;
+        previewItem.set(undefined);
+        if (target.files) {
+            previewAndSetDropItems(target.files);
+        }
+    }
 </script>
 
 <div class="tools">

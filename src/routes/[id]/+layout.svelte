@@ -1,11 +1,22 @@
-<script>
+<script lang="ts">
     import Nav from "$lib/components/Nav.svelte";
     import Header from "$lib/components/Header.svelte";
     import { navigating } from "$app/stores";
     import LoadIndicator from "$lib/components/LoadIndicator.svelte";
     import Preview from "$lib/components/Preview.svelte";
     import Drop from "$lib/components/Drop.svelte";
-    import { dropHandler } from "$lib/scripts/utils";
+    import { previewAndSetDropItems, previewItem } from "$lib/scripts/utils";
+
+    let draggedOver = false;
+    export function imgDropHandler(e: DragEvent) {
+        e.preventDefault();
+        draggedOver = false;
+        console.log(e);
+        previewItem.set(undefined);
+        if (e.dataTransfer?.files) {
+            previewAndSetDropItems(e.dataTransfer.files);
+        }
+    }
 </script>
 
 <svelte:head>
@@ -17,12 +28,12 @@
     <LoadIndicator />
 {:else}
     <main
-        class="main"
+        class="main {draggedOver === true ? 'dragover' : ''}"
         on:dragstart|preventDefault
         on:dragover|preventDefault
-        on:dragenter
-        on:dragleave
-        on:drop={dropHandler}
+        on:dragenter={() => (draggedOver = true)}
+        on:dragleave={() => (draggedOver = false)}
+        on:drop={imgDropHandler}
     >
         <div class="content">
             <Nav />
@@ -38,9 +49,13 @@
         background-color: inherit;
         display: flex;
     }
+
     .content {
         background-color: inherit;
         width: 100%;
+    }
+    .dragover {
+        background-color: #00f5;
     }
     @media (max-width: 800px) {
         .main :global(.preview),
