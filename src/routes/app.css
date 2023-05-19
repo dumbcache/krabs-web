@@ -35,7 +35,8 @@
     --theme-button-hover-background: var(--color-white-level-two);
     --theme-button-svg-fill: var(--color-black-level-two);
     --header-border-color: var(--color-black-level-six);
-    --content-background-color: var(--color-white-level-two);
+    --content-background-color: var(--color-black-level-six);
+    --content-background-color-hover: var(--color-black-level-four);
 
     --font-size-default: 1.6rem;
     --line-size-default: 1.6rem;
@@ -59,6 +60,7 @@
     --theme-button-svg-fill: var(--color-black);
     --header-border-color: var(--color-white-level-six);
     --content-background-color: var(--color-black-level-three);
+    --content-background-color-hover: var(--color-black-level-one);
 }
 
 :root {
@@ -161,7 +163,7 @@ a {
     backdrop-filter: blur(1rem);
 }
 ::-webkit-scrollbar-thumb {
-    background: var(--color-bluegrey);
+    background: var(--primary-color);
     border-radius: 0.5rem;
 }
 ::-webkit-scrollbar-thumb:hover {
@@ -180,7 +182,7 @@ a {
         --content-padding: 1rem;
     }
     h2 {
-        font-size: 1.5rem;
+        font-size: 1.3rem;
     }
 }
 @media (prefers-color-scheme: dark) {
@@ -192,12 +194,6 @@ a {
         --theme-button-svg-fill: var(--color-black);
         --primary-svg-fill: var(--color-white-level-four);
     } */
-    ::-webkit-scrollbar-thumb {
-        background: var(--color-lightgreen);
-    }
-    ::-webkit-scrollbar-thumb:hover {
-        background: var(--color-bluegrey);
-    }
 }
 @media (prefers-reduced-motion: no-preference) {
 }

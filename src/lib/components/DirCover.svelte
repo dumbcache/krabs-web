@@ -1,5 +1,6 @@
 <script lang="ts">
     import { fetchFiles } from "$lib/scripts/drive";
+    import EditTool from "./EditTool.svelte";
 
     export let id: string;
     let pics: GoogleFile[] = [];
@@ -21,6 +22,7 @@
             />
         {/each}
     {/if}
+    <EditTool type="dir" />
 </div>
 
 <style>
@@ -38,11 +40,14 @@
         overflow: hidden;
         gap: 1px;
         background-color: var(--content-background-color);
+        cursor: pointer;
     }
 
     .cover:hover {
+        background-color: var(--content-background-color-hover);
+    }
+    .cover:hover img {
         filter: brightness(0.5);
-        cursor: pointer;
     }
     .cover img {
         width: 100%;

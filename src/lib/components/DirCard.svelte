@@ -1,5 +1,6 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
+
     import { previewItem } from "$lib/scripts/utils";
     import DirCover from "./DirCover.svelte";
 
@@ -18,6 +19,9 @@
 </div>
 
 <style>
+    .dir-card {
+        position: relative;
+    }
     button {
         filter: none;
     }

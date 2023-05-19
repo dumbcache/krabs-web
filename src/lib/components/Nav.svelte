@@ -39,8 +39,10 @@
         display: flex;
         width: fit-content;
         align-items: center;
+        font-size: 1.4rem;
     }
     .back-button :global(svg) {
-        width: 3rem;
+        width: var(--secondary-icon-size);
+        height: var(--secondary-icon-size);
     }
 </style>
