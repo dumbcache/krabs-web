@@ -351,8 +351,9 @@ export function dropOkHandler() {
         document.querySelector(".common-url") as HTMLInputElement
     ).value;
     const tempDirItems = [];
+    console.log(get(dropItems));
     for (let item of get(dropItems)) {
-        if (item.progress === "success") return;
+        if (item.progress === "success") continue;
         const id = item.id;
         const dropItem = droppeditems.querySelector(
             `[data-id='${id}']`
