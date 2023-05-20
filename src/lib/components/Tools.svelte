@@ -53,7 +53,10 @@
         {@html folderCreate}
     </button>
     {#if dirCreateToggle}
-        <DirCreate on:dirCreateClose={() => (dirCreateToggle = false)} />
+        <DirCreate
+            type="create"
+            on:dirCreateClose={() => (dirCreateToggle = false)}
+        />
     {/if}
 </div>
 

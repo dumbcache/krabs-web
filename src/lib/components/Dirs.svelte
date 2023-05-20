@@ -7,7 +7,7 @@
 <div class="dirs">
     {#each dirs as dir}
         {#key dir.id}
-            <DirCard {dir} />
+            <DirCard {dir} on:editDir on:deleteDir />
         {/key}
     {/each}
 </div>

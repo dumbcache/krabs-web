@@ -2,19 +2,31 @@
     import expandIcon from "$lib/assets/expandDown.svg?raw";
     import editIcon from "$lib/assets/edit.svg?raw";
     import deleteIcon from "$lib/assets/delete.svg?raw";
+    import { createEventDispatcher } from "svelte";
+    import { deleteDir } from "$lib/scripts/drive";
+    import { activeParent } from "$lib/scripts/utils";
 
     export let type: "dir" | "img";
-    console.log(type);
+    export let id: string;
+    export let name: string;
+
+    const dispatch = createEventDispatcher();
+    function editHandler() {
+        dispatch("editDir", { id, name });
+    }
+    function deleteHandler() {
+        dispatch("deleteDir", { id });
+    }
 </script>
 
 <div class="edit-tools">
     <button class="btn expand" on:click|stopPropagation>
         {@html expandIcon}
     </button>
-    <button class="btn action" on:click|stopPropagation>
+    <button class="btn action" on:click|stopPropagation={editHandler}>
         {@html editIcon}
     </button>
-    <button class="btn action" on:click|stopPropagation>
+    <button class="btn action" on:click|stopPropagation={deleteHandler}>
         {@html deleteIcon}
     </button>
 </div>

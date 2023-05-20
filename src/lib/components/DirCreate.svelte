@@ -1,52 +1,104 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
     import doneIcon from "$lib/assets/done.svg?raw";
-    import { activeParent } from "$lib/scripts/utils";
-    import { createDir } from "$lib/scripts/drive";
+    import { activeParent, renameValue, renameid } from "$lib/scripts/utils";
+    import { createDir, updateDir, deleteDir } from "$lib/scripts/drive";
 
-    let dirName = "";
+    const confirmText = "confirm";
+    export let type: "create" | "update" | "delete";
+    export let id = "";
+    export let name = "";
+    let placeholder = name || "";
+    let submitDisabled = true;
+    let confirmationVisible = false;
+    let inputVisible = true;
+    if (type === "delete") {
+        inputVisible = false;
+        confirmationVisible = true;
+    }
 
     const dispatch = createEventDispatcher();
-    function dispatchClose() {
-        dispatch("dirCreateClose");
+    function dispatchClose(ctx: string, detail?: any) {
+        dispatch(ctx, detail);
     }
-    async function createDirHandler() {
+    async function dirActionHandler() {
         const token = window.localStorage.getItem("token")!;
-        dirName = dirName
+        let dirName = placeholder
             .split(" ")
             .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
             .join(" ");
-        if (await createDir(dirName, $activeParent, token)) dispatchClose();
+        placeholder = dirName;
+        if (type === "create") {
+            await createDir(dirName, $activeParent, token);
+            dispatchClose("dirCreateClose");
+        }
+        if (type === "update") {
+            const data = await updateDir(dirName, id, $activeParent, token);
+            $renameid = data.id;
+            $renameValue = data.name;
+            console.log($renameValue);
+            dispatchClose("dirUpdateClose");
+        }
+        if (type === "delete") {
+            await deleteDir(id, $activeParent, token);
+            dispatchClose("dirDeleteClose");
+        }
+    }
+    function checkDisabled() {
+        if (type === "delete") {
+            placeholder.trim() !== "confirm"
+                ? (submitDisabled = true)
+                : (submitDisabled = false);
+        } else {
+            placeholder.trim() === ""
+                ? (submitDisabled = true)
+                : (submitDisabled = false);
+        }
     }
 </script>
 
 <form
     class="create"
-    on:click={dispatchClose}
+    on:click={() =>
+        dispatchClose(type === "create" ? "dirCreateClose" : "dirUpdateClose")}
     on:keypress|stopPropagation
-    on:submit|preventDefault={createDirHandler}
+    on:submit|preventDefault={dirActionHandler}
 >
-    <label
-        class="wrapper"
-        for="dir-name"
-        on:click|stopPropagation
-        on:keypress|stopPropagation
-    >
-        <input
-            type="text"
-            id="dir-name"
-            placeholder="Directory Name"
-            bind:value={dirName}
-            autofocus
+    {#if confirmationVisible}
+        <div class="wrapper">
+            All files and subfolders will be deleted. You alright in Mind?
+            <button
+                type="button"
+                class="btn"
+                on:click|stopPropagation={() => {
+                    confirmationVisible = false;
+                    inputVisible = true;
+                }}>{@html doneIcon}</button
+            >
+        </div>
+    {/if}
+    {#if inputVisible}
+        <label
+            class="wrapper"
+            for="dir-name"
             on:click|stopPropagation
-        />
-        <button
-            type="submit"
-            class="btn"
-            disabled={dirName.trim() === "" ? true : false}
-            >{@html doneIcon}</button
+            on:keypress|stopPropagation
         >
-    </label>
+            <input
+                type="text"
+                id="dir-name"
+                placeholder={type === "delete" ? confirmText : "Directory Name"}
+                bind:value={placeholder}
+                autofocus
+                on:click|stopPropagation
+                on:input={checkDisabled}
+                autocomplete="off"
+            />
+            <button type="submit" class="btn" disabled={submitDisabled}
+                >{@html doneIcon}</button
+            >
+        </label>
+    {/if}
 </form>
 
 <style>
@@ -92,6 +144,7 @@
 
     .btn :global(svg) {
         fill: #0f0;
+        min-width: var(--primary-icon-size);
     }
     @media (max-width: 600px) {
         .wrapper {

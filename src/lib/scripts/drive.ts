@@ -1,4 +1,5 @@
-import { activeParent, getToken } from "./utils";
+import { get } from "svelte/store";
+import { activeParent, getToken, renameValue, renameid } from "./utils";
 
 export const DIR_MIME_TYPE = "application/vnd.google-apps.folder";
 export const IMG_MIME_TYPE = "image/";
@@ -38,7 +39,7 @@ export const createDir = async (
     name: string,
     parent: string,
     token: string
-) => {
+): Promise<any> => {
     const url = "https://www.googleapis.com/drive/v3/files/";
     let req = await fetch(url, {
         method: "POST",
@@ -67,6 +68,70 @@ export const createDir = async (
                 parent,
                 window.localStorage.getItem("token")!
             );
+        }
+    }
+    refreshCache(parent, "dirs").then(() => window.location.reload());
+};
+
+export const updateDir = async (
+    name: string,
+    id: string,
+    parent: string,
+    token: string
+): Promise<any> => {
+    const url = `https://www.googleapis.com/drive/v3/files/${id}`;
+    let req = await fetch(url, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+            name,
+        }),
+    });
+    let { status, statusText } = req;
+    let data = (await req.json()) as CreateResourceResponse;
+    if (status !== 200) {
+        console.log(
+            `error while creating root dir ${status} ${statusText}`,
+            data
+        );
+        if (status === 401) {
+            await getToken();
+            return updateDir(
+                name,
+                id,
+                parent,
+                window.localStorage.getItem("token")!
+            );
+        }
+    }
+    refreshCache(parent, "dirs");
+    return data;
+};
+
+export const deleteDir = async (
+    id: string,
+    parent: string,
+    token: string
+): Promise<any> => {
+    const url = `https://www.googleapis.com/drive/v3/files/${id}`;
+    let req = await fetch(url, {
+        method: "DELETE",
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    let { status, statusText } = req;
+    if (status !== 204) {
+        console.log(
+            `error while deleting root dir ${status} ${statusText}`,
+            await req.text()
+        );
+        if (status === 401) {
+            await getToken();
+            return deleteDir(id, parent, window.localStorage.getItem("token")!);
         }
     }
     refreshCache(parent, "dirs").then(() => window.location.reload());

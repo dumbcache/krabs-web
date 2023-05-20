@@ -3,6 +3,7 @@
     import EditTool from "./EditTool.svelte";
 
     export let id: string;
+    export let name: string;
     let pics: GoogleFile[] = [];
 
     $: (fetchFiles(id, "covers", 3) as Promise<GoogleFileRes>).then(
@@ -22,7 +23,7 @@
             />
         {/each}
     {/if}
-    <EditTool type="dir" />
+    <EditTool type="dir" {id} {name} on:editDir on:deleteDir />
 </div>
 
 <style>

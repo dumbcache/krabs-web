@@ -26,7 +26,6 @@
     <img
         src={img.thumbnailLink}
         alt="thumbnail to link"
-        referrerpolicy="no-referrer"
         class="img"
         loading="lazy"
         height="200"
