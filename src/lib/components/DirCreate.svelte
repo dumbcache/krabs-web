@@ -4,7 +4,7 @@
     import { activeParent, renameValue, renameid } from "$lib/scripts/utils";
     import { createDir, updateDir, deleteDir } from "$lib/scripts/drive";
 
-    const confirmText = "confirm";
+    const confirmText = "type 'confirm'";
     export let type: "create" | "update" | "delete";
     export let id = "";
     export let name = "";
@@ -34,9 +34,8 @@
         }
         if (type === "update") {
             const data = await updateDir(dirName, id, $activeParent, token);
-            $renameid = data.id;
             $renameValue = data.name;
-            console.log($renameValue);
+            $renameid = data.id;
             dispatchClose("dirUpdateClose");
         }
         if (type === "delete") {

@@ -17,7 +17,6 @@
         <Dirs
             dirs={data.dirs?.files}
             on:editDir={(e) => {
-                console.log(e);
                 activeId = e.detail.id;
                 activeName = e.detail.name;
                 dirToggle = true;

@@ -4,20 +4,17 @@
     import DirCover from "./DirCover.svelte";
 
     export let dir: GoogleFile;
-    let dirName = dir.name;
     function dirNavigate(e) {
         $previewItem = undefined;
         goto(`/${dir.id}`);
     }
-    $: dir.id === $renameid && (dirName = $renameValue);
-    console.log(dirName);
 </script>
 
 <div class="dir-card" data-id={dir.id}>
     <button on:click={dirNavigate}>
-        <DirCover id={dir.id} name={dirName} on:editDir on:deleteDir />
+        <DirCover id={dir.id} name={dir.name} on:editDir on:deleteDir />
     </button>
-    <h2 class="dir-title">{dir.name}</h2>
+    <h2 class="dir-title">{$renameid === dir.id ? $renameValue : dir.name}</h2>
 </div>
 
 <style>
