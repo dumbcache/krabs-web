@@ -136,9 +136,9 @@ function checkForImgLocal(id: string, token: string) {
     };
 }
 
-async function dropSave(dropItems: DropItem[], parent: string, token: string) {
+async function dropSave(dropItems: DropItem[], token: string) {
     for (let item of dropItems) {
-        const { id, name, url, mimeType, bytes } = item;
+        const { id, name, url, mimeType, bytes, parent } = item;
         const imgMeta: ImgMeta = {
             name: name || id,
             mimeType,
@@ -174,7 +174,7 @@ onmessage = ({ data }) => {
             checkForImgLocal(data.id, data.token);
             return;
         case "DROP_SAVE":
-            dropSave(data.dropItems, data.parent, data.token);
+            dropSave(data.dropItems, data.token);
             // setTimeout(() => {
             //     for (let id in data.dropItems) {
             //         if (Number(id) % 2 === 0) {

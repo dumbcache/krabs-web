@@ -10,6 +10,7 @@ import ChildWorker from "$lib/scripts/childWorker.ts?worker";
 
 export let isLoggedin = writable(false);
 export let activeParent = writable("");
+export let activeParentName = writable("");
 export let renameid = writable("");
 export let renameValue = writable("");
 
@@ -413,6 +414,8 @@ export function previewAndSetDropItems(files: FileList) {
                         mimeType: img.type,
                         bytes,
                         imgRef,
+                        parent: get(activeParent),
+                        parentName: get(activeParentName),
                     },
                 ]);
             };

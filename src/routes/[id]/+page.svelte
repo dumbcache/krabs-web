@@ -3,6 +3,13 @@
     import Imgs from "$lib/components/Imgs.svelte";
     import type { PageData } from "./$types";
     import DirCreate from "$lib/components/DirCreate.svelte";
+    import { onMount } from "svelte";
+    import { FILE_API } from "$lib/scripts/drive";
+    import {
+        activeParent,
+        activeParentName,
+        getToken,
+    } from "$lib/scripts/utils";
 
     export let data: PageData;
 
@@ -10,6 +17,29 @@
     let dirToggle = false;
     let activeId = "";
     let activeName = "";
+    onMount(() => {
+        async function getParentName() {
+            let res = await fetch(`${FILE_API}/${$activeParent}?fields=name`, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${window.localStorage.getItem(
+                        "token"
+                    )}`,
+                },
+            });
+            if (res.status !== 200) {
+                console.log(await res.text());
+                if (res.status === 401) {
+                    getToken();
+                    getParentName();
+                }
+                return;
+            }
+            const { name } = await res.json();
+            $activeParentName = name;
+        }
+        getParentName();
+    });
 </script>
 
 {#if data.dirs?.files.length !== 0 || data.imgs?.files.length !== 0}

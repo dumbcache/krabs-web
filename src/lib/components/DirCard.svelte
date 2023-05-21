@@ -1,9 +1,15 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
-    import { previewItem, renameValue, renameid } from "$lib/scripts/utils";
+    import {
+        activeParentName,
+        previewItem,
+        renameValue,
+        renameid,
+    } from "$lib/scripts/utils";
     import DirCover from "./DirCover.svelte";
 
     export let dir: GoogleFile;
+
     function dirNavigate(e) {
         $previewItem = undefined;
         goto(`/${dir.id}`);

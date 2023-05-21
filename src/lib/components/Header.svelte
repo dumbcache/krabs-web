@@ -1,5 +1,4 @@
 <script>
-    import logout from "$lib/assets/logout.svg?raw";
     import ColorScheme from "$lib/components/ColorScheme.svelte";
     import LogoutButton from "./LogoutButton.svelte";
 </script>

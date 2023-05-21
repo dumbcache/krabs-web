@@ -102,6 +102,7 @@
 
 <style>
     .create {
+        color: var(--color-white-level-two);
         position: fixed;
         top: 0;
         bottom: 0;

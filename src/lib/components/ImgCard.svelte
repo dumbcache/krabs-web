@@ -1,6 +1,7 @@
 <script lang="ts">
     import linkIcon from "$lib/assets/link.svg?raw";
     import { fetchImgPreview, previewItem } from "$lib/scripts/utils";
+    import imgPlaceholder from "$lib/assets/imgPlaceholder.svg";
     export let img: GoogleFile;
 
     function handleImgclick(e) {
@@ -30,6 +31,7 @@
         loading="lazy"
         height="200"
         width="200"
+        on:error={(e) => (e.target.src = imgPlaceholder)}
     />
     <button class="anchor">.</button>
     {#if img.appProperties?.origin}
@@ -37,6 +39,7 @@
             href={img.appProperties?.origin}
             class="img-link"
             target="_blank"
+            referrerpolicy="no-referrer"
             rel="external noopener noreferrer nofollow"
             on:click|stopPropagation
         >

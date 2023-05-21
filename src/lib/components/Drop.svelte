@@ -83,15 +83,15 @@
         padding: 0.5rem;
         font-size: 1.6rem;
         color: #000;
-        background-color: #ddd;
-        border-bottom: 2px solid #000;
+        background-color: var(--color-white-level-two);
+        border-bottom: 2px solid var(--color-black);
         padding-left: 0.5rem;
     }
     .drop :global(input::placeholder) {
-        color: #555;
+        color: var(--color-black-level-six);
     }
     .drop :global(input:hover) {
-        background-color: #ccc;
+        background-color: var(--color-white-level-four);
     }
     .btn :global(svg) {
         fill: var(--color-white);

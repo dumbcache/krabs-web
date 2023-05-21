@@ -35,6 +35,8 @@
     --theme-button-hover-background: var(--color-white-level-two);
     --theme-button-svg-fill: var(--color-black-level-two);
     --header-border-color: var(--color-black-level-six);
+    --cover-background-color: var(--color-white-level-five);
+    --cover-border-color: #0003;
     --content-background-color: var(--color-black-level-six);
     --content-background-color-hover: var(--color-black-level-four);
 
@@ -59,6 +61,8 @@
     --theme-button-hover-background: var(--color-black-level-five);
     --theme-button-svg-fill: var(--color-black);
     --header-border-color: var(--color-white-level-six);
+    --cover-background-color: var(--color-black-level-four);
+    --cover-border-color: #fff3;
     --content-background-color: var(--color-black-level-three);
     --content-background-color-hover: var(--color-black-level-one);
 }

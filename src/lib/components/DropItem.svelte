@@ -16,6 +16,13 @@
     {#if item.progress !== "uploading" && item.progress !== "success"}
         <input
             type="text"
+            class="parent"
+            disabled
+            value={item.parentName}
+            on:click={(e) => e.target.select()}
+        />
+        <input
+            type="text"
             class="name"
             placeholder="name"
             value={item.name || ""}
@@ -97,6 +104,14 @@
     .anime {
         -webkit-animation: spin 1.5s linear 0s infinite;
         animation: spin 1s linear 0s infinite;
+    }
+    input:disabled {
+        background: var(--color-white-level-one);
+        color: #00fd;
+        cursor: not-allowed;
+    }
+    input:disabled:hover {
+        background: var(--color-white-level-one);
     }
     @media (max-width: 600px) {
         .drop-item {

@@ -70,6 +70,8 @@ declare global {
         bytes: Uint8Array;
         imgRef: string;
         progress?: string;
+        parent: string;
+        parentName: string;
     }
 
     interface DropItems {

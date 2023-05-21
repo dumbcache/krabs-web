@@ -16,19 +16,31 @@
 <div class="cover">
     {#if pics.length != 0}
         {#each pics as pic}
-            <img
-                src={pic.thumbnailLink}
-                alt="cover pic"
-                referrerpolicy="no-referrer"
-            />
+            <div class="pic-wrapper">
+                <img
+                    src={pic.thumbnailLink}
+                    alt="cover pic"
+                    referrerpolicy="no-referrer"
+                    on:load={(e) => (e.target.style.display = "initial")}
+                    on:error={(e) => (e.target.style.display = "none")}
+                />
+            </div>
         {/each}
+    {:else}
+        <div class="pic-wrapper" />
+        <div class="pic-wrapper" />
+        <div class="pic-wrapper" />
     {/if}
     <EditTool type="dir" {id} {name} on:editDir on:deleteDir />
 </div>
 
 <style>
+    .pic-wrapper {
+        /* background-color: var(--cover-background-color); */
+    }
     .cover {
-        border: 1px solid #000;
+        border: 1px solid var(--cover-border-color);
+        background-color: var(--cover-background-color);
         width: var(--dir-width);
         height: var(--cover-height);
         display: grid;
@@ -39,15 +51,14 @@
             "one three";
         border-radius: 1rem;
         overflow: hidden;
-        gap: 1px;
-        background-color: var(--content-background-color);
+        /* background-color: var(--content-background-color); */
         cursor: pointer;
     }
 
-    .cover:hover {
+    /* .cover:hover {
         background-color: var(--content-background-color-hover);
-    }
-    .cover:hover img {
+    } */
+    .cover:hover .pic-wrapper {
         filter: brightness(0.5);
     }
     .cover img {
@@ -56,15 +67,18 @@
         object-fit: cover;
         object-position: top;
         border: none;
+        display: none;
     }
 
-    .cover img:nth-child(1) {
+    .cover .pic-wrapper:nth-child(1) {
         grid-area: one;
+        border-right: 1px solid var(--cover-border-color);
     }
-    .cover img:nth-child(2) {
+    .cover .pic-wrapper:nth-child(2) {
         grid-area: two;
+        border-bottom: 1px solid var(--cover-border-color);
     }
-    .cover img:nth-child(3) {
+    .cover .pic-wrapper:nth-child(3) {
         grid-area: three;
     }
 </style>
