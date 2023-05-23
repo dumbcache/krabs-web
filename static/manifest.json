@@ -1,0 +1,22 @@
+{
+    "short_name": "Krabs",
+    "name": "Krabs",
+    "description": "a image application",
+    "start_url": "/",
+    "icons": [
+        {
+            "src": "512.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        },
+        {
+            "src": "192.png",
+            "type": "image/png",
+            "sizes": "192x192"
+        }
+    ],
+    "background_color": "#000",
+    "theme_color": "#646cff",
+    "scope": "/",
+    "display": "standalone"
+}

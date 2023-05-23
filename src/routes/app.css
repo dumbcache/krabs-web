@@ -134,11 +134,11 @@ button {
 .btn svg,
 button svg {
     fill: var(--primary-svg-fill);
+    cursor: pointer;
 }
 
 button:hover,
 .btn:hover {
-    cursor: pointer;
     filter: invert(0.5);
 }
 
@@ -188,6 +188,14 @@ a {
     h2 {
         font-size: 1.3rem;
     }
+    /* button:hover,
+    .btn:hover {
+        filter: none;
+    }
+    button:active,
+    .btn:active {
+        filter: invert(0.5);
+    } */
 }
 @media (prefers-color-scheme: dark) {
     /* :root {
