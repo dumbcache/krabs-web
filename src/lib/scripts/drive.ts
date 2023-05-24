@@ -259,10 +259,10 @@ export function fetchFiles(
         const krabsCache = await caches.open("krabs");
         const path = `/${parent}?type=${type}`;
         const cacheData = await localFetch(path, krabsCache);
-        if (cacheData) {
-            resolve(cacheData.json());
-            return;
-        }
+        // if (cacheData) {
+        //     resolve(cacheData.json());
+        //     return;
+        // }
         refreshCache(parent, type, pageSize)
             .then((res) => resolve(res))
             .catch((e) => reject(e));

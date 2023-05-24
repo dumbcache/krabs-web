@@ -38,7 +38,6 @@
         <a
             href={img.appProperties?.origin}
             class="img-link"
-            target="_blank"
             referrerpolicy="no-referrer"
             rel="external noopener noreferrer nofollow"
             on:click|stopPropagation

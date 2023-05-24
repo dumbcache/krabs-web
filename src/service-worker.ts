@@ -45,11 +45,10 @@ function initIDB() {
     };
 }
 
-export const DIR_MIME_TYPE = "application/vnd.google-apps.folder";
-export const IMG_MIME_TYPE = "image/";
-export const FILE_API = "https://www.googleapis.com/drive/v3/files";
-export const FIELDS_REQUIRED =
-    "files(id,name,appProperties(origin),thumbnailLink)";
+const DIR_MIME_TYPE = "application/vnd.google-apps.folder";
+const IMG_MIME_TYPE = "image/";
+const FILE_API = "https://www.googleapis.com/drive/v3/files";
+const FIELDS_REQUIRED = "files(id,name,appProperties(origin),thumbnailLink)";
 
 function checkForImgLocal(id: string, token: string, broadcast: WindowClient) {
     const db = idbRequest.result;
