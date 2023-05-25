@@ -7,6 +7,11 @@ import { build, files, version } from "$service-worker";
 // import {} from "./lib/scripts/dr"
 const sw = self as unknown as ServiceWorkerGlobalScope;
 
+const DIR_MIME_TYPE = "application/vnd.google-apps.folder";
+const IMG_MIME_TYPE = "image/";
+const FILE_API = "https://www.googleapis.com/drive/v3/files";
+const FIELDS_REQUIRED = "files(id,name,appProperties(origin),thumbnailLink)";
+
 const CACHE_APP = `krabs_app-${version}`;
 const CACHE_DATA = `krabs_data-${version}`;
 const ASSETS = [
@@ -44,11 +49,6 @@ function initIDB() {
         postMessage({ context: "IDB_RELOAD_REQUIRED" });
     };
 }
-
-const DIR_MIME_TYPE = "application/vnd.google-apps.folder";
-const IMG_MIME_TYPE = "image/";
-const FILE_API = "https://www.googleapis.com/drive/v3/files";
-const FIELDS_REQUIRED = "files(id,name,appProperties(origin),thumbnailLink)";
 
 function checkForImgLocal(id: string, token: string, broadcast: WindowClient) {
     const db = idbRequest.result;
@@ -138,28 +138,34 @@ sw.addEventListener("activate", (e) => {
 });
 
 sw.addEventListener("fetch", (e) => {
-    // if (e.request.method !== "GET") return;
-    // async function respond() {
-    //     const url = new URL(e.request.url);
-    //     const cache = await caches.open(CACHE_APP);
-    //     console.log(url.pathname);
-    //     if (url.host.startsWith("www.googleapis.com")) {
-    //     }
-    //     // // `build`/`files` can always be served from the cache
-    //     if (ASSETS.includes(url.pathname)) {
-    //         return cache.match(url.pathname);
-    //     }
-    //     // // for everything else, try the network first, but
-    //     // // fall back to the cache if we're offline
-    //     try {
-    //         const response = await fetch(e.request);
-    //         if (response.status === 200) {
-    //             // cache.put(e.request, response.clone());
-    //         }
-    //         return response;
-    //     } catch {
-    //         return cache.match(e.request);
-    //     }
-    // }
-    // e.respondWith(respond());
+    console.log(e.request);
+    if (e.request.method !== "GET") return;
+    if (e.request.mode === "navigate") return;
+    async function respond() {
+        const url = new URL(e.request.url);
+        const cache = await caches.open(CACHE_APP);
+        console.log(url.pathname, e);
+        // if (url.host.startsWith("www.googleapis.com")) {
+        //     return;
+        // }
+        // // `build`/`files` can always be served from the cache
+        if (ASSETS.includes(url.pathname)) {
+            return cache.match(url.pathname);
+        } else {
+            return fetch(e.request);
+        }
+
+        // // for everything else, try the network first, but
+        // // fall back to the cache if we're offline
+        // try {
+        //     const response = await fetch(e.request);
+        //     if (response.status === 200) {
+        //         // cache.put(e.request, response.clone());
+        //     }
+        //     return response;
+        // } catch {
+        //     return cache.match(e.request);
+        // }
+    }
+    e.respondWith(respond());
 });

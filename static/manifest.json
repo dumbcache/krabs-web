@@ -18,5 +18,21 @@
     "background_color": "#000",
     "theme_color": "#646cff",
     "scope": "/",
-    "display": "standalone"
+    "display": "standalone",
+    "share_target": {
+        "action": "/img-share",
+        "method": "POST",
+        "enctype": "multipart/form-data",
+        "params": {
+            "title": "photos",
+            "text": "description",
+            "url": "link",
+            "files": [
+                {
+                    "name": "photos",
+                    "accept": ["image/*"]
+                }
+            ]
+        }
+    }
 }
