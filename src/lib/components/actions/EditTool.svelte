@@ -3,8 +3,6 @@
     import editIcon from "$lib/assets/edit.svg?raw";
     import deleteIcon from "$lib/assets/delete.svg?raw";
     import { createEventDispatcher } from "svelte";
-    import { deleteDir } from "$lib/scripts/drive";
-    import { activeParent } from "$lib/scripts/utils";
 
     export let type: "dir" | "img";
     export let id: string;

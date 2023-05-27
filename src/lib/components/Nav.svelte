@@ -1,8 +1,8 @@
 <script lang="ts">
     import { page } from "$app/stores";
-    import Tools from "./Tools.svelte";
+    import Tools from "$lib/components/actions/Tools.svelte";
     import beforeNavigate from "$lib/assets/beforeNavigate.svg?raw";
-    import { previewItem } from "$lib/scripts/utils";
+    import { previewItem } from "$lib/scripts/stores";
 
     let id: string;
     $: id = $page.params.id ?? "";

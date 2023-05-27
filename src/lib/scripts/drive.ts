@@ -1,11 +1,12 @@
-import { get } from "svelte/store";
-import { activeParent, getToken, renameValue, renameid } from "./utils";
+import { getToken } from "./utils";
 
 export const DIR_MIME_TYPE = "application/vnd.google-apps.folder";
 export const IMG_MIME_TYPE = "image/";
 export const FILE_API = "https://www.googleapis.com/drive/v3/files";
 export const FIELDS_REQUIRED =
     "files(id,name,appProperties(origin),thumbnailLink)";
+
+export const wait = (s: number) => new Promise((res) => setTimeout(res, s));
 
 function constructAPI(
     parent: string,
@@ -183,18 +184,17 @@ export const uploadImg = async (
     return { status };
 };
 
-const wait = (s: number) => new Promise((res) => setTimeout(res, s));
-
-export async function fetchFromDrive(
+export async function fetchFiles(
     parent: string,
-    token: string,
-    mimeType: string,
-    pageSize?: number
-): Promise<Response | undefined> {
+    type: "dirs" | "imgs" | "covers",
+    pageSize: number = 1000
+): Promise<GoogleFileRes | undefined> {
     try {
-        if (!pageSize) {
-            pageSize = mimeType === DIR_MIME_TYPE ? 1000 : 100;
-        }
+        // if (!pageSize) {
+        //     pageSize = mimeType === DIR_MIME_TYPE ? 1000 : 100;
+        // }
+        let mimeType = type == "dirs" ? DIR_MIME_TYPE : IMG_MIME_TYPE;
+        const token = window.localStorage.getItem("token");
         return new Promise(async (resolve, reject) => {
             let res = await fetch(constructAPI(parent, mimeType, pageSize), {
                 method: "GET",
@@ -210,8 +210,7 @@ export async function fetchFromDrive(
                 reject({ status: res.status });
                 return;
             }
-            // const data = (await res.json()) as GoogleFileRes;
-            resolve(res);
+            resolve(res.json());
         });
     } catch (error) {
         console.warn(error);
@@ -227,45 +226,14 @@ export async function refreshCache(
     type: "dirs" | "imgs" | "covers",
     pageSize: number = 1000
 ): Promise<GoogleFileRes> {
-    const krabsCache = await caches.open("krabs");
-    const path = `/${parent}?type=${type}`;
-    const token = window.localStorage.getItem("token")!;
     return new Promise((resolve, reject) => {
-        fetchFromDrive(
-            parent,
-            token,
-            type == "dirs" ? DIR_MIME_TYPE : IMG_MIME_TYPE,
-            pageSize
-        )
-            .then((res) => {
-                krabsCache.put(path, res!.clone());
-                resolve(res!.json());
+        fetchFiles(parent, (type = "dirs"), pageSize)
+            .then((data) => {
+                resolve(data!);
             })
             .catch((e) => {
                 reject(e);
             });
-    });
-}
-
-export function fetchFiles(
-    parent: string,
-    type: "dirs" | "imgs" | "covers",
-    pageSize?: number
-): Promise<GoogleFileRes> {
-    // if (!pageSize) {
-    // pageSize = type === "dirs" ? 1000 : 100;
-    // }
-    return new Promise(async (resolve, reject) => {
-        const krabsCache = await caches.open("krabs");
-        const path = `/${parent}?type=${type}`;
-        const cacheData = await localFetch(path, krabsCache);
-        // if (cacheData) {
-        //     resolve(cacheData.json());
-        //     return;
-        // }
-        refreshCache(parent, type, pageSize)
-            .then((res) => resolve(res))
-            .catch((e) => reject(e));
     });
 }
 

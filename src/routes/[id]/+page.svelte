@@ -1,15 +1,12 @@
 <script lang="ts">
-    import Dirs from "$lib/components/Dirs.svelte";
-    import Imgs from "$lib/components/Imgs.svelte";
+    import Dirs from "$lib/components/dirs/Dirs.svelte";
+    import Imgs from "$lib/components/imgs/Imgs.svelte";
     import type { PageData } from "./$types";
-    import DirCreate from "$lib/components/DirCreate.svelte";
+    import DirCreate from "$lib/components/actions/DirCreate.svelte";
     import { onMount } from "svelte";
     import { FILE_API } from "$lib/scripts/drive";
-    import {
-        activeParent,
-        activeParentName,
-        getToken,
-    } from "$lib/scripts/utils";
+    import { getToken } from "$lib/scripts/utils";
+    import { activeParentId, activeParentName } from "$lib/scripts/stores";
 
     export let data: PageData;
 
@@ -19,14 +16,17 @@
     let activeName = "";
     onMount(() => {
         async function getParentName() {
-            let res = await fetch(`${FILE_API}/${$activeParent}?fields=name`, {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${window.localStorage.getItem(
-                        "token"
-                    )}`,
-                },
-            });
+            let res = await fetch(
+                `${FILE_API}/${$activeParentId}?fields=name`,
+                {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${window.localStorage.getItem(
+                            "token"
+                        )}`,
+                    },
+                }
+            );
             if (res.status !== 200) {
                 console.log(await res.text());
                 if (res.status === 401) {

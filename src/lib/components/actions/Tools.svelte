@@ -2,12 +2,9 @@
     import imgCreate from "$lib/assets/imgCreate.svg?raw";
     import folderCreate from "$lib/assets/folderCreate.svg?raw";
     import refresh from "$lib/assets/refresh.svg?raw";
-    import {
-        activeParent,
-        previewItem,
-        previewAndSetDropItems,
-    } from "$lib/scripts/utils";
-    import DirCreate from "./DirCreate.svelte";
+    import { previewAndSetDropItems } from "$lib/scripts/utils";
+    import { activeParentId, previewItem } from "$lib/scripts/stores";
+    import DirCreate from "$lib/components/actions/DirCreate.svelte";
     import { refreshMainContent } from "$lib/scripts/drive";
 
     let dirCreateToggle = false;
@@ -29,7 +26,7 @@
         title="refresh cache"
         on:click={() => {
             refreshClicked = true;
-            refreshMainContent($activeParent);
+            refreshMainContent($activeParentId);
         }}
     >
         {@html refresh}

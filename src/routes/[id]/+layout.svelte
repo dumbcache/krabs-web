@@ -2,10 +2,11 @@
     import Nav from "$lib/components/Nav.svelte";
     import Header from "$lib/components/Header.svelte";
     import { navigating } from "$app/stores";
-    import LoadIndicator from "$lib/components/LoadIndicator.svelte";
+    import LoadIndicator from "$lib/components/actions/LoadIndicator.svelte";
     import Preview from "$lib/components/Preview.svelte";
     import Drop from "$lib/components/Drop.svelte";
-    import { previewAndSetDropItems, previewItem } from "$lib/scripts/utils";
+    import { previewAndSetDropItems } from "$lib/scripts/utils";
+    import { previewItem } from "$lib/scripts/stores";
 
     let draggedOver = false;
     export function imgDropHandler(e: DragEvent) {

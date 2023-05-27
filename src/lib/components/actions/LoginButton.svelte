@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { loadGSIScript, isLoggedin } from "$lib/scripts/utils";
+    import { loadGSIScript } from "$lib/scripts/utils";
     import { onMount } from "svelte";
 
     // console.log($isLoggedin);

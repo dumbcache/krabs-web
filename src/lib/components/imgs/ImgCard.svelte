@@ -1,6 +1,7 @@
 <script lang="ts">
     import linkIcon from "$lib/assets/link.svg?raw";
-    import { fetchImgPreview, previewItem } from "$lib/scripts/utils";
+    import { fetchImgPreview } from "$lib/scripts/utils";
+    import { previewItem } from "$lib/scripts/stores";
     import imgPlaceholder from "$lib/assets/imgPlaceholder.svg";
     export let img: GoogleFile;
 

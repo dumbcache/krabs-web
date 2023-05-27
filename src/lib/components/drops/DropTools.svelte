@@ -1,14 +1,14 @@
 <script lang="ts">
+    import { createEventDispatcher } from "svelte";
     import closeIcon from "$lib/assets/close.svg?raw";
     import doneIcon from "$lib/assets/done.svg?raw";
     import clearIcon from "$lib/assets/clear.svg?raw";
     import doubleRightIcon from "$lib/assets/doubleRight.svg?raw";
     import {
-        dropItems,
         dropOkHandler,
         // clearDropItems,
     } from "$lib/scripts/utils";
-    import { createEventDispatcher } from "svelte";
+    import { dropItems } from "$lib/scripts/stores";
 
     const dispatch = createEventDispatcher();
     function toggleMini() {

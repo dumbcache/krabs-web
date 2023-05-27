@@ -1,5 +1,5 @@
 <script lang="ts">
-    import DirCard from "./DirCard.svelte";
+    import DirCard from "$lib/components/dirs/DirCard.svelte";
 
     export let dirs: GoogleFile[];
 </script>

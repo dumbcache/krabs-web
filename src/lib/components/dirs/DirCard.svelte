@@ -1,12 +1,7 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
-    import {
-        activeParentName,
-        previewItem,
-        renameValue,
-        renameid,
-    } from "$lib/scripts/utils";
-    import DirCover from "./DirCover.svelte";
+    import { previewItem, renameValue, renameid } from "$lib/scripts/stores";
+    import DirCover from "$lib/components/dirs/DirCover.svelte";
 
     export let dir: GoogleFile;
 

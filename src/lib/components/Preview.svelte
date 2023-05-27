@@ -5,9 +5,9 @@
         handleTouchMove,
         handleTouchStart,
         previewChange,
-        previewItem,
         previewShortcutHandler,
     } from "$lib/scripts/utils";
+    import { previewItem } from "$lib/scripts/stores";
     import closeIcon from "$lib/assets/close.svg?raw";
     import beforeIcon from "$lib/assets/beforeNavigate.svg?raw";
     import nextIcon from "$lib/assets/nextNavigate.svg?raw";

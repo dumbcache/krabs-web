@@ -2,7 +2,7 @@
     import lightModeIcon from "$lib/assets/lightMode.svg?raw";
     import darkModeIcon from "$lib/assets/darkMode.svg?raw";
     import { onMount } from "svelte";
-    import { toggleColorMode } from "../scripts/utils";
+    import { toggleColorMode } from "$lib/scripts/utils";
 
     onMount(() => {
         let active = window.localStorage.getItem("krabColorScheme");

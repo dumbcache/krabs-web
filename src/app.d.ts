@@ -19,10 +19,6 @@ declare global {
         name: string;
         parents: string[];
         thumbnailLink?: string;
-        // hasThumbnail: string;
-        // mimeType: string;
-        // createdTime: string;
-        // modifiedTime: string;
         appProperties: {
             origin: string;
             src: string;

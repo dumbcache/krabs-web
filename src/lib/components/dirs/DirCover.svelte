@@ -1,6 +1,6 @@
 <script lang="ts">
     import { fetchFiles } from "$lib/scripts/drive";
-    import EditTool from "./EditTool.svelte";
+    import EditTool from "$lib/components/actions/EditTool.svelte";
 
     export let id: string;
     export let name: string;

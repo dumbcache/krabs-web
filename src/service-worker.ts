@@ -24,7 +24,6 @@ function initIDB() {
     idbRequest = indexedDB.open("krabfiles", 1);
     idbRequest.onsuccess = () => {
         const db = idbRequest.result;
-        console.log(db);
         db.onversionchange = () => {
             postMessage({ context: "IDB_RELOAD_REQUIRED" });
         };
@@ -130,7 +129,8 @@ sw.addEventListener("install", (e) => {
 sw.addEventListener("activate", (e) => {
     async function deleteOldCaches() {
         for (const key of await caches.keys()) {
-            if (key !== CACHE_APP) await caches.delete(key);
+            if (key !== CACHE_APP && key !== CACHE_DATA)
+                await caches.delete(key);
         }
     }
 
@@ -138,34 +138,37 @@ sw.addEventListener("activate", (e) => {
 });
 
 sw.addEventListener("fetch", (e) => {
-    console.log(e.request);
     if (e.request.method !== "GET") return;
     if (e.request.mode === "navigate") return;
-    async function respond() {
-        const url = new URL(e.request.url);
-        const cache = await caches.open(CACHE_APP);
-        console.log(url.pathname, e);
-        // if (url.host.startsWith("www.googleapis.com")) {
-        //     return;
-        // }
-        // // `build`/`files` can always be served from the cache
-        if (ASSETS.includes(url.pathname)) {
-            return cache.match(url.pathname);
-        } else {
+    const url = new URL(e.request.url);
+    switch (url.host) {
+        case self.location.host:
+            return (async () => {
+                const cache = await caches.open(CACHE_APP);
+                if (ASSETS.includes(url.pathname)) {
+                    return cache.match(url.pathname);
+                } else {
+                    return fetch(e.request);
+                }
+            })();
+        case "www.googleapis.com":
+            return (async () => {
+                const cache = await caches.open(CACHE_DATA);
+                const cacheData = await cache.match(e.request);
+                if (cacheData) {
+                    // console.log("cache");
+                    return cacheData;
+                } else {
+                    const response = await fetch(e.request);
+                    console.log(response);
+                    if (response.status === 200) {
+                        cache.put(e.request, response.clone());
+                    }
+                    // console.log("network");
+                    return response;
+                }
+            })();
+        default:
             return fetch(e.request);
-        }
-
-        // // for everything else, try the network first, but
-        // // fall back to the cache if we're offline
-        // try {
-        //     const response = await fetch(e.request);
-        //     if (response.status === 200) {
-        //         // cache.put(e.request, response.clone());
-        //     }
-        //     return response;
-        // } catch {
-        //     return cache.match(e.request);
-        // }
     }
-    e.respondWith(respond());
 });

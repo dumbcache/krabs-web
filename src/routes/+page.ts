@@ -1,6 +1,7 @@
 import { redirect } from "@sveltejs/kit";
 import { get } from "svelte/store";
-import { checkLoginStatus, isLoggedin } from "$lib/scripts/utils";
+import { checkLoginStatus } from "$lib/scripts/utils";
+import { isLoggedin } from "$lib/scripts/stores";
 import { browser } from "$app/environment";
 
 export const load = () => {

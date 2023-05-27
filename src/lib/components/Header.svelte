@@ -1,6 +1,6 @@
 <script>
-    import ColorScheme from "$lib/components/ColorScheme.svelte";
-    import LogoutButton from "./LogoutButton.svelte";
+    import ColorScheme from "$lib/components/actions/ColorScheme.svelte";
+    import LogoutButton from "$lib/components/actions/LogoutButton.svelte";
 </script>
 
 <header class="header">

@@ -1,8 +1,8 @@
 <script>
-    import ColorScheme from "$lib/components/ColorScheme.svelte";
-    import LoginButton from "$lib/components/LoginButton.svelte";
+    import ColorScheme from "$lib/components/actions/ColorScheme.svelte";
+    import LoginButton from "$lib/components/actions/LoginButton.svelte";
     import { navigating } from "$app/stores";
-    import LoadIndicator from "$lib/components/LoadIndicator.svelte";
+    import LoadIndicator from "$lib/components/actions/LoadIndicator.svelte";
 </script>
 
 {#if $navigating}

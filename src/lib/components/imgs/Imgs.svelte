@@ -1,5 +1,5 @@
 <script lang="ts">
-    import ImgCard from "./ImgCard.svelte";
+    import ImgCard from "$lib/components/imgs/ImgCard.svelte";
 
     export let imgs: GoogleFile[];
 </script>

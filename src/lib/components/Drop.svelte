@@ -1,7 +1,7 @@
 <script>
-    import { dropItems, previewItem } from "$lib/scripts/utils";
-    import DropItem from "./DropItem.svelte";
-    import DropTools from "./DropTools.svelte";
+    import { dropItems, previewItem } from "$lib/scripts/stores";
+    import DropItem from "$lib/components/drops/DropItem.svelte";
+    import DropTools from "$lib/components/drops/DropTools.svelte";
     import doubleLeftIcon from "$lib/assets/doubleLeft.svg?raw";
     import { fly } from "svelte/transition";
 

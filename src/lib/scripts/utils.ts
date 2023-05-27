@@ -4,19 +4,17 @@ import {
     PUBLIC_KRAB_API,
     PUBLIC_KRAB_NONCE_WEB,
 } from "$env/static/public";
-import { get, writable, type Writable } from "svelte/store";
+import { get } from "svelte/store";
 import { browser } from "$app/environment";
-import ChildWorker from "$lib/scripts/childWorker.ts?worker";
-
-export let isLoggedin = writable(false);
-export let activeParent = writable("");
-export let activeParentName = writable("");
-export let renameid = writable("");
-export let renameValue = writable("");
-
-export let previewItem: Writable<PreviewItem | undefined> = writable(undefined);
-export let dropItems: Writable<DropItem[]> = writable([]);
-export let touchCoords: Writable<TouchCoords> = writable({});
+import ChildWorker from "$lib/scripts/worker.ts?worker";
+import {
+    activeParentId,
+    activeParentName,
+    touchCoords,
+    isLoggedin,
+    previewItem,
+    dropItems,
+} from "$lib/scripts/stores";
 
 export let childWorker: Worker;
 if (browser) {
@@ -44,6 +42,7 @@ if (browser) {
                     return;
                 }
                 return;
+
             case "DROP_SAVE":
                 // dropResultHandler(data.id, 200);
                 dropItems.set(
@@ -53,6 +52,7 @@ if (browser) {
                     })
                 );
                 return;
+
             case "DROP_SAVE_FAILED":
                 // dropResultHandler(data.id, data.status);
                 dropItems.set(
@@ -66,6 +66,7 @@ if (browser) {
                     return;
                 }
                 return;
+
             case "IDB_RELOAD_REQUIRED":
                 return;
         }
@@ -414,7 +415,7 @@ export function previewAndSetDropItems(files: FileList) {
                         mimeType: img.type,
                         bytes,
                         imgRef,
-                        parent: get(activeParent),
+                        parent: get(activeParentId),
                         parentName: get(activeParentName),
                     },
                 ]);
