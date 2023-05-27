@@ -1,3 +1,5 @@
+import { get } from "svelte/store";
+import { dataCacheName } from "./stores";
 import { getToken } from "./utils";
 
 export const DIR_MIME_TYPE = "application/vnd.google-apps.folder";
@@ -71,7 +73,7 @@ export const createDir = async (
             );
         }
     }
-    refreshCache(parent, "dirs").then(() => window.location.reload());
+    fetchFiles(parent, "dirs", 1000, true).then(() => window.location.reload());
 };
 
 export const updateDir = async (
@@ -108,7 +110,7 @@ export const updateDir = async (
             );
         }
     }
-    refreshCache(parent, "dirs");
+    fetchFiles(parent, "dirs", 1000, true);
     return data;
 };
 
@@ -135,7 +137,7 @@ export const deleteDir = async (
             return deleteDir(id, parent, window.localStorage.getItem("token")!);
         }
     }
-    refreshCache(parent, "dirs").then(() => window.location.reload());
+    fetchFiles(parent, "dirs", 1000, true).then(() => window.location.reload());
 };
 
 export const createImgMetadata = (
@@ -187,7 +189,8 @@ export const uploadImg = async (
 export async function fetchFiles(
     parent: string,
     type: "dirs" | "imgs" | "covers",
-    pageSize: number = 1000
+    pageSize: number = 1000,
+    cache: Boolean = false
 ): Promise<GoogleFileRes | undefined> {
     try {
         // if (!pageSize) {
@@ -195,13 +198,14 @@ export async function fetchFiles(
         // }
         let mimeType = type == "dirs" ? DIR_MIME_TYPE : IMG_MIME_TYPE;
         const token = window.localStorage.getItem("token");
+        const req = new Request(constructAPI(parent, mimeType, pageSize), {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
         return new Promise(async (resolve, reject) => {
-            let res = await fetch(constructAPI(parent, mimeType, pageSize), {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+            let res = await fetch(req);
             if (res.status !== 200) {
                 if (res.status === 401) {
                     reject({ status: 401 });
@@ -210,6 +214,9 @@ export async function fetchFiles(
                 reject({ status: res.status });
                 return;
             }
+            if (cache)
+                (await caches.open(get(dataCacheName))).put(req, res.clone());
+
             resolve(res.json());
         });
     } catch (error) {
@@ -219,22 +226,6 @@ export async function fetchFiles(
 
 export function localFetch(url: string, krabsCache: Cache) {
     return krabsCache.match(url);
-}
-
-export async function refreshCache(
-    parent: string,
-    type: "dirs" | "imgs" | "covers",
-    pageSize: number = 1000
-): Promise<GoogleFileRes> {
-    return new Promise((resolve, reject) => {
-        fetchFiles(parent, (type = "dirs"), pageSize)
-            .then((data) => {
-                resolve(data!);
-            })
-            .catch((e) => {
-                reject(e);
-            });
-    });
 }
 
 export const loadMainContent = (
@@ -269,14 +260,14 @@ export const refreshMainContent = (
 }> => {
     return new Promise(async (resolve, reject) => {
         const promises = [
-            refreshCache(parent!, "dirs"),
-            refreshCache(parent!, "imgs"),
+            fetchFiles(parent!, "dirs", 1000, true),
+            fetchFiles(parent!, "imgs", 1000, true),
         ];
         Promise.all(promises)
             .then(async ([dirs, imgs]) => {
                 resolve({ dirs, imgs });
-                for (let dir of dirs.files) {
-                    await refreshCache(dir.id, "covers", 3);
+                for (let dir of dirs!.files) {
+                    await fetchFiles(dir.id, "covers", 3, true);
                 }
                 window.location.reload();
                 return;

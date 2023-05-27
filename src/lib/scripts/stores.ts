@@ -6,6 +6,7 @@ export let activeImgs = writable<GoogleFile[]>([]);
 export let activeDirs = writable<GoogleFile[]>([]);
 
 export let isLoggedin = writable(false);
+export let dataCacheName = writable("");
 export let renameid = writable("");
 export let renameValue = writable("");
 

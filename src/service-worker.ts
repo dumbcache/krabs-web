@@ -152,6 +152,7 @@ sw.addEventListener("fetch", (e) => {
                 }
             })();
         case "www.googleapis.com":
+            if (url.search === "?alt=media") return;
             return (async () => {
                 const cache = await caches.open(CACHE_DATA);
                 const cacheData = await cache.match(e.request);
@@ -160,7 +161,6 @@ sw.addEventListener("fetch", (e) => {
                     return cacheData;
                 } else {
                     const response = await fetch(e.request);
-                    console.log(response);
                     if (response.status === 200) {
                         cache.put(e.request, response.clone());
                     }
