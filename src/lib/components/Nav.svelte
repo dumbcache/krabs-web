@@ -1,48 +1,38 @@
 <script lang="ts">
-    import { page } from "$app/stores";
     import Tools from "$lib/components/actions/Tools.svelte";
-    import beforeNavigate from "$lib/assets/beforeNavigate.svg?raw";
-    import { previewItem } from "$lib/scripts/stores";
-
-    let id: string;
-    $: id = $page.params.id ?? "";
-    let backButton: HTMLButtonElement;
-    $: backButton &&
-        (backButton.style.visibility = id === "r" ? "hidden" : "initial");
+    import BackButton from "./actions/BackButton.svelte";
 </script>
 
 <nav class="navigation">
-    <button
-        class="back-button btn"
-        bind:this={backButton}
-        on:click={() => {
-            history.back();
-            $previewItem = undefined;
-        }}
-    >
-        {@html beforeNavigate} back
-    </button>
+    <div class="back">
+        <BackButton />
+    </div>
     <Tools />
 </nav>
 
 <style>
     .navigation {
-        position: sticky;
-        top: 0;
         display: flex;
+        flex-flow: column;
+        align-items: center;
         justify-content: space-between;
         background: inherit;
-        z-index: 1;
-        padding: 1rem 1rem 1rem 0rem;
+        gap: 1rem;
+        z-index: inherit;
     }
-    .back-button {
-        display: flex;
-        width: fit-content;
-        align-items: center;
-        font-size: 1.4rem;
+    .back {
+        display: none;
     }
-    .back-button :global(svg) {
-        width: var(--secondary-icon-size);
-        height: var(--secondary-icon-size);
+
+    @media (max-width: 600px) {
+        .navigation {
+            position: sticky;
+            top: 0;
+            flex-flow: row nowrap;
+            padding: 1rem 0.5rem;
+        }
+        .back {
+            display: initial;
+        }
     }
 </style>

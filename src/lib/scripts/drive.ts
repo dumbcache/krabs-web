@@ -246,7 +246,7 @@ export const loadMainContent = (
             .catch(async (e) => {
                 if (e.status === 401) {
                     await getToken();
-                    return loadMainContent(parent);
+                    resolve(loadMainContent(parent));
                 }
                 console.warn(e);
             });

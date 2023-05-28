@@ -60,6 +60,7 @@
 <style>
     .tools {
         display: flex;
+        flex-flow: column nowrap;
         gap: 1rem;
     }
     #img-picker {
@@ -79,5 +80,10 @@
     .anime {
         -webkit-animation: spin 1.5s linear 0s infinite;
         animation: spin 1s linear 0s infinite;
+    }
+    @media (max-width: 600px) {
+        .tools {
+            flex-flow: row nowrap;
+        }
     }
 </style>

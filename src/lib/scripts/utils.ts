@@ -206,10 +206,10 @@ export async function signUserOut(e?: Event) {
         },
     });
     if (res.status !== 200) {
-        if (res.status !== 401) {
-            console.warn(res.status, await res.text());
-            return;
-        }
+        // if (res.status !== 401) {
+        //     console.warn(res.status, await res.text());
+        //     return;
+        // }
         console.warn(res.status, await res.text());
     }
     await clearFiles();
