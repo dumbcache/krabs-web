@@ -157,14 +157,14 @@ sw.addEventListener("fetch", (e) => {
                 const cache = await caches.open(CACHE_DATA);
                 const cacheData = await cache.match(e.request);
                 if (cacheData) {
-                    // console.log("cache");
+                    console.log("cache");
                     return cacheData;
                 } else {
                     const response = await fetch(e.request);
                     if (response.status === 200) {
                         cache.put(e.request, response.clone());
                     }
-                    // console.log("network");
+                    console.log("network");
                     return response;
                 }
             })();
