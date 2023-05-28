@@ -1,7 +1,7 @@
 <script lang="ts">
     import Nav from "$lib/components/Nav.svelte";
     import Header from "$lib/components/Header.svelte";
-    import { navigating, page } from "$app/stores";
+    import { navigating } from "$app/stores";
     import LoadIndicator from "$lib/components/actions/LoadIndicator.svelte";
     import Preview from "$lib/components/Preview.svelte";
     import Drop from "$lib/components/Drop.svelte";
@@ -9,11 +9,6 @@
     import { previewItem } from "$lib/scripts/stores";
     import BackButton from "$lib/components/actions/BackButton.svelte";
 
-    let id: string;
-    $: id = $page.params.id ?? "";
-    let backButton: HTMLDivElement;
-    $: backButton &&
-        (backButton.style.display = id === "r" ? "none" : "initial");
     let draggedOver = false;
     export function imgDropHandler(e: DragEvent) {
         e.preventDefault();
@@ -47,7 +42,7 @@
                 <div class="nav">
                     <Nav />
                 </div>
-                <div class="back" bind:this={backButton}>
+                <div class="back">
                     <BackButton />
                 </div>
                 <slot />
