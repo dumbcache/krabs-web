@@ -5,9 +5,11 @@
     import LoadIndicator from "$lib/components/actions/LoadIndicator.svelte";
     import Preview from "$lib/components/Preview.svelte";
     import Drop from "$lib/components/Drop.svelte";
-    import { previewAndSetDropItems } from "$lib/scripts/utils";
-    import { previewItem } from "$lib/scripts/stores";
+    import { previewAndSetDropItems, updateRecents } from "$lib/scripts/utils";
+    import { previewItem, online } from "$lib/scripts/stores";
     import BackButton from "$lib/components/actions/BackButton.svelte";
+    import Offline from "$lib/components/actions/Offline.svelte";
+    import { onMount } from "svelte";
 
     let draggedOver = false;
     export function imgDropHandler(e: DragEvent) {
@@ -19,37 +21,52 @@
             previewAndSetDropItems(e.dataTransfer.files);
         }
     }
+    onMount(updateRecents);
 </script>
 
 <svelte:head>
     <title>Karbs:root</title>
 </svelte:head>
+<svelte:window
+    on:offline={() => {
+        $online = false;
+        console.log("offline");
+    }}
+    on:online={() => {
+        console.log("online");
+        $online = true;
+    }}
+/>
 
 <div class="layout">
-    <Header />
-    {#if $navigating}
-        <LoadIndicator />
+    {#if $online}
+        <Header />
+        {#if $navigating}
+            <LoadIndicator />
+        {:else}
+            <main
+                class="main {draggedOver === true ? 'dragover' : ''}"
+                on:dragstart|preventDefault
+                on:dragover|preventDefault
+                on:dragenter={() => (draggedOver = true)}
+                on:dragleave={() => (draggedOver = false)}
+                on:drop={imgDropHandler}
+            >
+                <div class="content">
+                    <div class="nav">
+                        <Nav />
+                    </div>
+                    <div class="back">
+                        <BackButton />
+                    </div>
+                    <slot />
+                </div>
+                <Preview />
+                <Drop />
+            </main>
+        {/if}
     {:else}
-        <main
-            class="main {draggedOver === true ? 'dragover' : ''}"
-            on:dragstart|preventDefault
-            on:dragover|preventDefault
-            on:dragenter={() => (draggedOver = true)}
-            on:dragleave={() => (draggedOver = false)}
-            on:drop={imgDropHandler}
-        >
-            <div class="content">
-                <div class="nav">
-                    <Nav />
-                </div>
-                <div class="back">
-                    <BackButton />
-                </div>
-                <slot />
-            </div>
-            <Preview />
-            <Drop />
-        </main>
+        <Offline />
     {/if}
 </div>
 

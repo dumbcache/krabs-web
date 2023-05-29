@@ -5,7 +5,7 @@
     import DirCreate from "$lib/components/actions/DirCreate.svelte";
     import { onMount } from "svelte";
     import { FILE_API } from "$lib/scripts/drive";
-    import { getToken } from "$lib/scripts/utils";
+    import { getToken, updateRecents } from "$lib/scripts/utils";
     import { activeParentId, activeParentName } from "$lib/scripts/stores";
 
     export let data: PageData;

@@ -2,12 +2,14 @@
     import { goto } from "$app/navigation";
     import { previewItem, renameValue, renameid } from "$lib/scripts/stores";
     import DirCover from "$lib/components/dirs/DirCover.svelte";
+    import { updateRecents } from "$lib/scripts/utils";
 
     export let dir: GoogleFile;
 
     function dirNavigate(e) {
         $previewItem = undefined;
         goto(`/${dir.id}`);
+        updateRecents({ name: dir.name, id: dir.id });
     }
 </script>
 

@@ -6,6 +6,8 @@
     import { activeParentId, previewItem } from "$lib/scripts/stores";
     import DirCreate from "$lib/components/actions/DirCreate.svelte";
     import { refreshMainContent } from "$lib/scripts/drive";
+    import EditIcon from "./EditIcon.svelte";
+    import History from "./History.svelte";
 
     let dirCreateToggle = false;
     let refreshClicked = false;
@@ -21,16 +23,8 @@
 </script>
 
 <div class="tools">
-    <button
-        class="refresh-button btn {refreshClicked ? 'anime' : ''}"
-        title="refresh cache"
-        on:click={() => {
-            refreshClicked = true;
-            refreshMainContent($activeParentId);
-        }}
-    >
-        {@html refresh}
-    </button>
+    <History />
+    <EditIcon />
     <label for="img-picker" class="button__create-img btn" title="add image">
         {@html imgCreate}
     </label>
@@ -49,6 +43,17 @@
     >
         {@html folderCreate}
     </button>
+    <button
+        class="refresh-button btn {refreshClicked ? 'anime' : ''}"
+        title="refresh cache"
+        on:click={() => {
+            refreshClicked = true;
+            refreshMainContent($activeParentId);
+        }}
+    >
+        {@html refresh}
+    </button>
+
     {#if dirCreateToggle}
         <DirCreate
             type="create"

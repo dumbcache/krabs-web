@@ -14,6 +14,7 @@ import {
     isLoggedin,
     previewItem,
     dropItems,
+    recents,
 } from "$lib/scripts/stores";
 
 export let childWorker: Worker;
@@ -72,6 +73,25 @@ if (browser) {
         }
     };
 }
+
+export const updateRecents = (data?: { name: string; id: string }) => {
+    let old =
+        (JSON.parse(window.localStorage.getItem("recents")!) as {
+            name: string;
+            id: string;
+        }[]) ?? [];
+    console.log(data);
+    if (old.length === 0 && !data) return;
+    if (data) {
+        if (old?.length === 10) {
+            old.pop();
+        }
+        old = old.filter((item) => item.id !== data.id);
+        old.unshift(data);
+    }
+    recents.set(old);
+    window.localStorage.setItem("recents", JSON.stringify(old));
+};
 
 export const toggleColorMode = () => {
     const root = document.documentElement;
