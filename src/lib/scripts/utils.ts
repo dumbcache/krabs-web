@@ -80,7 +80,6 @@ export const updateRecents = (data?: { name: string; id: string }) => {
             name: string;
             id: string;
         }[]) ?? [];
-    console.log(data);
     if (old.length === 0 && !data) return;
     if (data) {
         if (old?.length === 10) {

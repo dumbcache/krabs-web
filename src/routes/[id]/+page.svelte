@@ -43,7 +43,7 @@
 </script>
 
 {#if data.dirs?.files.length !== 0 || data.imgs?.files.length !== 0}
-    {#if data.dirs?.files}
+    {#if data.dirs?.files.length !== 0}
         <Dirs
             dirs={data.dirs?.files}
             on:editDir={(e) => {
@@ -59,7 +59,7 @@
             }}
         />
     {/if}
-    {#if data.imgs?.files}
+    {#if data.imgs?.files.length !== 0}
         <Imgs imgs={data.imgs.files} />
     {/if}
 {:else}
