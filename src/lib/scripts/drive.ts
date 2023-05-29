@@ -245,8 +245,8 @@ export const loadMainContent = (
             })
             .catch(async (e) => {
                 if (e.status === 401) {
-                    await getToken();
-                    resolve(loadMainContent(parent));
+                    const success = await getToken();
+                    if (success) resolve(loadMainContent(parent));
                 }
                 console.warn(e);
             });
@@ -274,7 +274,8 @@ export const refreshMainContent = (
             })
             .catch(async (e) => {
                 if (e.status === 401) {
-                    await getToken();
+                    const success = await getToken();
+                    if (success) resolve(refreshMainContent(parent));
                     window.location.reload();
                     return;
                 }
