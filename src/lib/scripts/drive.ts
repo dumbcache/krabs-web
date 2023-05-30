@@ -216,7 +216,6 @@ export async function fetchFiles(
             }
             if (cache)
                 (await caches.open(get(dataCacheName))).put(req, res.clone());
-
             resolve(res.json());
         });
     } catch (error) {

@@ -45,30 +45,38 @@ sw.addEventListener("fetch", (e) => {
     const url = new URL(e.request.url);
     switch (url.host) {
         case self.location.host:
-            return (async () => {
-                const cache = await caches.open(CACHE_APP);
-                if (ASSETS.includes(url.pathname)) {
-                    return cache.match(url.pathname);
-                } else {
-                    return fetch(e.request);
-                }
-            })();
+            e.respondWith(
+                (async () => {
+                    const cache = await caches.open(CACHE_APP);
+                    if (ASSETS.includes(url.pathname)) {
+                        return cache.match(url.pathname) as Promise<Response>;
+                    } else {
+                        return fetch(e.request) as Promise<Response>;
+                    }
+                })()
+            );
+            break;
+
         case "www.googleapis.com":
             if (url.search === "?alt=media") return;
-            return (async () => {
-                const cache = await caches.open(CACHE_DATA);
-                const cacheData = await cache.match(e.request);
-                if (cacheData) {
-                    return cacheData;
-                } else {
-                    const response = await fetch(e.request);
-                    if (response.status === 200) {
-                        cache.put(e.request, response.clone());
+            e.respondWith(
+                (async () => {
+                    const cache = await caches.open(CACHE_DATA);
+                    const cacheData = await cache.match(e.request);
+                    if (cacheData) {
+                        return cacheData;
+                    } else {
+                        const response = await fetch(e.request);
+                        if (response.status === 200) {
+                            cache.put(e.request, response.clone());
+                        }
+                        return response;
                     }
-                    return response;
-                }
-            })();
+                })()
+            );
+            break;
         default:
-            return fetch(e.request);
+            // e.respondWith(fetch(e.request));
+            return;
     }
 });
