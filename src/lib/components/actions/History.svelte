@@ -35,7 +35,6 @@
     }
     .history {
         position: relative;
-        background-color: inherit;
     }
     .wrapper {
         display: none;
