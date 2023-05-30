@@ -29,17 +29,12 @@
 </div>
 
 <style>
-    /* .btn {
-        display: flex;
-        align-items: center;
-    } */
     .history {
         position: relative;
     }
     .wrapper {
         display: none;
         position: absolute;
-        margin-left: 2rem;
         padding-left: 1rem;
         top: 0;
     }

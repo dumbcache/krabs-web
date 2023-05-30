@@ -227,8 +227,6 @@ export function localFetch(url: string, krabsCache: Cache) {
 }
 
 export async function refreshCache() {
-    console.log("refresh");
-    console.log(get(dataCacheName));
     for (const key of await caches.keys()) {
         if (key === get(dataCacheName)) await caches.delete(key);
     }
