@@ -15,6 +15,7 @@ import {
     previewItem,
     dropItems,
     recents,
+    dataCacheName,
 } from "$lib/scripts/stores";
 
 export let childWorker: Worker;
@@ -72,6 +73,12 @@ if (browser) {
                 return;
         }
     };
+}
+
+export async function setCacheName() {
+    for (let key of await caches.keys()) {
+        if (key.startsWith("krabs_data")) dataCacheName.set(key);
+    }
 }
 
 export const updateRecents = (data?: { name: string; id: string }) => {

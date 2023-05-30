@@ -66,6 +66,7 @@ sw.addEventListener("fetch", (e) => {
                     if (cacheData) {
                         return cacheData;
                     } else {
+                        console.log("network");
                         const response = await fetch(e.request);
                         if (response.status === 200) {
                             cache.put(e.request, response.clone());

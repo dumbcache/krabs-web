@@ -5,7 +5,11 @@
     import LoadIndicator from "$lib/components/actions/LoadIndicator.svelte";
     import Preview from "$lib/components/Preview.svelte";
     import Drop from "$lib/components/Drop.svelte";
-    import { previewAndSetDropItems, updateRecents } from "$lib/scripts/utils";
+    import {
+        previewAndSetDropItems,
+        updateRecents,
+        setCacheName,
+    } from "$lib/scripts/utils";
     import { previewItem, online } from "$lib/scripts/stores";
     import BackButton from "$lib/components/actions/BackButton.svelte";
     import Offline from "$lib/components/actions/Offline.svelte";
@@ -21,7 +25,10 @@
             previewAndSetDropItems(e.dataTransfer.files);
         }
     }
-    onMount(updateRecents);
+    onMount(() => {
+        setCacheName();
+        updateRecents();
+    });
 </script>
 
 <svelte:head>

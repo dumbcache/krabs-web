@@ -5,7 +5,7 @@
     import { previewAndSetDropItems } from "$lib/scripts/utils";
     import { activeParentId, previewItem } from "$lib/scripts/stores";
     import DirCreate from "$lib/components/actions/DirCreate.svelte";
-    import { refreshMainContent } from "$lib/scripts/drive";
+    import { refreshCache, refreshMainContent } from "$lib/scripts/drive";
     import EditIcon from "./EditIcon.svelte";
     import History from "./History.svelte";
 
@@ -48,7 +48,7 @@
         title="refresh cache"
         on:click={() => {
             refreshClicked = true;
-            refreshMainContent($activeParentId);
+            refreshCache();
         }}
     >
         {@html refresh}

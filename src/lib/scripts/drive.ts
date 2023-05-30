@@ -204,6 +204,7 @@ export async function fetchFiles(
                 Authorization: `Bearer ${token}`,
             },
         });
+        if (cache) await (await caches.open(get(dataCacheName))).delete(req);
         return new Promise(async (resolve, reject) => {
             let res = await fetch(req);
             if (res.status !== 200) {
@@ -214,8 +215,6 @@ export async function fetchFiles(
                 reject({ status: res.status });
                 return;
             }
-            if (cache)
-                (await caches.open(get(dataCacheName))).put(req, res.clone());
             resolve(res.json());
         });
     } catch (error) {
@@ -225,6 +224,15 @@ export async function fetchFiles(
 
 export function localFetch(url: string, krabsCache: Cache) {
     return krabsCache.match(url);
+}
+
+export async function refreshCache() {
+    console.log("refresh");
+    console.log(get(dataCacheName));
+    for (const key of await caches.keys()) {
+        if (key === get(dataCacheName)) await caches.delete(key);
+    }
+    window.location.reload();
 }
 
 export const loadMainContent = (
@@ -259,14 +267,14 @@ export const refreshMainContent = (
 }> => {
     return new Promise(async (resolve, reject) => {
         const promises = [
-            fetchFiles(parent!, "dirs", 1000, true),
-            fetchFiles(parent!, "imgs", 1000, true),
+            fetchFiles(parent!, "dirs"),
+            fetchFiles(parent!, "imgs"),
         ];
         Promise.all(promises)
             .then(async ([dirs, imgs]) => {
                 resolve({ dirs, imgs });
                 for (let dir of dirs!.files) {
-                    await fetchFiles(dir.id, "covers", 3, true);
+                    await fetchFiles(dir.id, "covers", 3);
                 }
                 window.location.reload();
                 return;

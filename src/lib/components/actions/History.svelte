@@ -29,10 +29,10 @@
 </div>
 
 <style>
-    .btn {
+    /* .btn {
         display: flex;
         align-items: center;
-    }
+    } */
     .history {
         position: relative;
     }
