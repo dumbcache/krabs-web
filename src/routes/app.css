@@ -71,6 +71,7 @@
     font-family: var(--font-default);
     font-size: var(--size-system);
     line-height: var(--line-height-default);
+    min-height: 100%;
 
     color-scheme: light dark;
     background-color: var(--primary-bg-color);
