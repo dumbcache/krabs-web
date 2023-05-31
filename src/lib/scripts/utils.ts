@@ -438,7 +438,7 @@ export function previewAndSetDropItems(files: FileList) {
                         ...get(dropItems),
                         {
                             id,
-                            name: img.name,
+                            name: id.toString() + ".gif",
                             mimeType: img.type,
                             bytes,
                             imgRef,
@@ -466,7 +466,7 @@ export function previewAndSetDropItems(files: FileList) {
                             ...get(dropItems),
                             {
                                 id,
-                                name: img.name,
+                                name: id.toString() + ".webp",
                                 mimeType: blob?.type!,
                                 bytes,
                                 imgRef,
