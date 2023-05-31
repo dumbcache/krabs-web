@@ -245,9 +245,9 @@ export async function signUserOut(e?: Event) {
 }
 export async function clearFiles() {
     window.localStorage.clear();
-    const krabsCache = await caches.open("krabs");
-    const keys = await krabsCache.keys();
-    keys.forEach((key) => krabsCache.delete(key));
+    (await caches.keys()).forEach(
+        (key) => key.startsWith("krabs_data") && caches.delete(key)
+    );
 }
 
 export function handleTouchStart(e: TouchEvent) {
@@ -429,24 +429,77 @@ export function previewAndSetDropItems(files: FileList) {
             // dropZone.hidden = false;
             const id = Date.now();
             const imgRef = URL.createObjectURL(img);
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const result = e.target?.result! as ArrayBuffer;
-                const bytes = new Uint8Array(result);
-                dropItems.set([
-                    ...get(dropItems),
-                    {
-                        id,
-                        name: img.name,
-                        mimeType: img.type,
-                        bytes,
-                        imgRef,
-                        parent: get(activeParentId),
-                        parentName: get(activeParentName),
-                    },
-                ]);
-            };
-            reader.readAsArrayBuffer(img);
+            if (img.type === "image/gif") {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const result = e.target?.result! as ArrayBuffer;
+                    const bytes = new Uint8Array(result);
+                    dropItems.set([
+                        ...get(dropItems),
+                        {
+                            id,
+                            name: img.name,
+                            mimeType: img.type,
+                            bytes,
+                            imgRef,
+                            parent: get(activeParentId),
+                            parentName: get(activeParentName),
+                        },
+                    ]);
+                };
+                reader.readAsArrayBuffer(img);
+            } else {
+                const image = new Image();
+                const c = document.createElement("canvas");
+                const ctx = c.getContext("2d");
+
+                image.onload = function () {
+                    c.width = this.naturalWidth; // update canvas size to match image
+                    c.height = this.naturalHeight;
+                    ctx.drawImage(this, 0, 0);
+                    c.toBlob(async function (blob) {
+                        const result =
+                            (await blob?.arrayBuffer()) as ArrayBuffer;
+                        const bytes = new Uint8Array(result);
+                        const imgRef = URL.createObjectURL(blob);
+                        dropItems.set([
+                            ...get(dropItems),
+                            {
+                                id,
+                                name: img.name,
+                                mimeType: blob?.type!,
+                                bytes,
+                                imgRef,
+                                parent: get(activeParentId),
+                                parentName: get(activeParentName),
+                            },
+                        ]);
+                    }, "image/webp");
+                };
+                image.onerror = function () {
+                    alert("Error in loading");
+                };
+                image.crossOrigin = ""; // if from different origin
+                image.src = imgRef;
+            }
+            // const reader = new FileReader();
+            // reader.onload = (e) => {
+            //     const result = e.target?.result! as ArrayBuffer;
+            //     const bytes = new Uint8Array(result);
+            //     dropItems.set([
+            //         ...get(dropItems),
+            //         {
+            //             id,
+            //             name: img.name,
+            //             mimeType: img.type,
+            //             bytes,
+            //             imgRef,
+            //             parent: get(activeParentId),
+            //             parentName: get(activeParentName),
+            //         },
+            //     ]);
+            // };
+            // reader.readAsArrayBuffer(img);
         }
     }
 }

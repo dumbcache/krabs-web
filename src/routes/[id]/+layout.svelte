@@ -19,7 +19,6 @@
     export function imgDropHandler(e: DragEvent) {
         e.preventDefault();
         draggedOver = false;
-        console.log(e);
         previewItem.set(undefined);
         if (e.dataTransfer?.files) {
             previewAndSetDropItems(e.dataTransfer.files);
@@ -85,6 +84,7 @@
     .main {
         background-color: inherit;
         display: flex;
+        width: 100%;
     }
     .back {
         position: sticky;
@@ -96,7 +96,7 @@
         width: 100%;
     }
     .dragover {
-        background-color: #00f5;
+        background-color: #55f5;
     }
     .nav {
         background-color: inherit;
