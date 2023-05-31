@@ -85,6 +85,7 @@
         background-color: inherit;
         display: flex;
         width: 100%;
+        min-height: 100vh;
     }
     .back {
         position: sticky;
@@ -116,6 +117,9 @@
         }
     }
     @media (max-width: 600px) {
+        .main {
+            min-height: initial;
+        }
         .nav {
             display: initial;
         }
