@@ -1,13 +1,14 @@
 <script lang="ts">
     import imgCreate from "$lib/assets/imgCreate.svg?raw";
+    import goToDrive from "$lib/assets/drive.svg?raw";
     import folderCreate from "$lib/assets/folderCreate.svg?raw";
     import refresh from "$lib/assets/refresh.svg?raw";
     import { previewAndSetDropItems } from "$lib/scripts/utils";
-    import { activeParentId, previewItem } from "$lib/scripts/stores";
+    import { previewItem } from "$lib/scripts/stores";
     import DirCreate from "$lib/components/actions/DirCreate.svelte";
-    import { refreshCache, refreshMainContent } from "$lib/scripts/drive";
-    import EditIcon from "./EditIcon.svelte";
-    import History from "./History.svelte";
+    import { refreshCache } from "$lib/scripts/drive";
+    import EditIcon from "$lib/components/actions/EditIcon.svelte";
+    import History from "$lib/components/actions/History.svelte";
 
     let dirCreateToggle = false;
     let refreshClicked = false;
@@ -53,6 +54,17 @@
     >
         {@html refresh}
     </button>
+    <a
+        href={`https://drive.google.com/drive/folders/${window.localStorage.getItem(
+            "root"
+        )}`}
+        referrerpolicy="no-referrer"
+        rel="external noopener noreferrer nofollow"
+        class="drive-button btn"
+        title="refresh cache"
+    >
+        {@html goToDrive}
+    </a>
 
     {#if dirCreateToggle}
         <DirCreate
