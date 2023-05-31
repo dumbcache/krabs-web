@@ -4,7 +4,7 @@
     import folderCreate from "$lib/assets/folderCreate.svg?raw";
     import refresh from "$lib/assets/refresh.svg?raw";
     import { previewAndSetDropItems } from "$lib/scripts/utils";
-    import { previewItem } from "$lib/scripts/stores";
+    import { activeParentId, previewItem } from "$lib/scripts/stores";
     import DirCreate from "$lib/components/actions/DirCreate.svelte";
     import { refreshCache } from "$lib/scripts/drive";
     import EditIcon from "$lib/components/actions/EditIcon.svelte";
@@ -55,13 +55,11 @@
         {@html refresh}
     </button>
     <a
-        href={`https://drive.google.com/drive/folders/${window.localStorage.getItem(
-            "root"
-        )}`}
+        href={`https://drive.google.com/drive/folders/${$activeParentId}`}
         referrerpolicy="no-referrer"
         rel="external noopener noreferrer nofollow"
         class="drive-button btn"
-        title="refresh cache"
+        title="open in Gdrive"
     >
         {@html goToDrive}
     </a>

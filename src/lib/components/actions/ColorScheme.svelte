@@ -58,6 +58,7 @@
     aria-label="Dark mode"
     role="switch"
     aria-checked="false"
+    title="toggle dark mode"
     on:click={toggleColorMode}
 >
     <span class="light-icon icon">

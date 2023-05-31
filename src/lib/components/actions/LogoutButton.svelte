@@ -3,7 +3,7 @@
     import { signUserOut } from "$lib/scripts/utils";
 </script>
 
-<button class="button__signout btn" on:click={signUserOut}>
+<button class="button__signout btn" on:click={signUserOut} title="logout">
     {@html logoutIcon}
 </button>
 
