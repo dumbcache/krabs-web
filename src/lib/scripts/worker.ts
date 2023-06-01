@@ -175,23 +175,6 @@ onmessage = ({ data }) => {
             return;
         case "DROP_SAVE":
             dropSave(data.dropItems, data.token);
-            // setTimeout(() => {
-            //     for (let id in data.dropItems) {
-            //         if (Number(id) % 2 === 0) {
-            //             console.log("divisible");
-            //             postMessage({
-            //                 context: "DROP_SAVE",
-            //                 id,
-            //             });
-            //         } else {
-            //             postMessage({
-            //                 context: "DROP_SAVE_FAILED",
-            //                 id,
-            //                 status: 500,
-            //             });
-            //         }
-            //     }
-            // }, 2000);
             return;
     }
 };

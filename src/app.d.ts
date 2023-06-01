@@ -60,7 +60,7 @@ declare global {
     }
     interface DropItem {
         name: string;
-        id: number;
+        id: string;
         mimeType: string;
         url?: string;
         bytes: Uint8Array;

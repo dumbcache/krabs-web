@@ -1,7 +1,9 @@
 <script lang="ts">
+    import closeIcon from "$lib/assets/close.svg?raw";
     import loadingIcon from "$lib/assets/progress.svg?raw";
     import successIcon from "$lib/assets/success.svg?raw";
     import failureIcon from "$lib/assets/failure.svg?raw";
+    import { removeDropEntry } from "$lib/scripts/utils";
     export let item: DropItem;
     let progressIcon: string;
     $: item.progress === "uploading"
@@ -13,6 +15,9 @@
 
 <div class="drop-item" data-id={item.id}>
     <img src={item.imgRef} class="drop-img" alt="" />
+    <button class="remove btn" on:click={() => removeDropEntry(item.id)}>
+        {@html closeIcon}
+    </button>
     {#if item.progress !== "uploading" && item.progress !== "success"}
         <input
             type="text"
@@ -65,7 +70,18 @@
         object-position: top;
         border-radius: 1rem;
     }
-
+    .drop-item:hover .drop-img {
+        filter: brightness(0.5);
+    }
+    .remove {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        filter: none;
+    }
+    .remove :global(svg) {
+        fill: var(--color-white);
+    }
     .progress {
         border-radius: 1rem;
         display: grid;

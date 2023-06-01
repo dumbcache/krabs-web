@@ -369,6 +369,10 @@ export function previewShortcutHandler(
     }
 }
 
+export function removeDropEntry(id: string) {
+    dropItems.set(get(dropItems).filter((item) => item.id !== id));
+}
+
 export function clearDropItems() {
     const a = get(dropItems).filter((item) => item.progress !== "success");
     dropItems.set(a);
@@ -427,7 +431,7 @@ export function previewAndSetDropItems(files: FileList) {
         if (img.type.match("image/")) {
             // previewLoadDropItem(img, dropArea);
             // dropZone.hidden = false;
-            const id = Date.now();
+            const id = Date.now().toString();
             const imgRef = URL.createObjectURL(img);
             if (img.type === "image/gif") {
                 const reader = new FileReader();
@@ -438,7 +442,7 @@ export function previewAndSetDropItems(files: FileList) {
                         ...get(dropItems),
                         {
                             id,
-                            name: id.toString(),
+                            name: id,
                             mimeType: img.type,
                             bytes,
                             imgRef,
@@ -466,7 +470,7 @@ export function previewAndSetDropItems(files: FileList) {
                             ...get(dropItems),
                             {
                                 id,
-                                name: id.toString(),
+                                name: id,
                                 mimeType: blob?.type!,
                                 bytes,
                                 imgRef,
