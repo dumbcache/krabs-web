@@ -108,6 +108,14 @@ let idbRequest: IDBOpenDBRequest;
     };
 })();
 
+function clearImageCache() {
+    const db = idbRequest.result;
+    const objectStore = db
+        .transaction("images", "readwrite")
+        .objectStore("images");
+    objectStore.clear();
+}
+
 function checkForImgLocal(id: string, token: string) {
     const db = idbRequest.result;
     const objectStore = db.transaction("images").objectStore("images");
@@ -172,6 +180,9 @@ onmessage = ({ data }) => {
     switch (data.context) {
         case "IMG_PREVIEW":
             checkForImgLocal(data.id, data.token);
+            return;
+        case "CLEAR_IMAGE_CACHE":
+            clearImageCache();
             return;
         case "DROP_SAVE":
             dropSave(data.dropItems, data.token);

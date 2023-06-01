@@ -1,9 +1,14 @@
 <script lang="ts">
     import logoutIcon from "$lib/assets/logout.svg?raw";
-    import { signUserOut } from "$lib/scripts/utils";
+    import { childWorker, signUserOut } from "$lib/scripts/utils";
+
+    function signoutHandler() {
+        childWorker.postMessage({ context: "CLEAR_IMAGE_CACHE" });
+        signUserOut();
+    }
 </script>
 
-<button class="button__signout btn" on:click={signUserOut} title="logout">
+<button class="button__signout btn" on:click={signoutHandler} title="logout">
     {@html logoutIcon}
 </button>
 
