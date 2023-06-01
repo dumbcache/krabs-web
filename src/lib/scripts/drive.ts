@@ -18,7 +18,9 @@ function constructAPI(
 ) {
     let api = `${FILE_API}?q='${parent}' in parents and mimeType contains '${mimeType}'&fields=${FIELDS_REQUIRED}&pageSize=${pageSize}`;
     pageToken && (api = api + `&pageToken=` + pageToken);
-    mimeType === DIR_MIME_TYPE && (api = api + "&orderBy=name");
+    api =
+        `${api}&orderBy=` +
+        (mimeType === DIR_MIME_TYPE ? "name" : "createdTime desc");
     return api;
 }
 export async function downloadImage(id: string, token: string): Promise<Blob> {
