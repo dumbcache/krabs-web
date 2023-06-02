@@ -1,7 +1,7 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
     import doneIcon from "$lib/assets/done.svg?raw";
-    import { activeParentId, renameValue, renameid } from "$lib/scripts/stores";
+    import { activeParentId } from "$lib/scripts/stores";
     import { createDir, updateDir, deleteDir } from "$lib/scripts/drive";
 
     const confirmText = "type 'confirm'";
@@ -33,9 +33,7 @@
             dispatchClose("dirCreateClose");
         }
         if (type === "update") {
-            const data = await updateDir(dirName, id, $activeParentId, token);
-            $renameValue = data.name;
-            $renameid = data.id;
+            await updateDir(dirName, id, $activeParentId, token);
             dispatchClose("dirUpdateClose");
         }
         if (type === "delete") {

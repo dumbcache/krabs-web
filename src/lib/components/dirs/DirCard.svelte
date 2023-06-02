@@ -1,6 +1,6 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
-    import { previewItem, renameValue, renameid } from "$lib/scripts/stores";
+    import { previewItem } from "$lib/scripts/stores";
     import DirCover from "$lib/components/dirs/DirCover.svelte";
     import { updateRecents } from "$lib/scripts/utils";
 
@@ -17,7 +17,7 @@
     <button on:click={dirNavigate}>
         <DirCover id={dir.id} name={dir.name} on:editDir on:deleteDir />
     </button>
-    <h2 class="dir-title">{$renameid === dir.id ? $renameValue : dir.name}</h2>
+    <h2 class="dir-title">{dir.name}</h2>
 </div>
 
 <style>

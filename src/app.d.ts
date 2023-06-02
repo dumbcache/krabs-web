@@ -17,9 +17,9 @@ declare global {
     interface GoogleFile {
         id: string;
         name: string;
-        parents: string[];
+        parents?: string[];
         thumbnailLink?: string;
-        appProperties: {
+        appProperties?: {
             origin: string;
             src: string;
         };

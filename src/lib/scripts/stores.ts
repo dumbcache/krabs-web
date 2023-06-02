@@ -11,8 +11,6 @@ export let editItems = writable<string[]>([]);
 export let selectedCount = writable(0);
 export let isLoggedin = writable(false);
 export let dataCacheName = writable("");
-export let renameid = writable("");
-export let renameValue = writable("");
 export let refreshClicked = writable(false);
 
 export let previewItem: Writable<PreviewItem | undefined> = writable(undefined);

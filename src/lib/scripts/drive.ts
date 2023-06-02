@@ -72,16 +72,13 @@ export const createDir = async (
             data
         );
         if (status === 401) {
-            await getToken();
-
-            return createDir(
-                name,
-                parent,
-                window.localStorage.getItem("token")!
-            );
+            (await getToken()) && window.location.reload();
         }
     }
-    fetchFiles(parent, "dirs", 1000, true).then(() => window.location.reload());
+    let old = get(activeDirs) ?? [];
+    old = [...old, { name: data.name, id: data.id }];
+    activeDirs.set(old.sort((a, b) => a.name.localeCompare(b.name)));
+    fetchFiles(parent, "dirs", 1000, true);
 };
 
 export const updateDir = async (
@@ -112,8 +109,10 @@ export const updateDir = async (
             (await getToken()) && window.location.reload();
         }
     }
+    let old = get(activeDirs)?.filter((img) => img.id !== id) ?? [];
+    old = [...old, { name: data.name, id: data.id }];
+    activeDirs.set(old.sort((a, b) => a.name.localeCompare(b.name)));
     fetchFiles(parent, "dirs", 1000, true);
-    return data;
 };
 
 export const deleteDir = async (
@@ -138,7 +137,9 @@ export const deleteDir = async (
             (await getToken()) && window.location.reload();
         }
     }
-    fetchFiles(parent, "dirs", 1000, true).then(() => window.location.reload());
+    let old = get(activeDirs)?.filter((img) => img.id !== id) ?? [];
+    old.length === 0 ? activeDirs.set(undefined) : activeDirs.set(old);
+    fetchFiles(parent, "dirs", 1000, true);
 };
 
 export const createImgMetadata = (
@@ -257,12 +258,15 @@ export async function fetchDirs(
     parent: string,
     cache: Boolean = false
 ): Promise<void> {
+    activeDirs.set(undefined);
     return new Promise((resolve, reject) => {
         fetchFiles(parent!, "dirs", 1000, cache)
             .then(async (dirs) => {
                 activeDirs.set(dirs?.files);
-                for (let dir of dirs!.files) {
-                    fetchFiles(dir.id, "covers", 3, cache);
+                if (cache) {
+                    for (let dir of dirs!.files) {
+                        fetchFiles(dir.id, "covers", 3, cache);
+                    }
                 }
                 resolve();
                 return;
@@ -274,6 +278,7 @@ export async function fetchImgs(
     parent: string,
     cache: Boolean = false
 ): Promise<void> {
+    activeImgs.set(undefined);
     return new Promise((resolve, reject) => {
         fetchFiles(parent!, "imgs", 1000, cache)
             .then(async (imgs) => {

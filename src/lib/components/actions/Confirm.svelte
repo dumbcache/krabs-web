@@ -11,9 +11,9 @@
 <div
     class="confirm"
     on:click={() => dispatch("confirmCloseNO")}
-    on:keydown|preventDefault
+    on:keydown|stopPropagation
 >
-    <div class="wrapper" on:click|preventDefault on:keydown|preventDefault>
+    <div class="wrapper" on:click|stopPropagation on:keydown|stopPropagation>
         <p>Sure you want to delete?</p>
         <button class="btn" on:click={() => dispatchClose("confirmCloseOK")}
             >{@html doneIcon}</button
