@@ -15,11 +15,13 @@
     } from "$lib/scripts/stores";
     import doneIcon from "$lib/assets/done.svg?raw";
     import closeIcon from "$lib/assets/close.svg?raw";
+    import Confirm from "$lib/components/actions/Confirm.svelte";
 
     export let data: PageData;
 
     let type: "update" | "delete";
     let dirToggle = false;
+    let selectConfirm = false;
     let activeId = "";
     let activeName = "";
     onMount(() => {
@@ -58,12 +60,7 @@
                 class="btn"
                 disabled={$selectedCount === 0}
                 on:click={() => {
-                    childWorker.postMessage({
-                        context: "IMG_DELETE",
-                        imgs: $editItems,
-                        token: window.localStorage.getItem("token"),
-                    });
-                    console.log($editItems);
+                    selectConfirm = true;
                 }}>{@html doneIcon}</button
             >
             <button
@@ -110,6 +107,24 @@
         name={type !== "delete" ? activeName : ""}
         on:dirUpdateClose={() => (dirToggle = false)}
         on:dirDeleteClose={() => (dirToggle = false)}
+    />
+{/if}
+{#if selectConfirm}
+    <Confirm
+        on:confirmCloseNO={() => {
+            $editMode = "";
+            $selectedCount = 0;
+            $editItems = [];
+            selectConfirm = false;
+        }}
+        on:confirmCloseOK={() => {
+            childWorker.postMessage({
+                context: "IMG_DELETE",
+                imgs: $editItems,
+                token: window.localStorage.getItem("token"),
+            });
+            selectConfirm = false;
+        }}
     />
 {/if}
 
