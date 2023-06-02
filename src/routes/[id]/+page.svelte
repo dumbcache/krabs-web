@@ -3,7 +3,7 @@
     import Imgs from "$lib/components/imgs/Imgs.svelte";
     import type { PageData } from "./$types";
     import DirCreate from "$lib/components/actions/DirCreate.svelte";
-    import { onMount } from "svelte";
+    import { onDestroy, onMount } from "svelte";
     import { FILE_API } from "$lib/scripts/drive";
     import { childWorker, getToken } from "$lib/scripts/utils";
     import {
@@ -27,8 +27,9 @@
     let selectConfirm = false;
     let activeId = "";
     let activeName = "";
+    let contentHidden: string;
+    $: contentHidden = $editMode === "delete" ? "none" : "initial";
     onMount(() => {
-        $previewItem = undefined;
         async function getParentName() {
             let res = await fetch(
                 `${FILE_API}/${$activeParentId}?fields=name`,
@@ -54,6 +55,11 @@
         }
         getParentName();
     });
+    onDestroy(() => {
+        console.log("destory");
+        $previewItem = undefined;
+        $editMode = "";
+    });
 </script>
 
 {#if $activeDirs?.length !== 0 || $activeImgs?.length !== 0}
@@ -78,10 +84,11 @@
                 }}>{@html closeIcon}</button
             >
         </div>
-        {#if $activeImgs?.length !== 0}
+    {/if}
+    <!-- {#if $activeImgs?.length !== 0}
             <Imgs imgs={$activeImgs} />
-        {/if}
-    {:else}
+        {/if} -->
+    <div style:display={contentHidden}>
         <Dirs
             dirs={$activeDirs}
             on:editDir={(e) => {
@@ -96,9 +103,8 @@
                 type = "delete";
             }}
         />
-
-        <Imgs imgs={$activeImgs} />
-    {/if}
+    </div>
+    <Imgs imgs={$activeImgs} />
 {:else}
     <p class="no-files">No Files</p>
 {/if}

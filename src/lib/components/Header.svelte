@@ -1,11 +1,18 @@
 <script>
+    import { goto } from "$app/navigation";
     import ColorScheme from "$lib/components/actions/ColorScheme.svelte";
     import LogoutButton from "$lib/components/actions/LogoutButton.svelte";
+    import { editMode, previewItem } from "$lib/scripts/stores";
     import Nav from "./Nav.svelte";
 </script>
 
 <header class="header">
-    <a href="/r"><h1 class="title">K</h1></a>
+    <button
+        on:click={() => {
+            $previewItem = undefined;
+            goto("r");
+        }}><h1 class="title">K</h1></button
+    >
     <div class="nav">
         <Nav />
     </div>
@@ -16,6 +23,9 @@
 </header>
 
 <style>
+    button {
+        cursor: pointer;
+    }
     .header {
         position: sticky;
         top: 0;

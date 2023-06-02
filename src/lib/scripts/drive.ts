@@ -4,6 +4,7 @@ import {
     activeImgs,
     activeParentId,
     dataCacheName,
+    recents,
     refreshClicked,
 } from "./stores";
 import { getToken } from "./utils";
@@ -229,6 +230,8 @@ export function localFetch(url: string, krabsCache: Cache) {
 }
 
 export async function refreshCache() {
+    window.localStorage.setItem("recents", "[]");
+    recents.set([]);
     for (const key of await caches.keys()) {
         if (key === get(dataCacheName)) await caches.delete(key);
     }
