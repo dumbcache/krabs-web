@@ -109,13 +109,7 @@ export const updateDir = async (
             data
         );
         if (status === 401) {
-            await getToken();
-            return updateDir(
-                name,
-                id,
-                parent,
-                window.localStorage.getItem("token")!
-            );
+            (await getToken()) && window.location.reload();
         }
     }
     fetchFiles(parent, "dirs", 1000, true);
@@ -141,8 +135,7 @@ export const deleteDir = async (
             await req.text()
         );
         if (status === 401) {
-            await getToken();
-            return deleteDir(id, parent, window.localStorage.getItem("token")!);
+            (await getToken()) && window.location.reload();
         }
     }
     fetchFiles(parent, "dirs", 1000, true).then(() => window.location.reload());

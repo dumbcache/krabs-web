@@ -14,6 +14,7 @@
         selectedCount,
         activeDirs,
         activeImgs,
+        previewItem,
     } from "$lib/scripts/stores";
     import deleteIcon from "$lib/assets/delete.svg?raw";
     import closeIcon from "$lib/assets/close.svg?raw";
@@ -27,6 +28,7 @@
     let activeId = "";
     let activeName = "";
     onMount(() => {
+        $previewItem = undefined;
         async function getParentName() {
             let res = await fetch(
                 `${FILE_API}/${$activeParentId}?fields=name`,
