@@ -1,19 +1,37 @@
 <script lang="ts">
     import linkIcon from "$lib/assets/link.svg?raw";
     import { fetchImgPreview } from "$lib/scripts/utils";
-    import { previewItem } from "$lib/scripts/stores";
+    import {
+        editItems,
+        editMode,
+        previewItem,
+        selectedCount,
+    } from "$lib/scripts/stores";
     import imgPlaceholder from "$lib/assets/imgPlaceholder.svg";
     export let img: GoogleFile;
+    let selectedForDelete: Boolean;
 
     function handleImgclick(e) {
-        if ($previewItem?.id !== img.id) {
-            const { url } = e.currentTarget.dataset;
-            if (url) {
-                $previewItem = { id: img.id, src: img.thumbnailLink!, url };
-                return;
+        if ($editMode !== "delete") {
+            if ($previewItem?.id !== img.id) {
+                const { url } = e.currentTarget.dataset;
+                if (url) {
+                    $previewItem = { id: img.id, src: img.thumbnailLink!, url };
+                    return;
+                }
+                $previewItem = { id: img.id, src: img.thumbnailLink! };
+                fetchImgPreview($previewItem.id);
             }
-            $previewItem = { id: img.id, src: img.thumbnailLink! };
-            fetchImgPreview($previewItem.id);
+        } else {
+            selectedForDelete = !selectedForDelete;
+            if (selectedForDelete) {
+                $selectedCount = $selectedCount + 1;
+                let temp = [...$editItems, img.id];
+                $editItems = temp;
+            } else {
+                $selectedCount = $selectedCount - 1;
+                $editItems = $editItems.filter((entry) => entry !== img.id);
+            }
         }
     }
 </script>
@@ -28,23 +46,26 @@
     <img
         src={img.thumbnailLink}
         alt="thumbnail to link"
-        class="img"
+        class="img {$editMode === 'delete' ? 'delete' : ''}"
+        class:select={selectedForDelete}
         loading="lazy"
         height="200"
         width="200"
         on:error={(e) => (e.target.src = imgPlaceholder)}
     />
     <button class="anchor">.</button>
-    {#if img.appProperties?.origin}
-        <a
-            href={img.appProperties?.origin}
-            class="img-link"
-            referrerpolicy="no-referrer"
-            rel="external noopener noreferrer nofollow"
-            on:click|stopPropagation
-        >
-            {@html linkIcon}
-        </a>
+    {#if $editMode !== "delete"}
+        {#if img.appProperties?.origin}
+            <a
+                href={img.appProperties?.origin}
+                class="img-link"
+                referrerpolicy="no-referrer"
+                rel="external noopener noreferrer nofollow"
+                on:click|stopPropagation
+            >
+                {@html linkIcon}
+            </a>
+        {/if}
     {/if}
 </div>
 
@@ -88,6 +109,13 @@
     }
     .img:hover {
         cursor: zoom-in;
+    }
+
+    .delete:hover {
+        cursor: pointer;
+    }
+    .select {
+        filter: brightness(0.2);
     }
     .anchor {
         display: inline-block;

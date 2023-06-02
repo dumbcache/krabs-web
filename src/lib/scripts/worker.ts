@@ -78,6 +78,23 @@ export const uploadImg = async (
     return { status };
 };
 
+export const deleteImgs = async (imgs: string[], token: string) => {
+    const proms = [];
+    for (let id of imgs) {
+        proms.push(
+            fetch(`${FILE_API}/${id}`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+        );
+    }
+    Promise.allSettled(proms).then(() => {
+        postMessage({ context: "IMG_DELETE" });
+    });
+};
+
 let idbRequest: IDBOpenDBRequest;
 (() => {
     idbRequest = indexedDB.open("krabfiles", 1);
@@ -180,6 +197,9 @@ onmessage = ({ data }) => {
     switch (data.context) {
         case "IMG_PREVIEW":
             checkForImgLocal(data.id, data.token);
+            return;
+        case "IMG_DELETE":
+            deleteImgs(data.imgs, data.token);
             return;
         case "CLEAR_IMAGE_CACHE":
             clearImageCache();

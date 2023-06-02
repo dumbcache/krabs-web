@@ -16,7 +16,11 @@ import {
     dropItems,
     recents,
     dataCacheName,
+    editItems,
+    selectedCount,
+    editMode,
 } from "$lib/scripts/stores";
+import { fetchFiles } from "./drive";
 
 export let childWorker: Worker;
 if (browser) {
@@ -69,6 +73,15 @@ if (browser) {
                 }
                 return;
 
+            case "IMG_DELETE":
+                // console.log("deleted")
+                editItems.set([]);
+                selectedCount.set(0);
+                editMode.set("");
+                fetchFiles(get(activeParentId), "imgs", 1000, true).then(() =>
+                    window.location.reload()
+                );
+                return;
             case "IDB_RELOAD_REQUIRED":
                 return;
         }

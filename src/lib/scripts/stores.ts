@@ -6,6 +6,9 @@ export let activeImgs = writable<GoogleFile[]>([]);
 export let activeDirs = writable<GoogleFile[]>([]);
 export let recents = writable<{ name: string; id: string }[]>([]);
 
+export let editMode = writable("");
+export let editItems = writable<string[]>([]);
+export let selectedCount = writable(0);
 export let isLoggedin = writable(false);
 export let dataCacheName = writable("");
 export let renameid = writable("");
