@@ -8,6 +8,7 @@ export let recents = writable<{ name: string; id: string }[]>([]);
 
 export let editMode = writable("");
 export let editItems = writable<string[]>([]);
+export let editConfirm = writable(false);
 export let selectedCount = writable(0);
 export let isLoggedin = writable(false);
 export let dataCacheName = writable("");

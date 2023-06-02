@@ -15,6 +15,7 @@
         activeDirs,
         activeImgs,
         previewItem,
+        editConfirm,
     } from "$lib/scripts/stores";
     import deleteIcon from "$lib/assets/delete.svg?raw";
     import closeIcon from "$lib/assets/close.svg?raw";
@@ -24,7 +25,6 @@
 
     let type: "update" | "delete";
     let dirToggle = false;
-    let selectConfirm = false;
     let activeId = "";
     let activeName = "";
     let contentHidden: string;
@@ -71,7 +71,7 @@
                 disabled={$selectedCount === 0}
                 title="delete"
                 on:click={() => {
-                    selectConfirm = true;
+                    $editConfirm = true;
                 }}>{@html deleteIcon}</button
             >
             <button
@@ -84,10 +84,10 @@
                 }}>{@html closeIcon}</button
             >
         </div>
-    {/if}
-    <!-- {#if $activeImgs?.length !== 0}
+        {#if $activeImgs?.length !== 0}
             <Imgs imgs={$activeImgs} />
-        {/if} -->
+        {/if}
+    {/if}
     <div style:display={contentHidden}>
         <Dirs
             dirs={$activeDirs}
@@ -103,8 +103,8 @@
                 type = "delete";
             }}
         />
+        <Imgs imgs={$activeImgs} />
     </div>
-    <Imgs imgs={$activeImgs} />
 {:else}
     <p class="no-files">No Files</p>
 {/if}
@@ -117,13 +117,13 @@
         on:dirDeleteClose={() => (dirToggle = false)}
     />
 {/if}
-{#if selectConfirm}
+{#if $editConfirm}
     <Confirm
         on:confirmCloseNO={() => {
-            $editMode = "";
-            $selectedCount = 0;
-            $editItems = [];
-            selectConfirm = false;
+            // $editMode = "";
+            // $selectedCount = 0;
+            // $editItems = [];
+            $editConfirm = false;
         }}
         on:confirmCloseOK={() => {
             childWorker.postMessage({
@@ -131,7 +131,7 @@
                 imgs: $editItems,
                 token: window.localStorage.getItem("token"),
             });
-            selectConfirm = false;
+            $editConfirm = false;
         }}
     />
 {/if}

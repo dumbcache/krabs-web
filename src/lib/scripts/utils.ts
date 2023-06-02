@@ -19,6 +19,7 @@ import {
     editItems,
     selectedCount,
     editMode,
+    editConfirm,
 } from "$lib/scripts/stores";
 import { fetchFiles, refreshMainContent } from "./drive";
 
@@ -518,5 +519,21 @@ export function previewAndSetDropItems(files: FileList) {
             // };
             // reader.readAsArrayBuffer(img);
         }
+    }
+}
+
+export function shortcutHandler(e) {
+    switch (e.key) {
+        case "Delete":
+            if (get(editMode) === "delete") {
+                get(editItems).length !== 0 && editConfirm.set(true);
+            }
+            break;
+        case "Escape":
+            if (get(editMode) === "delete") {
+                get(editConfirm) === false && editMode.set("");
+                editConfirm.set(false);
+            }
+            break;
     }
 }

@@ -9,6 +9,7 @@
         previewAndSetDropItems,
         updateRecents,
         setCacheName,
+        shortcutHandler,
     } from "$lib/scripts/utils";
     import { previewItem } from "$lib/scripts/stores";
     import BackButton from "$lib/components/actions/BackButton.svelte";
@@ -38,6 +39,7 @@
         console.log("offline");
         window.alert("You're offline");
     }}
+    on:keydown={shortcutHandler}
 />
 
 <div class="layout">
