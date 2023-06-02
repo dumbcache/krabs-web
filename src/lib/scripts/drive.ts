@@ -246,17 +246,17 @@ export async function refreshCache() {
 export const loadMainContent = (parent: string): Promise<void> => {
     return new Promise(async (resolve, reject) => {
         const proms = [fetchDirs(parent!), fetchImgs(parent!)];
-        Promise.any(proms)
+        Promise.all(proms)
             .then(() => {
                 resolve();
             })
             .catch(async (e) => {
+                console.warn(e);
                 if (e.status === 401) {
                     await getToken();
                     window.location.reload();
                     return;
                 }
-                console.warn(e);
             });
     });
 };
@@ -305,7 +305,7 @@ export const refreshMainContent = (
                 break;
         }
 
-        Promise.any(proms)
+        Promise.all(proms)
             .then(() => {
                 resolve();
             })
