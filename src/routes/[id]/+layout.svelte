@@ -10,7 +10,7 @@
         updateRecents,
         setCacheName,
     } from "$lib/scripts/utils";
-    import { previewItem, online } from "$lib/scripts/stores";
+    import { previewItem } from "$lib/scripts/stores";
     import BackButton from "$lib/components/actions/BackButton.svelte";
     import Offline from "$lib/components/actions/Offline.svelte";
     import { onMount } from "svelte";
@@ -35,44 +35,36 @@
 </svelte:head>
 <svelte:window
     on:offline={() => {
-        $online = false;
         console.log("offline");
-    }}
-    on:online={() => {
-        console.log("online");
-        $online = true;
+        window.alert("You're offline");
     }}
 />
 
 <div class="layout">
-    {#if $online}
-        <Header />
-        {#if $navigating}
-            <LoadIndicator />
-        {:else}
-            <main
-                class="main {draggedOver === true ? 'dragover' : ''}"
-                on:dragstart|preventDefault
-                on:dragover|preventDefault
-                on:dragenter={() => (draggedOver = true)}
-                on:dragleave={() => (draggedOver = false)}
-                on:drop={imgDropHandler}
-            >
-                <div class="content">
-                    <div class="nav">
-                        <Nav />
-                    </div>
-                    <div class="back">
-                        <BackButton />
-                    </div>
-                    <slot />
-                </div>
-                <Preview />
-                <Drop />
-            </main>
-        {/if}
+    <Header />
+    {#if $navigating}
+        <LoadIndicator />
     {:else}
-        <Offline />
+        <main
+            class="main {draggedOver === true ? 'dragover' : ''}"
+            on:dragstart|preventDefault
+            on:dragover|preventDefault
+            on:dragenter={() => (draggedOver = true)}
+            on:dragleave={() => (draggedOver = false)}
+            on:drop={imgDropHandler}
+        >
+            <div class="content">
+                <div class="nav">
+                    <Nav />
+                </div>
+                <div class="back">
+                    <BackButton />
+                </div>
+                <slot />
+            </div>
+            <Preview />
+            <Drop />
+        </main>
     {/if}
 </div>
 

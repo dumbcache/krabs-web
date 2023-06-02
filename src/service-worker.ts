@@ -4,26 +4,20 @@
 /// <reference lib="webworker" />
 
 import { build, files, version } from "$service-worker";
-// import {} from "./lib/scripts/dr"
+
 const sw = self as unknown as ServiceWorkerGlobalScope;
 
-const DIR_MIME_TYPE = "application/vnd.google-apps.folder";
-const IMG_MIME_TYPE = "image/";
-const FILE_API = "https://www.googleapis.com/drive/v3/files";
-const FIELDS_REQUIRED = "files(id,name,appProperties(origin),thumbnailLink)";
-
+const CACHE_STATIC = `app-${version}`;
 const CACHE_APP = `krabs_app-${version}`;
 const CACHE_DATA = `krabs_data-${version}`;
-const ASSETS = [
-    ...build, // the app itself
-    ...files, // everything in `static`
-];
 
 /***************** SW Event Listners****************/
 sw.addEventListener("install", (e) => {
     async function addFilesToCache() {
-        const cache = await caches.open(CACHE_APP);
-        await cache.addAll(ASSETS);
+        const cache1 = await caches.open(CACHE_STATIC);
+        await cache1.addAll(files);
+        const cache2 = await caches.open(CACHE_APP);
+        await cache2.addAll(build);
     }
     e.waitUntil(addFilesToCache());
 });
@@ -31,7 +25,7 @@ sw.addEventListener("install", (e) => {
 sw.addEventListener("activate", (e) => {
     async function deleteOldCaches() {
         for (const key of await caches.keys()) {
-            if (key !== CACHE_APP && key !== CACHE_DATA)
+            if (key !== CACHE_APP && key !== CACHE_DATA && key != CACHE_STATIC)
                 await caches.delete(key);
         }
     }
@@ -47,11 +41,19 @@ sw.addEventListener("fetch", (e) => {
         case self.location.host:
             e.respondWith(
                 (async () => {
-                    const cache = await caches.open(CACHE_APP);
-                    if (ASSETS.includes(url.pathname)) {
+                    if (files.includes(url.pathname)) {
+                        const cache = await caches.open(CACHE_STATIC);
+                        return cache.match(url.pathname) as Promise<Response>;
+                    } else if (build.includes(url.pathname)) {
+                        const cache = await caches.open(CACHE_APP);
                         return cache.match(url.pathname) as Promise<Response>;
                     } else {
-                        return fetch(e.request) as Promise<Response>;
+                        const cache = await caches.open(CACHE_APP);
+                        const response = await fetch(e.request);
+                        if (response.status === 200) {
+                            cache.put(e.request, response.clone());
+                        }
+                        return response;
                     }
                 })()
             );

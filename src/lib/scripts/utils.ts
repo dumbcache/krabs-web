@@ -246,7 +246,7 @@ export async function signUserOut(e?: Event) {
 export async function clearFiles() {
     window.localStorage.clear();
     (await caches.keys()).forEach(
-        (key) => key.startsWith("krabs_data") && caches.delete(key)
+        (key) => key.startsWith("krabs") && caches.delete(key)
     );
 }
 
@@ -433,7 +433,11 @@ export function previewAndSetDropItems(files: FileList) {
             // dropZone.hidden = false;
             const id = Date.now().toString();
             const imgRef = URL.createObjectURL(img);
-            if (img.type === "image/gif") {
+            if (
+                img.type === "image/gif" ||
+                img.type === "image/avif" ||
+                img.type === "image/webp"
+            ) {
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     const result = e.target?.result! as ArrayBuffer;
