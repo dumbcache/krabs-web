@@ -20,7 +20,7 @@ import {
     selectedCount,
     editMode,
 } from "$lib/scripts/stores";
-import { fetchFiles } from "./drive";
+import { fetchFiles, refreshMainContent } from "./drive";
 
 export let childWorker: Worker;
 if (browser) {
@@ -75,11 +75,14 @@ if (browser) {
 
             case "IMG_DELETE":
                 // console.log("deleted")
-                editItems.set([]);
-                selectedCount.set(0);
-                editMode.set("");
                 fetchFiles(get(activeParentId), "imgs", 1000, true).then(() =>
-                    window.location.reload()
+                    // window.location.reload();
+                    // console.log("refresh")
+                    refreshMainContent(get(activeParentId), "imgs").then(() => {
+                        editItems.set([]);
+                        selectedCount.set(0);
+                        editMode.set("");
+                    })
                 );
                 return;
             case "IDB_RELOAD_REQUIRED":

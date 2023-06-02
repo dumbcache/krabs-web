@@ -1,5 +1,11 @@
 import { get } from "svelte/store";
-import { dataCacheName } from "./stores";
+import {
+    activeDirs,
+    activeImgs,
+    activeParentId,
+    dataCacheName,
+    refreshClicked,
+} from "./stores";
 import { getToken } from "./utils";
 
 export const DIR_MIME_TYPE = "application/vnd.google-apps.folder";
@@ -232,57 +238,80 @@ export async function refreshCache() {
     for (const key of await caches.keys()) {
         if (key === get(dataCacheName)) await caches.delete(key);
     }
-    window.location.reload();
+    refreshMainContent(get(activeParentId)).then(() => {
+        refreshClicked.set(false);
+    });
 }
 
-export const loadMainContent = (
-    parent: string
-): Promise<{
-    dirs: GoogleFileRes | undefined;
-    imgs: GoogleFileRes | undefined;
-}> => {
+export const loadMainContent = (parent: string): Promise<void> => {
     return new Promise(async (resolve, reject) => {
-        const promises = [
-            fetchFiles(parent!, "dirs"),
-            fetchFiles(parent!, "imgs"),
-        ];
-        Promise.all(promises)
-            .then(([dirs, imgs]) => {
-                resolve({ dirs, imgs });
+        const proms = [fetchDirs(parent!), fetchImgs(parent!)];
+        Promise.any(proms)
+            .then(() => {
+                resolve();
             })
             .catch(async (e) => {
                 if (e.status === 401) {
-                    const success = await getToken();
-                    if (success) resolve(loadMainContent(parent));
+                    await getToken();
+                    window.location.reload();
+                    return;
                 }
                 console.warn(e);
             });
     });
 };
-export const refreshMainContent = (
-    parent: string
-): Promise<{
-    dirs: GoogleFileRes | undefined;
-    imgs: GoogleFileRes | undefined;
-}> => {
-    return new Promise(async (resolve, reject) => {
-        const promises = [
-            fetchFiles(parent!, "dirs"),
-            fetchFiles(parent!, "imgs"),
-        ];
-        Promise.all(promises)
-            .then(async ([dirs, imgs]) => {
-                resolve({ dirs, imgs });
+
+export async function fetchDirs(parent: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+        fetchFiles(parent!, "dirs", 1000, true)
+            .then(async (dirs) => {
+                activeDirs.set(dirs?.files);
                 for (let dir of dirs!.files) {
-                    await fetchFiles(dir.id, "covers", 3);
+                    await fetchFiles(dir.id, "covers", 3, true);
                 }
-                window.location.reload();
+                resolve();
                 return;
+            })
+            .catch((status) => reject(status));
+    });
+}
+export async function fetchImgs(parent: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+        fetchFiles(parent!, "imgs", 1000, true)
+            .then(async (imgs) => {
+                activeImgs.set(imgs?.files);
+                resolve();
+                return;
+            })
+            .catch((status) => reject(status));
+    });
+}
+
+export const refreshMainContent = (
+    parent: string,
+    type?: "dirs" | "imgs"
+): Promise<void> => {
+    return new Promise(async (resolve, reject) => {
+        const proms: Promise<void>[] = [];
+        switch (type) {
+            case "dirs":
+                proms.push(fetchDirs(parent));
+                break;
+            case "imgs":
+                proms.push(fetchImgs(parent));
+                break;
+            default:
+                proms.push(fetchDirs(parent), fetchImgs(parent));
+                break;
+        }
+
+        Promise.any(proms)
+            .then(() => {
+                resolve();
             })
             .catch(async (e) => {
                 if (e.status === 401) {
-                    const success = await getToken();
-                    if (success) resolve(refreshMainContent(parent));
+                    await getToken();
                     window.location.reload();
                     return;
                 }

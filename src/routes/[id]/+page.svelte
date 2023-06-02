@@ -12,8 +12,10 @@
         editItems,
         editMode,
         selectedCount,
+        activeDirs,
+        activeImgs,
     } from "$lib/scripts/stores";
-    import doneIcon from "$lib/assets/done.svg?raw";
+    import deleteIcon from "$lib/assets/delete.svg?raw";
     import closeIcon from "$lib/assets/close.svg?raw";
     import Confirm from "$lib/components/actions/Confirm.svelte";
 
@@ -52,19 +54,21 @@
     });
 </script>
 
-{#if data.dirs?.files.length !== 0 || data.imgs?.files.length !== 0}
+{#if $activeDirs?.length !== 0 || $activeImgs?.length !== 0}
     {#if $editMode === "delete"}
         <div class="edit-mode">
             <p>seleted : {$selectedCount}</p>
             <button
-                class="btn"
+                class="delelte-button btn"
                 disabled={$selectedCount === 0}
+                title="delete"
                 on:click={() => {
                     selectConfirm = true;
-                }}>{@html doneIcon}</button
+                }}>{@html deleteIcon}</button
             >
             <button
                 class="btn"
+                title="close"
                 on:click={() => {
                     $editMode = "";
                     $selectedCount = 0;
@@ -72,30 +76,26 @@
                 }}>{@html closeIcon}</button
             >
         </div>
-        {#if data.imgs?.files.length !== 0}
-            <Imgs imgs={data.imgs.files} />
+        {#if $activeImgs?.length !== 0}
+            <Imgs imgs={$activeImgs} />
         {/if}
     {:else}
-        {#if data.dirs?.files.length !== 0}
-            <Dirs
-                dirs={data.dirs?.files}
-                on:editDir={(e) => {
-                    activeId = e.detail.id;
-                    activeName = e.detail.name;
-                    dirToggle = true;
-                    type = "update";
-                }}
-                on:deleteDir={(e) => {
-                    activeId = e.detail.id;
-                    dirToggle = true;
-                    type = "delete";
-                }}
-            />
-        {/if}
+        <Dirs
+            dirs={$activeDirs}
+            on:editDir={(e) => {
+                activeId = e.detail.id;
+                activeName = e.detail.name;
+                dirToggle = true;
+                type = "update";
+            }}
+            on:deleteDir={(e) => {
+                activeId = e.detail.id;
+                dirToggle = true;
+                type = "delete";
+            }}
+        />
 
-        {#if data.imgs?.files.length !== 0}
-            <Imgs imgs={data.imgs.files} />
-        {/if}
+        <Imgs imgs={$activeImgs} />
     {/if}
 {:else}
     <p class="no-files">No Files</p>
@@ -147,6 +147,7 @@
         z-index: 1;
     }
 
+    .btn:disabled :global(svg),
     .btn:disabled {
         cursor: not-allowed;
     }

@@ -30,6 +30,7 @@
         right: 0;
         display: grid;
         place-content: center;
+        color: var(--color-white);
         background-color: var(--primary-backdrop-color);
         backdrop-filter: blur(1rem);
         -webkit-backdrop-filter: blur(1rem);

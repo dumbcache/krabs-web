@@ -1,15 +1,18 @@
 <script lang="ts">
     import DirCard from "$lib/components/dirs/DirCard.svelte";
+    import { activeDirs } from "$lib/scripts/stores";
 
     export let dirs: GoogleFile[];
 </script>
 
 <div class="dirs">
-    {#each dirs as dir}
-        {#key dir.id}
-            <DirCard {dir} on:editDir on:deleteDir />
-        {/key}
-    {/each}
+    {#if $activeDirs}
+        {#each $activeDirs as dir}
+            {#key dir.id}
+                <DirCard {dir} on:editDir on:deleteDir />
+            {/key}
+        {/each}
+    {/if}
 </div>
 
 <style>

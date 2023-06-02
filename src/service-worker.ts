@@ -16,8 +16,8 @@ sw.addEventListener("install", (e) => {
     async function addFilesToCache() {
         const cache1 = await caches.open(CACHE_STATIC);
         await cache1.addAll(files);
-        const cache2 = await caches.open(CACHE_APP);
-        await cache2.addAll(build);
+        // const cache2 = await caches.open(CACHE_APP);
+        // await cache2.addAll(build);
     }
     e.waitUntil(addFilesToCache());
 });
@@ -44,15 +44,15 @@ sw.addEventListener("fetch", (e) => {
                     if (files.includes(url.pathname)) {
                         const cache = await caches.open(CACHE_STATIC);
                         return cache.match(url.pathname) as Promise<Response>;
-                    } else if (build.includes(url.pathname)) {
-                        const cache = await caches.open(CACHE_APP);
-                        return cache.match(url.pathname) as Promise<Response>;
+                        // } else if (build.includes(url.pathname)) {
+                        //     const cache = await caches.open(CACHE_APP);
+                        //     return cache.match(url.pathname) as Promise<Response>;
                     } else {
-                        const cache = await caches.open(CACHE_APP);
                         const response = await fetch(e.request);
-                        if (response.status === 200) {
-                            cache.put(e.request, response.clone());
-                        }
+                        // if (response.status === 200) {
+                        //     const cache = await caches.open(CACHE_APP);
+                        //     cache.put(e.request, response.clone());
+                        // }
                         return response;
                     }
                 })()

@@ -4,14 +4,17 @@
     import folderCreate from "$lib/assets/folderCreate.svg?raw";
     import refresh from "$lib/assets/refresh.svg?raw";
     import { previewAndSetDropItems } from "$lib/scripts/utils";
-    import { activeParentId, previewItem } from "$lib/scripts/stores";
+    import {
+        activeParentId,
+        previewItem,
+        refreshClicked,
+    } from "$lib/scripts/stores";
     import DirCreate from "$lib/components/actions/DirCreate.svelte";
     import { refreshCache } from "$lib/scripts/drive";
     import EditIcon from "$lib/components/actions/EditIcon.svelte";
     import History from "$lib/components/actions/History.svelte";
 
     let dirCreateToggle = false;
-    let refreshClicked = false;
     function imgPickerHandler(e: InputEvent) {
         e.preventDefault();
         // clearDropItems();
@@ -45,10 +48,10 @@
         {@html folderCreate}
     </button>
     <button
-        class="refresh-button btn {refreshClicked ? 'anime' : ''}"
+        class="refresh-button btn {$refreshClicked ? 'anime' : ''}"
         title="refresh cache"
         on:click={() => {
-            refreshClicked = true;
+            $refreshClicked = true;
             refreshCache();
         }}
     >

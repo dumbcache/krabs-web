@@ -1,12 +1,13 @@
 <script lang="ts">
     import ImgCard from "$lib/components/imgs/ImgCard.svelte";
+    import { activeImgs } from "$lib/scripts/stores";
 
     export let imgs: GoogleFile[];
 </script>
 
 <div class="imgs">
-    {#if imgs.length !== 0}
-        {#each imgs as img}
+    {#if $activeImgs}
+        {#each $activeImgs as img}
             <ImgCard {img} />
         {/each}
     {/if}
