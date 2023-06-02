@@ -269,7 +269,7 @@ export async function fetchDirs(
             .then(async (dirs) => {
                 activeDirs.set(dirs?.files);
                 for (let dir of dirs!.files) {
-                    await fetchFiles(dir.id, "covers", 3, cache);
+                    fetchFiles(dir.id, "covers", 3, cache);
                 }
                 resolve();
                 return;
