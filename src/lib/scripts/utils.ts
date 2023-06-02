@@ -247,13 +247,6 @@ export async function signUserOut(e?: Event) {
             Authorization: `Bearer ${secret}`,
         },
     });
-    if (res.status !== 200) {
-        // if (res.status !== 401) {
-        //     console.warn(res.status, await res.text());
-        //     return;
-        // }
-        console.warn(res.status, await res.text());
-    }
     await clearFiles();
     isLoggedin.set(false);
     console.log("logging user out");

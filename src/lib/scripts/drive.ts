@@ -253,21 +253,23 @@ export const loadMainContent = (parent: string): Promise<void> => {
             .catch(async (e) => {
                 console.warn(e);
                 if (e.status === 401) {
-                    await getToken();
-                    window.location.reload();
+                    (await getToken()) && window.location.reload();
                     return;
                 }
             });
     });
 };
 
-export async function fetchDirs(parent: string): Promise<void> {
+export async function fetchDirs(
+    parent: string,
+    cache: Boolean = false
+): Promise<void> {
     return new Promise((resolve, reject) => {
-        fetchFiles(parent!, "dirs", 1000, true)
+        fetchFiles(parent!, "dirs", 1000, cache)
             .then(async (dirs) => {
                 activeDirs.set(dirs?.files);
                 for (let dir of dirs!.files) {
-                    await fetchFiles(dir.id, "covers", 3, true);
+                    await fetchFiles(dir.id, "covers", 3, cache);
                 }
                 resolve();
                 return;
@@ -275,9 +277,12 @@ export async function fetchDirs(parent: string): Promise<void> {
             .catch((status) => reject(status));
     });
 }
-export async function fetchImgs(parent: string): Promise<void> {
+export async function fetchImgs(
+    parent: string,
+    cache: Boolean = false
+): Promise<void> {
     return new Promise((resolve, reject) => {
-        fetchFiles(parent!, "imgs", 1000, true)
+        fetchFiles(parent!, "imgs", 1000, cache)
             .then(async (imgs) => {
                 activeImgs.set(imgs?.files);
                 resolve();
@@ -295,13 +300,13 @@ export const refreshMainContent = (
         const proms: Promise<void>[] = [];
         switch (type) {
             case "dirs":
-                proms.push(fetchDirs(parent));
+                proms.push(fetchDirs(parent, true));
                 break;
             case "imgs":
-                proms.push(fetchImgs(parent));
+                proms.push(fetchImgs(parent, true));
                 break;
             default:
-                proms.push(fetchDirs(parent), fetchImgs(parent));
+                proms.push(fetchDirs(parent, true), fetchImgs(parent, true));
                 break;
         }
 
@@ -311,8 +316,7 @@ export const refreshMainContent = (
             })
             .catch(async (e) => {
                 if (e.status === 401) {
-                    await getToken();
-                    window.location.reload();
+                    (await getToken()) && window.location.reload();
                     return;
                 }
                 console.warn(e);
