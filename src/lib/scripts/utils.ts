@@ -344,10 +344,8 @@ export function previewChange(
     fetchImgPreview(id);
 }
 
-export function previewShortcutHandler(
-    e: KeyboardEvent,
-    targetId: string | undefined
-) {
+export function previewShortcutHandler(e: KeyboardEvent) {
+    let targetId = get(previewItem)!.id;
     if (!targetId) return;
     if (e.altKey || e.metaKey || e.ctrlKey) {
         return;
@@ -535,5 +533,7 @@ export function shortcutHandler(e) {
                 editConfirm.set(false);
             }
             break;
+        default:
+            previewShortcutHandler(e);
     }
 }

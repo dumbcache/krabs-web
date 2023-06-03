@@ -5,7 +5,6 @@
         handleTouchMove,
         handleTouchStart,
         previewChange,
-        previewShortcutHandler,
     } from "$lib/scripts/utils";
     import { previewItem } from "$lib/scripts/stores";
     import closeIcon from "$lib/assets/close.svg?raw";
@@ -15,9 +14,6 @@
     let fullMode = false;
 </script>
 
-<svelte:window
-    on:keydown={(e) => previewShortcutHandler(e, $previewItem?.id)}
-/>
 {#if $previewItem}
     <div
         class="preview {fullMode ? 'preview-full' : 'preview-half'}"
