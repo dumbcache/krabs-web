@@ -77,7 +77,9 @@
         background-color: var(--content-background-color);
         border-radius: 1rem;
         border: none;
-        max-height: 30rem;
+        height: fit-content;
+        max-height: 50rem;
+        overflow: hidden;
     }
     .img-card:hover .img {
         filter: brightness(0.5);
