@@ -3,6 +3,10 @@
     import { mode } from "$lib/scripts/stores";
 </script>
 
-<button class="edit-button btn" on:click={() => ($mode = "delete")}>
+<button
+    class="edit-button btn"
+    title="edit mode"
+    on:click={() => ($mode = "delete")}
+>
     {@html editIcon}
 </button>

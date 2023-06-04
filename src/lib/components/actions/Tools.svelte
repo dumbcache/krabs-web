@@ -38,7 +38,7 @@
     >
         {@html searchIcon}
     </button>
-    <label for="img-picker" class="button__create-img btn" title="add image">
+    <label for="img-picker" class="button__create-img btn" title="add images">
         {@html imgCreate}
     </label>
     <input
@@ -51,14 +51,14 @@
     />
     <button
         class="button__create-folder btn"
-        title="add directory"
+        title="create folder"
         on:click={() => (dirCreateToggle = !dirCreateToggle)}
     >
         {@html folderCreate}
     </button>
     <button
         class="refresh-button btn {$refreshClicked ? 'anime' : ''}"
-        title="refresh cache"
+        title="refresh files"
         on:click={() => {
             $refreshClicked = true;
             refreshCache();
