@@ -394,7 +394,6 @@ export function dropOkHandler() {
         document.querySelector(".common-url") as HTMLInputElement
     ).value;
     const tempDirItems = [];
-    console.log(get(dropItems));
     for (let item of get(dropItems)) {
         if (item.progress === "success") continue;
         const id = item.id;
@@ -433,7 +432,11 @@ export function dropOkHandler() {
     });
 }
 
-export function previewAndSetDropItems(files: FileList) {
+export function previewAndSetDropItems(
+    files: FileList,
+    parent?: string,
+    parentName?: string
+) {
     previewItem.set(undefined);
     for (let img of files!) {
         if (img.type.match("image/")) {
@@ -458,8 +461,8 @@ export function previewAndSetDropItems(files: FileList) {
                             mimeType: img.type,
                             bytes,
                             imgRef,
-                            parent: get(activeParentId),
-                            parentName: get(activeParentName),
+                            parent: parent || get(activeParentId),
+                            parentName: parentName || get(activeParentName),
                         },
                     ]);
                 };
@@ -486,8 +489,8 @@ export function previewAndSetDropItems(files: FileList) {
                                 mimeType: blob?.type!,
                                 bytes,
                                 imgRef,
-                                parent: get(activeParentId),
-                                parentName: get(activeParentName),
+                                parent: parent || get(activeParentId),
+                                parentName: parentName || get(activeParentName),
                             },
                         ]);
                     }, "image/webp");
