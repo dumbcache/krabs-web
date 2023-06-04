@@ -37,7 +37,7 @@
         width: fit-content;
         height: 100vh;
         padding: 1rem 0.5rem;
-        z-index: 1;
+        z-index: 2;
     }
     .wrapper {
         display: flex;

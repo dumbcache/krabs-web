@@ -96,20 +96,22 @@
             <span>Images: {$activeImgs?.length || 0}</span>
             <span>Folders: {$activeDirs?.length || 0}</span>
         </div>
-        <Dirs
-            dirs={$activeDirs}
-            on:editDir={(e) => {
-                activeId = e.detail.id;
-                activeName = e.detail.name;
-                dirToggle = true;
-                type = "update";
-            }}
-            on:deleteDir={(e) => {
-                activeId = e.detail.id;
-                dirToggle = true;
-                type = "delete";
-            }}
-        />
+        {#if $activeDirs?.length !== 0}
+            <Dirs
+                dirs={$activeDirs}
+                on:editDir={(e) => {
+                    activeId = e.detail.id;
+                    activeName = e.detail.name;
+                    dirToggle = true;
+                    type = "update";
+                }}
+                on:deleteDir={(e) => {
+                    activeId = e.detail.id;
+                    dirToggle = true;
+                    type = "delete";
+                }}
+            />
+        {/if}
         <Imgs imgs={$activeImgs} />
     </div>
 {:else}
