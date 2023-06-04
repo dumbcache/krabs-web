@@ -37,7 +37,13 @@
         </button>
     </span>
     <!-- <span class="drop-parent">parent</span> -->
-    <input type="text" class="common-url" placeholder="common-url" value="" />
+    <input
+        type="text"
+        class="common-url"
+        placeholder="common-url"
+        value=""
+        on:keydown|stopPropagation
+    />
     <button class="drop-ok btn" on:click={dropOkHandler}>
         {@html doneIcon}
     </button>

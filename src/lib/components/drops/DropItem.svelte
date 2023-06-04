@@ -23,6 +23,7 @@
             type="text"
             class="parent"
             disabled
+            on:keydown|stopPropagation
             value={item.parentName}
             on:click={(e) => e.target.select()}
         />
@@ -31,6 +32,7 @@
             class="name"
             placeholder="name"
             value={item.name || ""}
+            on:keydown|stopPropagation
             on:click={(e) => e.target.select()}
         />
         <input
@@ -38,6 +40,7 @@
             class="url"
             placeholder="url"
             value={item.url || ""}
+            on:keydown|stopPropagation
             on:click={(e) => e.target.select()}
         />
     {/if}

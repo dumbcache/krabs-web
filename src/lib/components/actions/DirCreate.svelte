@@ -88,6 +88,7 @@
                 bind:value={placeholder}
                 autofocus
                 on:click|stopPropagation
+                on:keydown|stopPropagation
                 on:input={checkDisabled}
                 autocomplete="off"
             />
