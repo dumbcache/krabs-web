@@ -13,7 +13,6 @@
     } from "$lib/scripts/utils";
     import { previewItem } from "$lib/scripts/stores";
     import BackButton from "$lib/components/actions/BackButton.svelte";
-    import Offline from "$lib/components/actions/Offline.svelte";
     import { onMount } from "svelte";
 
     let draggedOver = false;

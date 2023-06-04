@@ -34,7 +34,7 @@
         background-color: var(--primary-backdrop-color);
         backdrop-filter: blur(1rem);
         -webkit-backdrop-filter: blur(1rem);
-        z-index: 2;
+        z-index: 3;
     }
     .btn :global(svg) {
         fill: #0f0;
