@@ -8,12 +8,8 @@
         dropOkHandler,
         // clearDropItems,
     } from "$lib/scripts/utils";
-    import { dropItems } from "$lib/scripts/stores";
+    import { dropItems, dropMini } from "$lib/scripts/stores";
 
-    const dispatch = createEventDispatcher();
-    function toggleMini() {
-        dispatch("toggleMini");
-    }
     export function clearDropItems() {
         const a = $dropItems.filter((item) => item.progress !== "success");
         dropItems.set(a);
@@ -29,7 +25,11 @@
         >
             {@html closeIcon}
         </button>
-        <button class="btn" title="minimize to right" on:click={toggleMini}>
+        <button
+            class="btn"
+            title="minimize to right"
+            on:click={() => ($dropMini = !$dropMini)}
+        >
             {@html doubleRightIcon}
         </button>
         <button class="btn" title="clear completed" on:click={clearDropItems}>

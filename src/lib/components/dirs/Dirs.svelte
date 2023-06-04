@@ -6,8 +6,8 @@
 </script>
 
 <div class="dirs">
-    {#if $activeDirs}
-        {#each $activeDirs as dir}
+    {#if dirs}
+        {#each dirs as dir}
             {#key dir.id}
                 <DirCard {dir} on:editDir on:deleteDir />
             {/key}

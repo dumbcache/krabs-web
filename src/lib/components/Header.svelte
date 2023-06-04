@@ -10,7 +10,7 @@
     <button
         on:click={() => {
             $previewItem = undefined;
-            goto("r");
+            goto("r", { noScroll: true });
         }}><h1 class="title">K</h1></button
     >
     <div class="nav">

@@ -20,6 +20,7 @@ import {
     selectedCount,
     editMode,
     editConfirm,
+    mode,
 } from "$lib/scripts/stores";
 import { fetchFiles, refreshMainContent } from "./drive";
 
@@ -371,9 +372,6 @@ export function previewShortcutHandler(e: KeyboardEvent) {
             preview.classList.toggle("preview-full");
             preview.classList.toggle("preview-half");
             return;
-        case "Escape":
-            previewItem.set(undefined);
-            return;
     }
 }
 
@@ -535,8 +533,21 @@ export function shortcutHandler(e) {
                 get(editConfirm) === false && editMode.set("");
                 editConfirm.set(false);
             }
+            if (get(mode) === "search") {
+                mode.set("");
+            }
+            get(previewItem) && previewItem.set(undefined);
+            break;
+        case "s":
+            mode.set("search");
+            break;
+        case "ArrowRight":
+        case "ArrowLeft":
+        case "ArrowDown":
+        case "ArrowUp":
+            previewShortcutHandler(e);
             break;
         default:
-            previewShortcutHandler(e);
+            break;
     }
 }

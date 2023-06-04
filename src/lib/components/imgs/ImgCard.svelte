@@ -2,6 +2,7 @@
     import linkIcon from "$lib/assets/link.svg?raw";
     import { fetchImgPreview } from "$lib/scripts/utils";
     import {
+        dropMini,
         editItems,
         editMode,
         previewItem,
@@ -13,6 +14,7 @@
 
     function handleImgclick(e) {
         if ($editMode !== "delete") {
+            $dropMini = true;
             if ($previewItem?.id !== img.id) {
                 const { url } = e.currentTarget.dataset;
                 if (url) {

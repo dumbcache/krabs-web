@@ -11,14 +11,16 @@
         setCacheName,
         shortcutHandler,
     } from "$lib/scripts/utils";
-    import { previewItem } from "$lib/scripts/stores";
+    import { dropMini, mode, previewItem } from "$lib/scripts/stores";
     import BackButton from "$lib/components/actions/BackButton.svelte";
     import { onMount } from "svelte";
+    import Search from "$lib/components/actions/Search.svelte";
 
     let draggedOver = false;
     export function imgDropHandler(e: DragEvent) {
         e.preventDefault();
         draggedOver = false;
+        $dropMini = false;
         previewItem.set(undefined);
         if (e.dataTransfer?.files) {
             previewAndSetDropItems(e.dataTransfer.files);
@@ -61,6 +63,11 @@
                 <div class="back">
                     <BackButton />
                 </div>
+                {#if $mode === "search"}
+                    <div class="search">
+                        <Search />
+                    </div>
+                {/if}
                 <slot />
             </div>
             <Preview />
@@ -81,6 +88,13 @@
         min-height: 100vh;
     }
     .back {
+        position: sticky;
+        top: 1.5rem;
+        z-index: 1;
+    }
+    .search {
+        max-width: 30rem;
+        margin: auto;
         position: sticky;
         top: 1.5rem;
         z-index: 1;
@@ -112,6 +126,9 @@
     @media (max-width: 600px) {
         .main {
             min-height: initial;
+        }
+        .search {
+            top: 5rem;
         }
         .nav {
             display: initial;

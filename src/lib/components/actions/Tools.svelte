@@ -2,10 +2,12 @@
     import imgCreate from "$lib/assets/imgCreate.svg?raw";
     import goToDrive from "$lib/assets/drive.svg?raw";
     import folderCreate from "$lib/assets/folderCreate.svg?raw";
+    import searchIcon from "$lib/assets/search.svg?raw";
     import refresh from "$lib/assets/refresh.svg?raw";
     import { previewAndSetDropItems } from "$lib/scripts/utils";
     import {
         activeParentId,
+        mode,
         previewItem,
         refreshClicked,
     } from "$lib/scripts/stores";
@@ -29,6 +31,13 @@
 <div class="tools">
     <History />
     <EditIcon />
+    <button
+        class="button__search btn"
+        title="search"
+        on:click={() => ($mode = $mode === "search" ? "" : "search")}
+    >
+        {@html searchIcon}
+    </button>
     <label for="img-picker" class="button__create-img btn" title="add image">
         {@html imgCreate}
     </label>

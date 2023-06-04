@@ -1,28 +1,23 @@
 <script>
-    import { dropItems, previewItem } from "$lib/scripts/stores";
+    import { dropItems, dropMini, previewItem } from "$lib/scripts/stores";
     import DropItem from "$lib/components/drops/DropItem.svelte";
     import DropTools from "$lib/components/drops/DropTools.svelte";
     import doubleLeftIcon from "$lib/assets/doubleLeft.svg?raw";
     import { fly } from "svelte/transition";
-
-    let mini = false;
-    function toggleMini() {
-        mini = !mini;
-    }
 </script>
 
 {#if $dropItems.length !== 0}
-    {#if mini}
+    {#if $dropMini}
         <button
             class="drop-mini btn"
             on:click={() => {
                 $previewItem = undefined;
-                mini = !mini;
+                $dropMini = !$dropMini;
             }}>{@html doubleLeftIcon}</button
         >
     {:else}
         <div class="drop" transition:fly={{ duration: 500, x: 500, y: 500 }}>
-            <DropTools on:toggleMini={toggleMini} />
+            <DropTools />
 
             <div class="drop-items">
                 {#each $dropItems as item}

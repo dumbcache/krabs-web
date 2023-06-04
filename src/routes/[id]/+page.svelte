@@ -1,7 +1,6 @@
 <script lang="ts">
     import Dirs from "$lib/components/dirs/Dirs.svelte";
     import Imgs from "$lib/components/imgs/Imgs.svelte";
-    import type { PageData } from "./$types";
     import DirCreate from "$lib/components/actions/DirCreate.svelte";
     import { onDestroy, onMount } from "svelte";
     import { FILE_API } from "$lib/scripts/drive";
@@ -16,12 +15,12 @@
         activeImgs,
         previewItem,
         editConfirm,
+        searchItems,
+        mode,
     } from "$lib/scripts/stores";
     import deleteIcon from "$lib/assets/delete.svg?raw";
     import closeIcon from "$lib/assets/close.svg?raw";
     import Confirm from "$lib/components/actions/Confirm.svelte";
-
-    export let data: PageData;
 
     let type: "update" | "delete";
     let dirToggle = false;
@@ -29,6 +28,7 @@
     let activeName = "";
     let contentHidden: string;
     $: contentHidden = $editMode === "delete" ? "none" : "initial";
+    $: contentHidden = $mode === "search" ? "none" : "initial";
     onMount(() => {
         async function getParentName() {
             let res = await fetch(
@@ -56,9 +56,10 @@
         getParentName();
     });
     onDestroy(() => {
-        console.log("destory");
         $previewItem = undefined;
         $editMode = "";
+        // $mode = "";
+        // $searchItems = undefined;
     });
 </script>
 
@@ -86,6 +87,11 @@
         </div>
         {#if $activeImgs?.length !== 0}
             <Imgs imgs={$activeImgs} />
+        {/if}
+    {/if}
+    {#if $mode === "search"}
+        {#if $searchItems?.length !== 0}
+            <Dirs dirs={$searchItems} />
         {/if}
     {/if}
     <div style:display={contentHidden}>
