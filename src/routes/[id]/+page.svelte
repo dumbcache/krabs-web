@@ -9,7 +9,6 @@
         activeParentId,
         activeParentName,
         editItems,
-        editMode,
         selectedCount,
         activeDirs,
         activeImgs,
@@ -27,8 +26,8 @@
     let activeId = "";
     let activeName = "";
     let contentHidden: string;
-    $: contentHidden = $editMode === "delete" ? "none" : "initial";
-    $: contentHidden = $mode === "search" ? "none" : "initial";
+    $: contentHidden =
+        $mode === "delete" ? "none" : $mode === "search" ? "none" : "initial";
     onMount(() => {
         async function getParentName() {
             let res = await fetch(
@@ -57,12 +56,12 @@
     });
     onDestroy(() => {
         $previewItem = undefined;
-        $editMode = "";
+        $mode = "";
     });
 </script>
 
 {#if $activeDirs?.length !== 0 || $activeImgs?.length !== 0}
-    {#if $editMode === "delete"}
+    {#if $mode === "delete"}
         <div class="edit-mode">
             <p>seleted : {$selectedCount}</p>
             <button
@@ -77,7 +76,7 @@
                 class="btn"
                 title="close"
                 on:click={() => {
-                    $editMode = "";
+                    $mode = "";
                     $selectedCount = 0;
                     $editItems = [];
                 }}>{@html closeIcon}</button

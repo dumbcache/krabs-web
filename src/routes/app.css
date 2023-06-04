@@ -30,6 +30,7 @@
     --primary-backdrop-color: #111a;
     --primary-svg-fill: var(--color-black-level-two);
     --theme-button-outline: var(--color-black-level-six);
+    --input-background: var(--color-white-level-two);
     --theme-button-hover-outline: var(--color-white-level-three);
     --theme-button-background: var(--color-white-level-one);
     --theme-button-hover-background: var(--color-white-level-two);
@@ -55,6 +56,7 @@
     --primary-bg-color: var(--color-black-level-two);
     --primary-color: var(--color-white-level-two);
     --primary-svg-fill: var(--color-white-level-two);
+    --input-background: var(--color-black-level-four);
     --theme-button-outline: var(--color-white-level-six);
     --theme-button-hover-outline: var(--color-black-level-five);
     --theme-button-background: var(--color-white-level-four);

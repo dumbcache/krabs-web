@@ -24,6 +24,7 @@
 <div class="search">
     <input
         type="search"
+        placeholder="Search"
         bind:value={search}
         on:input={updateSearchItems}
         autofocus
@@ -38,16 +39,14 @@
         border-radius: 0.5rem;
         padding: 0.7rem;
         font-size: 1.6rem;
-        color: #000;
-        background-color: var(--color-white-level-two);
+        color: var(--primary-color);
+        background-color: var(--input-background);
         border-bottom: 2px solid var(--color-black);
         padding-left: 0.5rem;
     }
-    input::placeholder {
-        color: var(--color-black-level-six);
-    }
+
     input:hover {
-        background-color: var(--color-white-level-four);
+        background-color: var(--theme-button-hover-outline);
     }
 
     @media (max-width: 600px) {

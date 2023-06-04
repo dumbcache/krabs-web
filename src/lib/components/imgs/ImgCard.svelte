@@ -4,7 +4,7 @@
     import {
         dropMini,
         editItems,
-        editMode,
+        mode,
         previewItem,
         selectedCount,
     } from "$lib/scripts/stores";
@@ -13,7 +13,7 @@
     let selectedForDelete: Boolean;
 
     function handleImgclick(e) {
-        if ($editMode !== "delete") {
+        if ($mode === "") {
             $dropMini = true;
             if ($previewItem?.id !== img.id) {
                 const { url } = e.currentTarget.dataset;
@@ -48,7 +48,7 @@
     <img
         src={img.thumbnailLink}
         alt="thumbnail to link"
-        class="img {$editMode === 'delete' ? 'delete' : ''}"
+        class="img {$mode === 'delete' ? 'delete' : ''}"
         class:select={selectedForDelete}
         loading="lazy"
         height="200"
@@ -56,7 +56,7 @@
         on:error={(e) => (e.target.src = imgPlaceholder)}
     />
     <button class="anchor">.</button>
-    {#if $editMode !== "delete"}
+    {#if $mode !== "delete"}
         {#if img.appProperties?.origin}
             <a
                 href={img.appProperties?.origin}

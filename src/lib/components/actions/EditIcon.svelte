@@ -1,8 +1,8 @@
 <script lang="ts">
     import editIcon from "$lib/assets/edit.svg?raw";
-    import { editMode } from "$lib/scripts/stores";
+    import { mode } from "$lib/scripts/stores";
 </script>
 
-<button class="edit-button btn" on:click={() => ($editMode = "delete")}>
+<button class="edit-button btn" on:click={() => ($mode = "delete")}>
     {@html editIcon}
 </button>

@@ -18,9 +18,8 @@ import {
     dataCacheName,
     editItems,
     selectedCount,
-    editMode,
-    editConfirm,
     mode,
+    editConfirm,
 } from "$lib/scripts/stores";
 import { fetchFiles, refreshMainContent } from "./drive";
 
@@ -83,7 +82,7 @@ if (browser) {
                     refreshMainContent(get(activeParentId), "imgs").then(() => {
                         editItems.set([]);
                         selectedCount.set(0);
-                        editMode.set("");
+                        mode.set("");
                     })
                 );
                 return;
@@ -524,13 +523,13 @@ export function previewAndSetDropItems(
 export function shortcutHandler(e) {
     switch (e.key) {
         case "Delete":
-            if (get(editMode) === "delete") {
+            if (get(mode) === "delete") {
                 get(editItems).length !== 0 && editConfirm.set(true);
             }
             break;
         case "Escape":
-            if (get(editMode) === "delete") {
-                get(editConfirm) === false && editMode.set("");
+            if (get(mode) === "delete") {
+                get(editConfirm) === false && mode.set("");
                 editConfirm.set(false);
             }
             if (get(mode) === "search") {

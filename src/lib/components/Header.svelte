@@ -2,7 +2,7 @@
     import { goto } from "$app/navigation";
     import ColorScheme from "$lib/components/actions/ColorScheme.svelte";
     import LogoutButton from "$lib/components/actions/LogoutButton.svelte";
-    import { editMode, previewItem } from "$lib/scripts/stores";
+    import { previewItem } from "$lib/scripts/stores";
     import Nav from "./Nav.svelte";
 </script>
 
