@@ -58,8 +58,6 @@
     onDestroy(() => {
         $previewItem = undefined;
         $editMode = "";
-        // $mode = "";
-        // $searchItems = undefined;
     });
 </script>
 
@@ -95,6 +93,10 @@
         {/if}
     {/if}
     <div style:display={contentHidden}>
+        <div class="count">
+            <span>Images: {$activeImgs?.length || 0}</span>
+            <span>Folders: {$activeDirs?.length || 0}</span>
+        </div>
         <Dirs
             dirs={$activeDirs}
             on:editDir={(e) => {
@@ -143,6 +145,13 @@
 {/if}
 
 <style>
+    .count {
+        display: flex;
+        gap: 2rem;
+        width: fit-content;
+        margin-left: auto;
+        margin-right: 3rem;
+    }
     .no-files {
         position: absolute;
         top: 50%;
@@ -166,6 +175,10 @@
         cursor: not-allowed;
     }
     @media (max-width: 600px) {
+        .count {
+            margin-right: 1rem;
+            font-size: 1.3rem;
+        }
         .edit-mode {
             top: 5rem;
             margin-right: 1rem;
