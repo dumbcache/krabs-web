@@ -15,10 +15,10 @@
 
 <div class="drop-item" data-id={item.id}>
     <img src={item.imgRef} class="drop-img" alt="" />
-    <button class="remove btn" on:click={() => removeDropEntry(item.id)}>
-        {@html closeIcon}
-    </button>
     {#if item.progress !== "uploading" && item.progress !== "success"}
+        <button class="remove btn" on:click={() => removeDropEntry(item.id)}>
+            {@html closeIcon}
+        </button>
         <input
             type="text"
             class="parent"
@@ -61,14 +61,19 @@
         position: relative;
         border-radius: 1rem;
         max-width: 20rem;
+        border-bottom: none;
         /* background-color: #ddd; */
+        border: 1px solid var(--cover-border-color);
+        border-bottom: none;
+        overflow: hidden;
     }
     .drop-img {
         height: 15rem;
         max-width: 100%;
         object-fit: cover;
         object-position: top;
-        border-radius: 1rem;
+        border-top-left-radius: 0.5rem;
+        border-top-right-radius: 0.5rem;
     }
     .drop-item:hover .drop-img {
         filter: brightness(0.5);
@@ -78,6 +83,8 @@
         top: 0.5rem;
         right: 0.5rem;
         filter: none;
+        width: var(--size-small);
+        height: var(--size-small);
     }
     .remove :global(svg) {
         fill: var(--color-white);
@@ -120,14 +127,6 @@
     .anime {
         -webkit-animation: spin 1.5s linear 0s infinite;
         animation: spin 1s linear 0s infinite;
-    }
-    input:disabled {
-        background: var(--color-white-level-one);
-        color: #00fd;
-        cursor: not-allowed;
-    }
-    input:disabled:hover {
-        background: var(--color-white-level-one);
     }
     @media (max-width: 600px) {
         .drop-item {

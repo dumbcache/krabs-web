@@ -69,24 +69,31 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-
         flex-shrink: 2;
         width: 100%;
         border: none;
         outline: none;
-        border-radius: 0.5rem;
+        border-bottom-left-radius: 0.5rem;
+        border-bottom-right-radius: 0.5rem;
         padding: 0.5rem;
         font-size: 1.6rem;
         color: #000;
         background-color: var(--color-white-level-two);
+        color: var(--primary-color);
+        background-color: var(--input-background);
         border-bottom: 2px solid var(--color-black);
         padding-left: 0.5rem;
     }
-    .drop :global(input::placeholder) {
+
+    .drop :global(input:disabled:hover),
+    .drop :global(input:disabled) {
+        background-color: var(--primary-bg-color);
         color: var(--color-black-level-six);
+        cursor: not-allowed;
     }
     .drop :global(input:hover) {
         background-color: var(--color-white-level-four);
+        background-color: var(--theme-button-hover-outline);
     }
     .btn :global(svg) {
         fill: var(--color-white);

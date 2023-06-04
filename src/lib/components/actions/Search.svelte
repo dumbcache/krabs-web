@@ -6,7 +6,7 @@
 
     function updateSearchItems() {
         $searchItems = $activeDirs?.filter((dir) => {
-            return dir.name.toLowerCase().includes(search.toLowerCase());
+            return dir.name.toLowerCase().includes(search.trim().toLowerCase());
         });
     }
     onMount(() => {
