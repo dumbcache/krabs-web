@@ -4,8 +4,11 @@
     import folderCreate from "$lib/assets/folderCreate.svg?raw";
     import searchIcon from "$lib/assets/search.svg?raw";
     import refresh from "$lib/assets/refresh.svg?raw";
+    import swapIcon from "$lib/assets/swap.svg?raw";
     import { previewAndSetDropItems } from "$lib/scripts/utils";
     import {
+        activeDirs,
+        activeImgs,
         activeParentId,
         mode,
         previewItem,
@@ -29,7 +32,16 @@
 </script>
 
 <div class="tools">
-    <History />
+    <button
+        class="button__reverse btn"
+        title="search"
+        on:click={() => {
+            $activeDirs = $activeDirs?.reverse();
+            $activeImgs = $activeImgs?.reverse();
+        }}
+    >
+        {@html swapIcon}
+    </button>
     <EditIcon />
     <button
         class="button__search btn"
@@ -37,6 +49,17 @@
         on:click={() => ($mode = $mode === "search" ? "" : "search")}
     >
         {@html searchIcon}
+    </button>
+    <History />
+    <button
+        class="refresh-button btn {$refreshClicked ? 'anime' : ''}"
+        title="refresh files"
+        on:click={() => {
+            $refreshClicked = true;
+            refreshCache();
+        }}
+    >
+        {@html refresh}
     </button>
     <label for="img-picker" class="button__create-img btn" title="add images">
         {@html imgCreate}
@@ -55,16 +78,6 @@
         on:click={() => (dirCreateToggle = !dirCreateToggle)}
     >
         {@html folderCreate}
-    </button>
-    <button
-        class="refresh-button btn {$refreshClicked ? 'anime' : ''}"
-        title="refresh files"
-        on:click={() => {
-            $refreshClicked = true;
-            refreshCache();
-        }}
-    >
-        {@html refresh}
     </button>
     <a
         href={`https://drive.google.com/drive/folders/${$activeParentId}`}
