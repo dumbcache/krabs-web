@@ -93,10 +93,10 @@
     {/if}
     <div style:display={contentHidden}>
         <div class="count">
-            {#if $activeImgs?.length !== 0}
+            {#if $activeImgs?.length !== 0 && $activeImgs !== undefined}
                 <span>Images: {$activeImgs?.length}</span>
             {/if}
-            {#if $activeDirs?.length !== 0}
+            {#if $activeDirs?.length !== 0 && $activeDirs !== undefined}
                 <span>Folders: {$activeDirs?.length}</span>
             {/if}
         </div>

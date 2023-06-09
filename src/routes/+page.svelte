@@ -12,7 +12,7 @@
         <ColorScheme />
         <LoginButton />
     </header>
-    <h1 class="home-title">Krabs</h1>
+    <h1 class="home-title">Pocket Drive</h1>
 {/if}
 
 <style>
@@ -30,7 +30,7 @@
         left: 50%;
         transform: translate(-50%, -50%);
         font-weight: 900;
-        font-size: 15rem;
+        font-size: 10rem;
     }
 
     @media (max-width: 600px) {

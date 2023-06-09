@@ -5,6 +5,7 @@
     import failureIcon from "$lib/assets/failure.svg?raw";
     import { removeDropEntry } from "$lib/scripts/utils";
     export let item: DropItem;
+    $: console.log(item.progress);
     let progressIcon: string;
     $: item.progress === "uploading"
         ? (progressIcon = loadingIcon)
@@ -39,7 +40,7 @@
             type="text"
             class="url"
             placeholder="url"
-            value={item.url || ""}
+            value={decodeURI(item.url || "")}
             on:keydown|stopPropagation
             on:click={(e) => e.target.select()}
         />
@@ -88,6 +89,7 @@
         filter: none;
         width: var(--size-small);
         height: var(--size-small);
+        z-index: 1;
     }
     .remove :global(svg) {
         fill: var(--color-white);
@@ -99,8 +101,8 @@
         position: absolute;
         top: 0;
         left: 0;
-        bottom: 0;
         right: 0;
+        height: 15rem;
         background-color: var(--primary-backdrop-color);
     }
     .progress :global(svg) {
