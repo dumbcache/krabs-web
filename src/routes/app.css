@@ -43,7 +43,7 @@
 
     --font-size-default: 1.6rem;
     --line-size-default: 1.6rem;
-    --title-size: var(--size-large);
+    --title-size: var(--size-medium);
     --primary-icon-size: var(--size-medium);
     --secondary-icon-size: var(--size-small);
     --dir-width: 30rem;
@@ -179,7 +179,7 @@ a {
 
 @media (max-width: 600px) {
     :root {
-        --title-size: var(--size-medium);
+        --title-size: var(--size-small);
         --primary-icon-size: var(--size-small);
         --secondary-icon-size: var(--size-default);
         --dir-width: 14rem;

@@ -32,9 +32,6 @@
     });
 </script>
 
-<svelte:head>
-    <title>Karbs:root</title>
-</svelte:head>
 <svelte:window
     on:offline={() => {
         console.log("offline");
