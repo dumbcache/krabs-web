@@ -3,6 +3,8 @@
     import LoginButton from "$lib/components/actions/LoginButton.svelte";
     import { navigating } from "$app/stores";
     import LoadIndicator from "$lib/components/actions/LoadIndicator.svelte";
+    import { getOauthToken } from "$lib/scripts/utils";
+    import googleIcon from "$lib/assets/google.png";
 </script>
 
 {#if $navigating}
@@ -11,6 +13,9 @@
     <header class="header">
         <ColorScheme />
         <LoginButton />
+        <button on:click={getOauthToken} class="signin"
+            ><img src={googleIcon} alt="signin" /></button
+        >
     </header>
     <h1 class="home-title">Pocket Drive</h1>
 {/if}
@@ -22,7 +27,20 @@
         padding: 2rem;
         display: flex;
         align-items: center;
-        gap: 2rem;
+        gap: 1rem;
+    }
+    .signin {
+        width: var(--primary-icon-size);
+        background-color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        filter: none;
+        border: 1px solid #1115;
+    }
+    .signin:hover {
+        background-color: #fffc;
     }
     .home-title {
         position: absolute;

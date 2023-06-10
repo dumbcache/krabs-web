@@ -24,6 +24,7 @@ import {
 import { fetchFiles, refreshMainContent } from "./drive";
 
 export let childWorker: Worker;
+export let client, accessToken;
 if (browser) {
     childWorker = new ChildWorker();
     childWorker.onerror = (e) => console.warn(e);
@@ -163,6 +164,38 @@ export const toggleColorMode = () => {
     }
 };
 
+function initClient() {
+    client = window.google.accounts.oauth2.initTokenClient({
+        client_id:
+            "206697063226-p09kl0nq355h6q5440qlbikob3h8553u.apps.googleusercontent.com",
+        scope: "https://www.googleapis.com/auth/drive.file",
+        callback: (tokenResponse) => {
+            accessToken = tokenResponse.access_token;
+            window.localStorage.setItem("token", accessToken);
+            window.localStorage.getItem("root") ??
+                fetch(
+                    "https://www.googleapis.com/drive/v3/files?pageSize=1&fields=files(id,name,parents)",
+                    {
+                        headers: { authorization: `Bearer ${accessToken}` },
+                    }
+                ).then(async (res) => {
+                    const { files } = await res.json();
+                    window.localStorage.setItem("root", files[0].parents[0]);
+                    isLoggedin.set(true);
+                    goto("/r");
+                });
+        },
+    });
+}
+export function getOauthToken() {
+    client.requestAccessToken();
+}
+function revokeToken() {
+    window.google.accounts.oauth2.revoke(accessToken, () => {
+        console.log("access token revoked");
+    });
+}
+
 export const loadGSIScript = () => {
     const src = "https://accounts.google.com/gsi/client";
     const header = document.querySelector(".header") as HTMLDivElement;
@@ -171,27 +204,29 @@ export const loadGSIScript = () => {
     const script = document.createElement("script");
     script.src = src;
     script.onload = () => {
-        window.google.accounts.id.initialize({
-            client_id: PUBLIC_KRAB_CLIENT_ID,
-            nonce: PUBLIC_KRAB_NONCE_WEB,
-            auto_select: false,
-            callback: handleGoogleSignIn,
-        });
-        window.google.accounts.id.prompt();
-        window.google.accounts.id.renderButton(
-            header.querySelector(".button__signin"),
-            {
-                type: "icon",
-                shape: "circle",
-                size: "medium",
-            }
-        );
+        initClient();
+        // window.google.accounts.id.initialize({
+        //     client_id: PUBLIC_KRAB_CLIENT_ID,
+        //     nonce: PUBLIC_KRAB_NONCE_WEB,
+        //     auto_select: false,
+        //     callback: handleGoogleSignIn,
+        // });
+        // window.google.accounts.id.prompt();
+        // window.google.accounts.id.renderButton(
+        //     header.querySelector(".button__signin"),
+        //     {
+        //         type: "icon",
+        //         shape: "circle",
+        //         size: "medium",
+        //     }
+        // );
     };
     script.onerror = (e) => console.log(e);
     header.append(script);
 };
 
 export const handleGoogleSignIn = async (googleRes: GoogleSignInPayload) => {
+    getOauthToken();
     const creds = googleRes?.credential;
     const res = await fetch(`${PUBLIC_KRAB_API}/login`, {
         method: "POST",
@@ -235,7 +270,7 @@ export const getToken = async () => {
 
 export function checkLoginStatus() {
     if (browser) {
-        const secret = window ? window.localStorage.getItem("secret") : false;
+        const secret = window ? window.localStorage.getItem("token") : false;
         return Boolean(secret);
     }
 }
@@ -243,7 +278,7 @@ export function checkLoginStatus() {
 export async function signUserOut(e?: Event) {
     e?.stopPropagation();
     const secret = window.localStorage.getItem("secret");
-    const res = await fetch(`${PUBLIC_KRAB_API}/logout/WEB`, {
+    fetch(`${PUBLIC_KRAB_API}/logout/WEB`, {
         headers: {
             Authorization: `Bearer ${secret}`,
         },
