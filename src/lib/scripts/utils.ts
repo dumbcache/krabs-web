@@ -175,7 +175,7 @@ function initClient() {
             window.localStorage.setItem("token", accessToken);
             window.localStorage.getItem("root") ??
                 fetch(
-                    `https://www.googleapis.com/drive/v3/files?pageSize=1&fields=files(id,name)`,
+                    `https://www.googleapis.com/drive/v3/files?&pageSize=1&fields=files(id,name)&orderBy=createdTime`,
                     {
                         headers: { authorization: `Bearer ${accessToken}` },
                     }
