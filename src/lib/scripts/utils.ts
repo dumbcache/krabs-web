@@ -24,7 +24,7 @@ import {
 import { fetchFiles, refreshMainContent } from "./drive";
 
 export let childWorker: Worker;
-export let client, accessToken;
+export let client, accessToken: string;
 if (browser) {
     childWorker = new ChildWorker();
     childWorker.onerror = (e) => console.warn(e);
@@ -173,6 +173,10 @@ function initClient() {
             const name = encodeURIComponent("Pocket_#Drive");
             accessToken = tokenResponse.access_token;
             window.localStorage.setItem("token", accessToken);
+            window.localStorage.setItem(
+                "expires",
+                String(Date.now() + tokenResponse.expires_in)
+            );
             window.localStorage.getItem("root") ??
                 fetch(
                     `https://www.googleapis.com/drive/v3/files?&pageSize=1&fields=files(id,name)&orderBy=createdTime`,
@@ -196,10 +200,9 @@ function initClient() {
 export function getOauthToken() {
     client.requestAccessToken();
 }
-function revokeToken() {
-    window.google.accounts.oauth2.revoke(accessToken, () => {
-        console.log("access token revoked");
-    });
+
+export function isTokenExpired() {
+    return Date.now() > Number(window.localStorage.getItem("expires"));
 }
 
 export const loadGSIScript = () => {

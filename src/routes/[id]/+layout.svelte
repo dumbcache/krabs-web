@@ -10,6 +10,7 @@
         updateRecents,
         setCacheName,
         shortcutHandler,
+        loadGSIScript,
     } from "$lib/scripts/utils";
     import { dropMini, mode, previewItem } from "$lib/scripts/stores";
     import BackButton from "$lib/components/actions/BackButton.svelte";
@@ -27,8 +28,13 @@
         }
     }
     onMount(() => {
-        setCacheName();
-        updateRecents();
+        try {
+            setCacheName();
+            updateRecents();
+            loadGSIScript();
+        } catch (error) {
+            console.warn(error);
+        }
     });
 </script>
 
