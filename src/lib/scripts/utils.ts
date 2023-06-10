@@ -170,17 +170,23 @@ function initClient() {
             "206697063226-p09kl0nq355h6q5440qlbikob3h8553u.apps.googleusercontent.com",
         scope: "https://www.googleapis.com/auth/drive.file",
         callback: (tokenResponse) => {
+            const name = encodeURIComponent("Pocket_#Drive");
             accessToken = tokenResponse.access_token;
             window.localStorage.setItem("token", accessToken);
             window.localStorage.getItem("root") ??
                 fetch(
-                    "https://www.googleapis.com/drive/v3/files?pageSize=1&fields=files(id,name,parents)",
+                    `https://www.googleapis.com/drive/v3/files?pageSize=1&fields=files(id,name)`,
                     {
                         headers: { authorization: `Bearer ${accessToken}` },
                     }
                 ).then(async (res) => {
                     const { files } = await res.json();
-                    window.localStorage.setItem("root", files[0].parents[0]);
+                    if (files.length !== 0) {
+                        window.localStorage.setItem("root", files[0].id);
+                    } else {
+                        const { id } = await createRootDir(accessToken);
+                        window.localStorage.setItem("root", id);
+                    }
                     isLoggedin.set(true);
                     goto("/r");
                 });
@@ -223,6 +229,58 @@ export const loadGSIScript = () => {
     };
     script.onerror = (e) => console.log(e);
     header.append(script);
+};
+
+export const colorPalette = {
+    ChocolateIceCream: "#ac725e",
+    OldBrickRed: "#d06b64",
+    Cardinal: "#f83a22",
+    WildStraberries: "#fa573c",
+    MarsOrange: "#ff7537",
+    YellowCab: "#ffad46",
+    Spearmint: "#42d692",
+    VernFern: "#16a765",
+    Asparagus: "#7bd148",
+    SlimeGreen: "#b3dc6c",
+    DesertSand: "#fbe983",
+    Macaroni: "#fad165",
+    SeaFoam: "#92e1c0",
+    Pool: "#9fe1e7",
+    Denim: "#9fc6e7",
+    RainySky: "#4986e7",
+    BlueVelvet: "#9a9cff",
+    PurpleDino: "#b99aff",
+    Mouse: "#8f8f8f",
+    MountainGrey: "#cabdbf",
+    Earthworm: "#cca6ac",
+    BubbleGum: "#f691b2",
+    PurpleRain: "#cd74e6",
+    ToyEggplant: "#a47ae2",
+};
+
+export const createRootDir = async (accessToken: string) => {
+    const url = "https://www.googleapis.com/drive/v3/files/";
+    let req = await fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+            name: "Pocket_#Drive",
+            mimeType: "application/vnd.google-apps.folder",
+            folderColorRgb: colorPalette.Cardinal,
+            description: "",
+        }),
+    });
+    let { status, statusText } = req;
+    let data = (await req.json()) as CreateResourceResponse;
+    if (status !== 200)
+        console.log(
+            `error while creating root dir ${status} ${statusText}`,
+            data
+        );
+    return data;
 };
 
 export const handleGoogleSignIn = async (googleRes: GoogleSignInPayload) => {
@@ -277,12 +335,6 @@ export function checkLoginStatus() {
 
 export async function signUserOut(e?: Event) {
     e?.stopPropagation();
-    const secret = window.localStorage.getItem("secret");
-    fetch(`${PUBLIC_KRAB_API}/logout/WEB`, {
-        headers: {
-            Authorization: `Bearer ${secret}`,
-        },
-    });
     await clearFiles();
     isLoggedin.set(false);
     console.log("logging user out");
