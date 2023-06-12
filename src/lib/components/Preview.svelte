@@ -20,7 +20,7 @@
         on:touchstart={handleTouchStart}
         on:touchend={(e) => handleTouchEnd(e, $previewItem?.id)}
         on:touchmove={handleTouchMove}
-        transition:fly={{ duration: 200, x: 200 }}
+        in:fade={{ duration: 300, delay: 500 }}
     >
         {#key $previewItem.id}
             <img

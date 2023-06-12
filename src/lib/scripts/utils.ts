@@ -515,7 +515,6 @@ export function previewAndSetDropItems(
     parent?: string,
     parentName?: string
 ) {
-    previewItem.set(undefined);
     for (let img of files!) {
         if (img.type.match("image/")) {
             // previewLoadDropItem(img, dropArea);

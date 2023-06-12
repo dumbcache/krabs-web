@@ -19,6 +19,7 @@
         isLoggedin,
         mode,
         previewItem,
+        refreshClicked,
         sessionTimeout,
     } from "$lib/scripts/stores";
     import BackButton from "$lib/components/actions/BackButton.svelte";
@@ -42,6 +43,7 @@
             setCacheName();
             updateRecents();
             loadGSIScript();
+            $refreshClicked = false;
         } catch (error) {
             console.warn(error);
         }
@@ -128,6 +130,9 @@
     .content {
         background-color: inherit;
         width: 100%;
+    }
+    .main {
+        overflow-x: hidden;
     }
     .dragover {
         background-color: #55f5;

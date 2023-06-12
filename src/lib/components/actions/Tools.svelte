@@ -10,6 +10,7 @@
         activeDirs,
         activeImgs,
         activeParentId,
+        dropMini,
         mode,
         previewItem,
         refreshClicked,
@@ -24,7 +25,8 @@
         e.preventDefault();
         // clearDropItems();
         const target = e.target as HTMLInputElement;
-        previewItem.set(undefined);
+        $dropMini = false;
+        $previewItem = undefined;
         if (target.files) {
             previewAndSetDropItems(target.files);
         }
