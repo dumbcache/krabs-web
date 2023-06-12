@@ -132,7 +132,7 @@
         width: 100%;
     }
     .main {
-        overflow-x: hidden;
+        /* overflow-x: hidden; */
     }
     .dragover {
         background-color: #55f5;
