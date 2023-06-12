@@ -44,8 +44,7 @@ if (browser) {
 
             case "IMG_PREVIEW_FAILED":
                 if (data.status === 401) {
-                    getToken();
-                    return;
+                    !checkLoginStatus() && sessionTimeout.set(true);
                 }
                 return;
 
@@ -68,8 +67,7 @@ if (browser) {
                     })
                 );
                 if (data.status === 401) {
-                    getToken();
-                    return;
+                    !checkLoginStatus() && sessionTimeout.set(true);
                 }
                 return;
 

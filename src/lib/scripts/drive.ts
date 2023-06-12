@@ -37,22 +37,22 @@ function constructAPI(
         (mimeType === DIR_MIME_TYPE ? "name" : "createdTime desc");
     return api;
 }
-export async function downloadImage(id: string, token: string): Promise<Blob> {
-    return new Promise(async (resolve, reject) => {
-        let res = await fetch(`${FILE_API}/${id}?alt=media`, {
-            method: "GET",
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-        if (res.status !== 200) {
-            if (res.status === 401) reject({ status: 401 });
-            reject({ status: res.status });
-        }
-        const data = await res.blob();
-        resolve(data);
-    });
-}
+// export async function downloadImage(id: string, token: string): Promise<Blob> {
+//     return new Promise(async (resolve, reject) => {
+//         let res = await fetch(`${FILE_API}/${id}?alt=media`, {
+//             method: "GET",
+//             headers: {
+//                 Authorization: `Bearer ${token}`,
+//             },
+//         });
+//         if (res.status !== 200) {
+//             if (res.status === 401) reject({ status: 401 });
+//             reject({ status: res.status });
+//         }
+//         const data = await res.blob();
+//         resolve(data);
+//     });
+// }
 
 export const createRootDir = async (accessToken: string) => {
     const url = "https://www.googleapis.com/drive/v3/files/";
@@ -204,25 +204,25 @@ export const createImgMetadata = (
     });
 };
 
-export const uploadImg = async (
-    location: string,
-    bytes: Uint8Array
-    // mimeType: string
-) => {
-    let req = await fetch(location, {
-        method: "PUT",
-        // headers: {
-        //     "Content-Type": mimeType,
-        // },
-        body: bytes,
-    });
-    let { status, statusText } = req;
-    if (status !== 200) {
-        console.log(`error while uploadingImg ${status} ${statusText}`);
-        return { status };
-    }
-    return { status };
-};
+// export const uploadImg = async (
+//     location: string,
+//     bytes: Uint8Array
+//     // mimeType: string
+// ) => {
+//     let req = await fetch(location, {
+//         method: "PUT",
+//         // headers: {
+//         //     "Content-Type": mimeType,
+//         // },
+//         body: bytes,
+//     });
+//     let { status, statusText } = req;
+//     if (status !== 200) {
+//         console.log(`error while uploadingImg ${status} ${statusText}`);
+//         return { status };
+//     }
+//     return { status };
+// };
 
 export async function fetchFiles(
     parent: string,
@@ -279,23 +279,6 @@ export async function refreshCache() {
         refreshClicked.set(false);
     });
 }
-
-export const loadMainContent = (parent: string): Promise<void> => {
-    return new Promise(async (resolve, reject) => {
-        const proms = [fetchDirs(parent!), fetchImgs(parent!)];
-        Promise.all(proms)
-            .then(() => {
-                resolve();
-            })
-            .catch(async (e) => {
-                console.warn(e);
-                if (e.status === 401) {
-                    get(sessionTimeout) === false && sessionTimeout.set(true);
-                    return;
-                }
-            });
-    });
-};
 
 export async function fetchDirs(
     parent: string,
@@ -361,6 +344,23 @@ export const refreshMainContent = (
                     return;
                 }
                 console.warn(e);
+            });
+    });
+};
+
+export const loadMainContent = (parent: string): Promise<void> => {
+    return new Promise(async (resolve, reject) => {
+        const proms = [fetchDirs(parent!), fetchImgs(parent!)];
+        Promise.all(proms)
+            .then(() => {
+                resolve();
+            })
+            .catch(async (e) => {
+                console.warn(e);
+                if (e.status === 401) {
+                    get(sessionTimeout) === false && sessionTimeout.set(true);
+                    return;
+                }
             });
     });
 };

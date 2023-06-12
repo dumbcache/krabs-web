@@ -1,16 +1,17 @@
 <script lang="ts">
     import { fetchFiles } from "$lib/scripts/drive";
     import EditTool from "$lib/components/actions/EditTool.svelte";
+    import { sessionTimeout } from "$lib/scripts/stores";
 
     export let id: string;
     export let name: string;
     let pics: GoogleFile[] = [];
 
-    $: (fetchFiles(id, "covers", 3) as Promise<GoogleFileRes>).then(
-        ({ files }) => {
+    (fetchFiles(id, "covers", 3) as Promise<GoogleFileRes>)
+        .then(({ files }) => {
             pics = files;
-        }
-    );
+        })
+        .catch((e) => {});
 </script>
 
 <div class="cover">
