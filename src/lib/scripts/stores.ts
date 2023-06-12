@@ -13,6 +13,8 @@ export let editItems = writable<string[]>([]);
 export let editConfirm = writable(false);
 export let selectedCount = writable(0);
 export let isLoggedin = writable(false);
+export let activeTimeout = writable(0);
+export let sessionTimeout = writable(false);
 export let dataCacheName = writable("");
 export let refreshClicked = writable(false);
 

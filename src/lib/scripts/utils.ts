@@ -1,9 +1,5 @@
 import { goto } from "$app/navigation";
-import {
-    PUBLIC_KRAB_CLIENT_ID,
-    PUBLIC_KRAB_API,
-    PUBLIC_KRAB_NONCE_WEB,
-} from "$env/static/public";
+import { PUBLIC_KRAB_API, PUBLIC_KRAB_CLIENT_ID } from "$env/static/public";
 import { get } from "svelte/store";
 import { browser } from "$app/environment";
 import ChildWorker from "$lib/scripts/worker.ts?worker";
@@ -20,8 +16,10 @@ import {
     selectedCount,
     mode,
     editConfirm,
+    sessionTimeout,
+    activeTimeout,
 } from "$lib/scripts/stores";
-import { fetchFiles, refreshMainContent } from "./drive";
+import { fetchFiles, refreshMainContent, createRootDir } from "./drive";
 
 export let childWorker: Worker;
 export let client, accessToken: string;
@@ -164,37 +162,54 @@ export const toggleColorMode = () => {
     }
 };
 
+export function checkSessionTimeout() {
+    let time = Number(window.localStorage.getItem("expires")) - Date.now();
+    time > 0 &&
+        activeTimeout.set(
+            setTimeout(() => {
+                if (isTokenExpired()) {
+                    sessionTimeout.set(true);
+                } else checkSessionTimeout();
+            }, time)
+        );
+}
+
+async function handleGoogleSignIn(tokenResponse: TokenResponse) {
+    const name = encodeURIComponent("Pocket_#Drive");
+    accessToken = tokenResponse.access_token;
+    window.localStorage.setItem("token", accessToken);
+    window.localStorage.setItem(
+        "expires",
+        String(Date.now() + tokenResponse.expires_in * 1000)
+    );
+    clearTimeout(get(activeTimeout));
+    checkSessionTimeout();
+    sessionTimeout.set(false);
+    if (!window.localStorage.getItem("root")) {
+        const res = await fetch(
+            `https://www.googleapis.com/drive/v3/files?&pageSize=1&fields=files(id,name)&orderBy=createdTime`,
+            {
+                headers: { authorization: `Bearer ${accessToken}` },
+            }
+        );
+        const { files } = await res.json();
+        if (files.length !== 0) {
+            window.localStorage.setItem("root", files[0].id);
+        } else {
+            const { id } = await createRootDir(accessToken);
+            window.localStorage.setItem("root", id);
+        }
+    }
+    if (get(isLoggedin)) return;
+    isLoggedin.set(true);
+    goto("/r");
+}
+
 function initClient() {
     client = window.google.accounts.oauth2.initTokenClient({
-        client_id:
-            "206697063226-p09kl0nq355h6q5440qlbikob3h8553u.apps.googleusercontent.com",
+        client_id: PUBLIC_KRAB_CLIENT_ID,
         scope: "https://www.googleapis.com/auth/drive.file",
-        callback: (tokenResponse) => {
-            const name = encodeURIComponent("Pocket_#Drive");
-            accessToken = tokenResponse.access_token;
-            window.localStorage.setItem("token", accessToken);
-            window.localStorage.setItem(
-                "expires",
-                String(Date.now() + tokenResponse.expires_in)
-            );
-            window.localStorage.getItem("root") ??
-                fetch(
-                    `https://www.googleapis.com/drive/v3/files?&pageSize=1&fields=files(id,name)&orderBy=createdTime`,
-                    {
-                        headers: { authorization: `Bearer ${accessToken}` },
-                    }
-                ).then(async (res) => {
-                    const { files } = await res.json();
-                    if (files.length !== 0) {
-                        window.localStorage.setItem("root", files[0].id);
-                    } else {
-                        const { id } = await createRootDir(accessToken);
-                        window.localStorage.setItem("root", id);
-                    }
-                    isLoggedin.set(true);
-                    goto("/r");
-                });
-        },
+        callback: handleGoogleSignIn,
     });
 }
 export function getOauthToken() {
@@ -261,52 +276,27 @@ export const colorPalette = {
     ToyEggplant: "#a47ae2",
 };
 
-export const createRootDir = async (accessToken: string) => {
-    const url = "https://www.googleapis.com/drive/v3/files/";
-    let req = await fetch(url, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({
-            name: "Pocket_#Drive",
-            mimeType: "application/vnd.google-apps.folder",
-            folderColorRgb: colorPalette.Cardinal,
-            description: "",
-        }),
-    });
-    let { status, statusText } = req;
-    let data = (await req.json()) as CreateResourceResponse;
-    if (status !== 200)
-        console.log(
-            `error while creating root dir ${status} ${statusText}`,
-            data
-        );
-    return data;
-};
-
-export const handleGoogleSignIn = async (googleRes: GoogleSignInPayload) => {
-    getOauthToken();
-    const creds = googleRes?.credential;
-    const res = await fetch(`${PUBLIC_KRAB_API}/login`, {
-        method: "POST",
-        headers: {
-            "content-type": "application/json",
-        },
-        body: JSON.stringify({ id_token: creds, app: "WEB" }),
-    });
-    if (res.status !== 200) {
-        console.warn(res.status, await res.text());
-        return;
-    }
-    const { token, root } = await res.json();
-    localStorage.setItem("secret", token);
-    localStorage.setItem("root", root);
-    await getToken();
-    isLoggedin.set(true);
-    goto("/r");
-};
+// export const handleGoogleSignIn = async (googleRes: GoogleSignInPayload) => {
+//     getOauthToken();
+//     const creds = googleRes?.credential;
+//     const res = await fetch(`${PUBLIC_KRAB_API}/login`, {
+//         method: "POST",
+//         headers: {
+//             "content-type": "application/json",
+//         },
+//         body: JSON.stringify({ id_token: creds, app: "WEB" }),
+//     });
+//     if (res.status !== 200) {
+//         console.warn(res.status, await res.text());
+//         return;
+//     }
+//     const { token, root } = await res.json();
+//     localStorage.setItem("secret", token);
+//     localStorage.setItem("root", root);
+//     await getToken();
+//     isLoggedin.set(true);
+//     goto("/r");
+// };
 
 export const getToken = async () => {
     const secret = window.localStorage.getItem("secret");
@@ -331,8 +321,9 @@ export const getToken = async () => {
 
 export function checkLoginStatus() {
     if (browser) {
-        const secret = window ? window.localStorage.getItem("token") : false;
-        return Boolean(secret);
+        return (
+            Boolean(window.localStorage.getItem("token")) && !isTokenExpired()
+        );
     }
 }
 
@@ -343,11 +334,13 @@ export async function signUserOut(e?: Event) {
     console.log("logging user out");
     goto("/");
 }
+
 export async function clearFiles() {
-    window.localStorage.clear();
     (await caches.keys()).forEach(
         (key) => key.startsWith("krabs") && caches.delete(key)
     );
+    window.localStorage.removeItem("token");
+    window.localStorage.removeItem("expires");
 }
 
 export function handleTouchStart(e: TouchEvent) {

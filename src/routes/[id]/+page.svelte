@@ -16,6 +16,7 @@
         editConfirm,
         searchItems,
         mode,
+        isLoggedin,
     } from "$lib/scripts/stores";
     import deleteIcon from "$lib/assets/delete.svg?raw";
     import closeIcon from "$lib/assets/close.svg?raw";
@@ -44,15 +45,15 @@
             if (res.status !== 200) {
                 console.log(await res.text());
                 if (res.status === 401) {
-                    getToken();
-                    getParentName();
                 }
                 return;
             }
             const { name } = await res.json();
             $activeParentName = name;
         }
-        getParentName();
+        if ($isLoggedin) {
+            getParentName();
+        }
     });
     onDestroy(() => {
         $previewItem = undefined;
@@ -132,6 +133,7 @@
 {/if}
 {#if $editConfirm}
     <Confirm
+        text={"Sure you want to delete?"}
         on:confirmCloseNO={() => {
             // $editMode = "";
             // $selectedCount = 0;

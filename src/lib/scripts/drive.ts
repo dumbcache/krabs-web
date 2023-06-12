@@ -4,10 +4,17 @@ import {
     activeImgs,
     activeParentId,
     dataCacheName,
+    isLoggedin,
     recents,
     refreshClicked,
+    sessionTimeout,
 } from "./stores";
-import { getToken } from "./utils";
+import {
+    getToken,
+    colorPalette,
+    checkLoginStatus,
+    isTokenExpired,
+} from "./utils";
 
 export const DIR_MIME_TYPE = "application/vnd.google-apps.folder";
 export const IMG_MIME_TYPE = "image/";
@@ -47,6 +54,31 @@ export async function downloadImage(id: string, token: string): Promise<Blob> {
     });
 }
 
+export const createRootDir = async (accessToken: string) => {
+    const url = "https://www.googleapis.com/drive/v3/files/";
+    let req = await fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+            name: "Pocket_#Drive",
+            mimeType: "application/vnd.google-apps.folder",
+            folderColorRgb: colorPalette.Cardinal,
+            description: "",
+        }),
+    });
+    let { status, statusText } = req;
+    let data = (await req.json()) as CreateResourceResponse;
+    if (status !== 200)
+        console.log(
+            `error while creating root dir ${status} ${statusText}`,
+            data
+        );
+    return data;
+};
+
 export const createDir = async (
     name: string,
     parent: string,
@@ -73,7 +105,8 @@ export const createDir = async (
             data
         );
         if (status === 401) {
-            (await getToken()) && window.location.reload();
+            get(sessionTimeout) === false && sessionTimeout.set(true);
+            return;
         }
     }
     let old = get(activeDirs) ?? [];
@@ -107,7 +140,8 @@ export const updateDir = async (
             data
         );
         if (status === 401) {
-            (await getToken()) && window.location.reload();
+            get(sessionTimeout) === false && sessionTimeout.set(true);
+            return;
         }
     }
     let old = get(activeDirs)?.filter((img) => img.id !== id) ?? [];
@@ -135,7 +169,8 @@ export const deleteDir = async (
             await req.text()
         );
         if (status === 401) {
-            (await getToken()) && window.location.reload();
+            get(sessionTimeout) === false && sessionTimeout.set(true);
+            return;
         }
     }
     let old = get(activeDirs)?.filter((img) => img.id !== id) ?? [];
@@ -230,6 +265,11 @@ export function localFetch(url: string, krabsCache: Cache) {
 }
 
 export async function refreshCache() {
+    if (!checkLoginStatus()) {
+        sessionTimeout.set(true);
+        return;
+    }
+    refreshClicked.set(true);
     window.localStorage.setItem("recents", "[]");
     recents.set([]);
     for (const key of await caches.keys()) {
@@ -250,7 +290,7 @@ export const loadMainContent = (parent: string): Promise<void> => {
             .catch(async (e) => {
                 console.warn(e);
                 if (e.status === 401) {
-                    (await getToken()) && window.location.reload();
+                    get(sessionTimeout) === false && sessionTimeout.set(true);
                     return;
                 }
             });
@@ -317,7 +357,7 @@ export const refreshMainContent = (
             })
             .catch(async (e) => {
                 if (e.status === 401) {
-                    (await getToken()) && window.location.reload();
+                    get(sessionTimeout) === false && sessionTimeout.set(true);
                     return;
                 }
                 console.warn(e);

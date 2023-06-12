@@ -32,7 +32,7 @@
             type="text"
             class="name"
             placeholder="name"
-            value={item.name || ""}
+            value={item.name.trim() || ""}
             on:keydown|stopPropagation
             on:click={(e) => e.target.select()}
         />
@@ -40,7 +40,7 @@
             type="text"
             class="url"
             placeholder="url"
-            value={decodeURI(item.url || "")}
+            value={decodeURI(item.url?.trim() || "")}
             on:keydown|stopPropagation
             on:click={(e) => e.target.select()}
         />

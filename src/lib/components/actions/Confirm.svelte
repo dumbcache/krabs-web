@@ -1,23 +1,36 @@
 <script lang="ts">
     import doneIcon from "$lib/assets/done.svg?raw";
+    import closeIcon from "$lib/assets/close.svg?raw";
     import { createEventDispatcher } from "svelte";
 
     const dispatch = createEventDispatcher();
     function dispatchClose(ctx: string, detail?: any) {
         dispatch(ctx, detail);
     }
+
+    export let text: string;
+    export let closeOnClick: Boolean = true;
 </script>
 
 <div
     class="confirm"
-    on:click={() => dispatch("confirmCloseNO")}
+    on:click={() => closeOnClick && dispatch("confirmCloseNO")}
     on:keydown|stopPropagation
 >
     <div class="wrapper" on:click|stopPropagation on:keydown|stopPropagation>
-        <p>Sure you want to delete?</p>
-        <button class="btn" on:click={() => dispatchClose("confirmCloseOK")}
-            >{@html doneIcon}</button
-        >
+        <p>{text}</p>
+        <span>
+            <button
+                class="btn close"
+                on:click={() => dispatchClose("confirmCloseNO")}
+                >{@html closeIcon}</button
+            >
+            <button
+                class="btn ok"
+                on:click={() => dispatchClose("confirmCloseOK")}
+                >{@html doneIcon}</button
+            >
+        </span>
     </div>
 </div>
 
@@ -36,8 +49,11 @@
         -webkit-backdrop-filter: blur(1rem);
         z-index: 3;
     }
-    .btn :global(svg) {
+    .ok :global(svg) {
         fill: #0f0;
+    }
+    .close :global(svg) {
+        fill: #f00;
     }
     .wrapper {
         background-color: var(--primary-backdrop-color);

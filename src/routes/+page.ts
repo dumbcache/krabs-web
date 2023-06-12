@@ -6,9 +6,11 @@ import { browser } from "$app/environment";
 
 export const load = () => {
     if (browser) {
-        isLoggedin.set(checkLoginStatus() ?? false);
-        if (get(isLoggedin)) {
-            throw redirect(302, "/r");
+        if (!checkLoginStatus()) {
+            isLoggedin.set(false);
+            return;
         }
+        isLoggedin.set(true);
+        throw redirect(302, "/r");
     }
 };

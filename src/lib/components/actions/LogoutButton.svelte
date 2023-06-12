@@ -4,6 +4,7 @@
 
     function signoutHandler() {
         childWorker.postMessage({ context: "CLEAR_IMAGE_CACHE" });
+        window.localStorage.clear();
         signUserOut();
     }
 </script>

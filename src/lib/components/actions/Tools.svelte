@@ -54,10 +54,7 @@
     <button
         class="refresh-button btn {$refreshClicked ? 'anime' : ''}"
         title="refresh files"
-        on:click={() => {
-            $refreshClicked = true;
-            refreshCache();
-        }}
+        on:click={refreshCache}
     >
         {@html refresh}
     </button>

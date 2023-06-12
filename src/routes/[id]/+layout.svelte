@@ -11,11 +11,21 @@
         setCacheName,
         shortcutHandler,
         loadGSIScript,
+        signUserOut,
+        getOauthToken,
     } from "$lib/scripts/utils";
-    import { dropMini, mode, previewItem } from "$lib/scripts/stores";
+    import {
+        dropMini,
+        isLoggedin,
+        mode,
+        previewItem,
+        sessionTimeout,
+    } from "$lib/scripts/stores";
     import BackButton from "$lib/components/actions/BackButton.svelte";
     import { onMount } from "svelte";
     import Search from "$lib/components/actions/Search.svelte";
+    import Confirm from "$lib/components/actions/Confirm.svelte";
+    import { goto } from "$app/navigation";
 
     let draggedOver = false;
     export function imgDropHandler(e: DragEvent) {
@@ -75,6 +85,19 @@
             </div>
             <Preview />
             <Drop />
+            {#if $sessionTimeout}
+                <Confirm
+                    text={"Session timeout. You want to continue?"}
+                    closeOnClick={false}
+                    on:confirmCloseNO={() => {
+                        signUserOut();
+                        goto("/");
+                    }}
+                    on:confirmCloseOK={() => {
+                        getOauthToken();
+                    }}
+                />
+            {/if}
         </main>
     {/if}
 </div>
