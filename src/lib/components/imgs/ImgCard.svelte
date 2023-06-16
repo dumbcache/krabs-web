@@ -72,15 +72,15 @@
                 {@html linkIcon}
             </a>
         {/if}
-    {/if}
 
-    <div class="favorite">
-        <Favorite
-            id={img.id}
-            starred={img.starred}
-            on:favStatus={() => (img.starred = !img.starred)}
-        />
-    </div>
+        <div class="favorite">
+            <Favorite
+                id={img.id}
+                starred={img.starred}
+                on:favStatus={() => (img.starred = !img.starred)}
+            />
+        </div>
+    {/if}
 </div>
 
 <style>
@@ -107,21 +107,21 @@
         right: 0.5rem;
         opacity: 0;
         transition: opacity 0.3s linear;
+        width: var(--size-small);
+        height: var(--size-small);
+        filter: none;
     }
     .favorite {
         bottom: 0.5rem;
-        filter: none;
     }
     .img-link:hover :global(svg) {
         fill: red;
     }
     .img-link {
-        max-width: fit-content;
+        display: block;
         top: 0.5rem;
     }
     .img-link :global(svg) {
-        width: var(--size-default);
-        height: var(--size-default);
         fill: var(--color-white);
         filter: none;
     }
@@ -161,6 +161,11 @@
         }
         .favorite {
             bottom: 0.2rem;
+        }
+        .img-link,
+        .favorite {
+            width: var(--size-default);
+            height: var(--size-default);
         }
     }
 </style>

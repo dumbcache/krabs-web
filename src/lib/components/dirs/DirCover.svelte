@@ -92,11 +92,15 @@
         bottom: 3rem;
         /* opacity: 0; */
         transition: opacity 0.3s linear;
+        width: var(--size-small);
+        height: var(--size-small);
     }
     @media (max-width: 600px) {
         .favorite {
             right: 0.5rem;
             bottom: 2rem;
+            width: var(--size-default);
+            height: var(--size-default);
         }
     }
 </style>

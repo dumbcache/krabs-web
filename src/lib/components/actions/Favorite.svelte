@@ -33,19 +33,10 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        width: fit-content;
-    }
-    .btn :global(svg) {
-        width: var(--size-small);
-        height: var(--size-small);
+        width: 100%;
+        display: block;
     }
     .starred :global(svg) {
         fill: red;
-    }
-    @media (max-width: 600px) {
-        .btn :global(svg) {
-            width: var(--size-default);
-            height: var(--size-default);
-        }
     }
 </style>
