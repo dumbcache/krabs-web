@@ -18,6 +18,7 @@ import {
     editConfirm,
     sessionTimeout,
     activeTimeout,
+    editMode,
 } from "$lib/scripts/stores";
 import { fetchFiles, refreshMainContent, createRootDir } from "./drive";
 
@@ -80,6 +81,7 @@ if (browser) {
                         editItems.set([]);
                         selectedCount.set(0);
                         mode.set("");
+                        editMode.set(false);
                     })
                 );
                 return;

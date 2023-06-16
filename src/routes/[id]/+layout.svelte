@@ -29,8 +29,6 @@
     import Confirm from "$lib/components/actions/Confirm.svelte";
     import { goto } from "$app/navigation";
 
-    $: console.log($mode, $editMode);
-
     let draggedOver = false;
     export function imgDropHandler(e: DragEvent) {
         e.preventDefault();

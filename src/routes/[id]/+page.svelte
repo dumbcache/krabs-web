@@ -67,7 +67,7 @@
 </script>
 
 {#if $activeDirs?.length !== 0 || $activeImgs?.length !== 0}
-    {#if $mode === "delete"}
+    {#if $editMode}
         <div class="edit-mode">
             <p>seleted : {$selectedCount}</p>
             <div class="edit-buttons">
@@ -87,6 +87,7 @@
                     disabled={$selectedCount === 0}
                     title="delete"
                     on:click={() => {
+                        // $mode = "delete";
                         $editConfirm = true;
                     }}>{@html deleteIcon}</button
                 >
