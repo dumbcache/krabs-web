@@ -115,6 +115,21 @@ export const updateDir = async (
     parent: string,
     token: string
 ): Promise<any> => {
+    const { status, data } = await updateResource(id, { name }, token);
+    if (status !== 200) {
+        return;
+    }
+    let old = get(activeDirs)?.filter((img) => img.id !== id) ?? [];
+    old = [...old, { name: data.name, id: data.id }];
+    activeDirs.set(old.sort((a, b) => a.name.localeCompare(b.name)));
+    fetchFiles(parent, "dirs", 1000, true);
+};
+
+export const updateResource = async (
+    id: string,
+    imgMeta: ImgMeta,
+    token: string
+): Promise<any> => {
     const url = `https://www.googleapis.com/drive/v3/files/${id}`;
     let req = await fetch(url, {
         method: "PATCH",
@@ -122,26 +137,22 @@ export const updateDir = async (
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-            name,
-        }),
+        body: JSON.stringify(imgMeta),
     });
     let { status, statusText } = req;
     let data = (await req.json()) as CreateResourceResponse;
     if (status !== 200) {
         console.log(
-            `error while creating root dir ${status} ${statusText}`,
+            `error while updating resource ${status} ${statusText}`,
             data
         );
         if (status === 401) {
             get(sessionTimeout) === false && sessionTimeout.set(true);
             return;
         }
+        return status;
     }
-    let old = get(activeDirs)?.filter((img) => img.id !== id) ?? [];
-    old = [...old, { name: data.name, id: data.id }];
-    activeDirs.set(old.sort((a, b) => a.name.localeCompare(b.name)));
-    fetchFiles(parent, "dirs", 1000, true);
+    return { status, data };
 };
 
 export const deleteDir = async (

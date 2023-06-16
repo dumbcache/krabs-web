@@ -1,5 +1,6 @@
 <script lang="ts">
     import linkIcon from "$lib/assets/link.svg?raw";
+    import favoriteIcon from "$lib/assets/favorite.svg?raw";
     import { fetchImgPreview, isValidUrl } from "$lib/scripts/utils";
     import {
         dropMini,
@@ -9,6 +10,8 @@
         selectedCount,
     } from "$lib/scripts/stores";
     import imgPlaceholder from "$lib/assets/imgPlaceholder.svg";
+    import { updateResource } from "$lib/scripts/drive";
+    import Favorite from "../actions/Favorite.svelte";
     export let img: GoogleFile;
     let selectedForDelete: Boolean;
 
@@ -70,6 +73,14 @@
             </a>
         {/if}
     {/if}
+
+    <div class="favorite">
+        <Favorite
+            id={img.id}
+            starred={img.starred}
+            on:favStatus={() => (img.starred = !img.starred)}
+        />
+    </div>
 </div>
 
 <style>
@@ -85,21 +96,32 @@
     .img-card:hover .img {
         filter: brightness(0.5);
     }
-    .img-card:hover .img-link :global(svg) {
+    .img-card:hover .img-link,
+    .img-card:hover .favorite {
         opacity: 1;
     }
 
+    .favorite,
     .img-link {
         position: absolute;
         right: 0.5rem;
-        top: 0.5rem;
+        opacity: 0;
+        transition: opacity 0.3s linear;
+    }
+    .favorite {
+        bottom: 0.5rem;
+        filter: none;
+    }
+    .img-link:hover :global(svg) {
+        fill: red;
+    }
+    .img-link {
         max-width: fit-content;
+        top: 0.5rem;
     }
     .img-link :global(svg) {
-        opacity: 0;
-        width: var(--primary-icon-size);
-        height: var(--primary-icon-size);
-        transition: opacity 0.3s linear;
+        width: var(--size-default);
+        height: var(--size-default);
         fill: var(--color-white);
         filter: none;
     }
@@ -133,8 +155,12 @@
     }
 
     @media (max-width: 600px) {
-        .img-link :global(svg) {
+        .img-link,
+        .favorite {
             opacity: unset;
+        }
+        .favorite {
+            bottom: 0.2rem;
         }
     }
 </style>

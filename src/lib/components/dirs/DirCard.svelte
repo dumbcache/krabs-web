@@ -32,7 +32,14 @@
     data-id={dir.id}
 >
     <button on:click={dirNavigate}>
-        <DirCover id={dir.id} name={dir.name} on:editDir on:deleteDir />
+        <DirCover
+            id={dir.id}
+            name={dir.name}
+            starred={dir.starred}
+            on:editDir
+            on:deleteDir
+            on:favStatus={() => (dir.starred = !dir.starred)}
+        />
     </button>
     <h2 class="dir-title">{dir.name}</h2>
 </div>

@@ -2,9 +2,11 @@
     import { fetchFiles } from "$lib/scripts/drive";
     import EditTool from "$lib/components/actions/EditTool.svelte";
     import { sessionTimeout } from "$lib/scripts/stores";
+    import Favorite from "$lib/components/actions/Favorite.svelte";
 
     export let id: string;
     export let name: string;
+    export let starred: Boolean;
     let pics: GoogleFile[] = [];
 
     (fetchFiles(id, "covers", 3) as Promise<GoogleFileRes>)
@@ -33,12 +35,12 @@
         <div class="pic-wrapper" />
     {/if}
     <EditTool type="dir" {id} {name} on:editDir on:deleteDir />
+    <div class="favorite">
+        <Favorite {id} {starred} on:favStatus />
+    </div>
 </div>
 
 <style>
-    .pic-wrapper {
-        /* background-color: var(--cover-background-color); */
-    }
     .cover {
         border: 1px solid var(--cover-border-color);
         background-color: var(--cover-background-color);
@@ -61,7 +63,9 @@
     } */
     .cover:hover .pic-wrapper {
         filter: brightness(0.5);
+        background-color: var(--cover-background-color);
     }
+
     .cover img {
         width: 100%;
         height: 100%;
@@ -81,5 +85,18 @@
     }
     .cover .pic-wrapper:nth-child(3) {
         grid-area: three;
+    }
+    .favorite {
+        position: absolute;
+        right: 1rem;
+        bottom: 3rem;
+        /* opacity: 0; */
+        transition: opacity 0.3s linear;
+    }
+    @media (max-width: 600px) {
+        .favorite {
+            right: 0.5rem;
+            bottom: 2rem;
+        }
     }
 </style>
