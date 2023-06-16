@@ -187,12 +187,13 @@
     }
     .edit-mode {
         position: sticky;
-        top: 1.5rem;
+        top: 0rem;
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 2rem;
-        padding: 0rem 5rem;
+        padding: 1rem 5rem;
+        background-color: var(--primary-bg-color);
         /* width: fit-content;
         margin-left: auto;
         margin-right: 5rem; */
@@ -214,8 +215,7 @@
             font-size: 1.3rem;
         }
         .edit-mode {
-            padding: 0rem 1rem;
-            top: 4.5rem;
+            padding: 1rem 1rem;
         }
         .edit-buttons {
             gap: 1.5rem;

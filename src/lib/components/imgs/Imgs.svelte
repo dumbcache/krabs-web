@@ -22,8 +22,5 @@
         justify-content: center;
     }
     @media (max-width: 600px) {
-        .imgs {
-            padding-top: calc(var(--content-padding) + 1rem);
-        }
     }
 </style>
