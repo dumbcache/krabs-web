@@ -36,10 +36,16 @@
         width: fit-content;
     }
     .btn :global(svg) {
-        width: var(--size-default);
-        height: var(--size-default);
+        width: var(--size-small);
+        height: var(--size-small);
     }
     .starred :global(svg) {
         fill: red;
+    }
+    @media (max-width: 600px) {
+        .btn :global(svg) {
+            width: var(--size-default);
+            height: var(--size-default);
+        }
     }
 </style>
