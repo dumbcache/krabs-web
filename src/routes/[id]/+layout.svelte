@@ -16,6 +16,7 @@
     } from "$lib/scripts/utils";
     import {
         dropMini,
+        editMode,
         isLoggedin,
         mode,
         previewItem,
@@ -27,6 +28,8 @@
     import Search from "$lib/components/actions/Search.svelte";
     import Confirm from "$lib/components/actions/Confirm.svelte";
     import { goto } from "$app/navigation";
+
+    $: console.log($mode, $editMode);
 
     let draggedOver = false;
     export function imgDropHandler(e: DragEvent) {
@@ -72,7 +75,7 @@
             on:drop={imgDropHandler}
         >
             <div class="content">
-                {#if !$mode}
+                {#if !$editMode}
                     <div class="nav">
                         <Nav />
                     </div>
@@ -162,6 +165,7 @@
         }
         .search {
             top: 5rem;
+            max-width: 80%;
         }
         .nav {
             display: initial;

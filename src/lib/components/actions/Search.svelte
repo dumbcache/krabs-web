@@ -16,7 +16,6 @@
         }, 0);
     });
     onDestroy(() => {
-        $mode = "";
         $searchItems = undefined;
     });
 </script>

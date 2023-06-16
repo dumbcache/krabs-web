@@ -7,6 +7,7 @@ export let activeDirs = writable<GoogleFile[] | undefined>();
 export let recents = writable<{ name: string; id: string }[]>([]);
 export let searchItems = writable<GoogleFile[] | undefined>();
 
+export let editMode = writable(false);
 export let mode = writable("");
 export let editItems = writable<string[]>([]);
 export let editConfirm = writable(false);

@@ -17,6 +17,7 @@
         searchItems,
         mode,
         isLoggedin,
+        editMode,
     } from "$lib/scripts/stores";
     import deleteIcon from "$lib/assets/delete.svg?raw";
     import closeIcon from "$lib/assets/close.svg?raw";
@@ -32,6 +33,7 @@
     let contentHidden: string;
     $: contentHidden =
         $mode === "delete" ? "none" : $mode === "search" ? "none" : "initial";
+
     onMount(() => {
         async function getParentName() {
             let res = await fetch(
@@ -93,6 +95,7 @@
                     title="close"
                     on:click={() => {
                         $mode = "";
+                        $editMode = false;
                         $selectedCount = 0;
                         $editItems = [];
                     }}>{@html closeIcon}</button
