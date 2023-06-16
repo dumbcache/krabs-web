@@ -1,6 +1,6 @@
 <script lang="ts">
     import linkIcon from "$lib/assets/link.svg?raw";
-    import { fetchImgPreview } from "$lib/scripts/utils";
+    import { fetchImgPreview, isValidUrl } from "$lib/scripts/utils";
     import {
         dropMini,
         editItems,
@@ -57,9 +57,10 @@
     />
     <button class="anchor">.</button>
     {#if $mode !== "delete"}
-        {#if img.appProperties?.origin}
+        {#if img.appProperties?.origin || img.description}
             <a
-                href={img.appProperties?.origin}
+                href={isValidUrl(img.appProperties?.origin) ||
+                    isValidUrl(img.description)}
                 class="img-link"
                 referrerpolicy="no-referrer"
                 rel="external noopener noreferrer nofollow"

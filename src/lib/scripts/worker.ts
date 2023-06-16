@@ -2,7 +2,7 @@ export const DIR_MIME_TYPE = "application/vnd.google-apps.folder";
 export const IMG_MIME_TYPE = "image/";
 export const FILE_API = "https://www.googleapis.com/drive/v3/files";
 export const FIELDS_REQUIRED =
-    "files(id,name,appProperties(origin),thumbnailLink)";
+    "files(id,name,description,appProperties(origin),thumbnailLink,starred)";
 
 function constructAPI(
     parent: string,
@@ -168,7 +168,8 @@ async function dropSave(dropItems: DropItem[], token: string) {
             name: name || id,
             mimeType,
             parents: [parent],
-            appProperties: { origin: url || "" },
+            description: url || "",
+            // appProperties: { origin: url || "" },
         };
         createImgMetadata(imgMeta, token)
             .then(async (location) => {

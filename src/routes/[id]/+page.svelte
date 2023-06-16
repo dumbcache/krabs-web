@@ -20,6 +20,8 @@
     } from "$lib/scripts/stores";
     import deleteIcon from "$lib/assets/delete.svg?raw";
     import closeIcon from "$lib/assets/close.svg?raw";
+    import moveIcon from "$lib/assets/move.svg?raw";
+    import selectallIcon from "$lib/assets/selectall.svg?raw";
     import Confirm from "$lib/components/actions/Confirm.svelte";
 
     let type: "update" | "delete";
@@ -65,23 +67,33 @@
     {#if $mode === "delete"}
         <div class="edit-mode">
             <p>seleted : {$selectedCount}</p>
-            <button
-                class="delelte-button btn"
-                disabled={$selectedCount === 0}
-                title="delete"
-                on:click={() => {
-                    $editConfirm = true;
-                }}>{@html deleteIcon}</button
-            >
-            <button
-                class="btn"
-                title="close"
-                on:click={() => {
-                    $mode = "";
-                    $selectedCount = 0;
-                    $editItems = [];
-                }}>{@html closeIcon}</button
-            >
+            <div class="edit-buttons">
+                <button
+                    class="delelte-button btn"
+                    title="select all"
+                    on:click={() => {}}>{@html selectallIcon}</button
+                >
+                <button class="btn" title="move" on:click={() => {}}
+                    >{@html moveIcon}</button
+                >
+                <button
+                    class="delelte-button btn"
+                    disabled={$selectedCount === 0}
+                    title="delete"
+                    on:click={() => {
+                        $editConfirm = true;
+                    }}>{@html deleteIcon}</button
+                >
+                <button
+                    class="btn"
+                    title="close"
+                    on:click={() => {
+                        $mode = "";
+                        $selectedCount = 0;
+                        $editItems = [];
+                    }}>{@html closeIcon}</button
+                >
+            </div>
         </div>
         {#if $activeImgs?.length !== 0}
             <Imgs imgs={$activeImgs} />
@@ -170,11 +182,18 @@
         top: 1.5rem;
         display: flex;
         align-items: center;
+        justify-content: space-between;
         gap: 2rem;
-        width: fit-content;
+        padding: 0rem 5rem;
+        /* width: fit-content;
         margin-left: auto;
-        margin-right: 5rem;
+        margin-right: 5rem; */
         z-index: 1;
+    }
+    .edit-buttons {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
     }
 
     .btn:disabled :global(svg),
@@ -187,8 +206,11 @@
             font-size: 1.3rem;
         }
         .edit-mode {
-            top: 5rem;
-            margin-right: 1rem;
+            padding: 0rem 1rem;
+            top: 4.5rem;
+        }
+        .edit-buttons {
+            gap: 1.5rem;
         }
     }
 </style>

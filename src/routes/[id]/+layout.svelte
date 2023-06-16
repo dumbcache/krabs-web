@@ -72,9 +72,11 @@
             on:drop={imgDropHandler}
         >
             <div class="content">
-                <div class="nav">
-                    <Nav />
-                </div>
+                {#if !$mode}
+                    <div class="nav">
+                        <Nav />
+                    </div>
+                {/if}
                 <div class="back">
                     <BackButton />
                 </div>

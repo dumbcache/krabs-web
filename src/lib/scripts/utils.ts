@@ -172,6 +172,15 @@ export function checkSessionTimeout() {
         );
 }
 
+export function isValidUrl(url: string) {
+    try {
+        new URL(url);
+        return url;
+    } catch (err) {
+        return "";
+    }
+}
+
 async function handleGoogleSignIn(tokenResponse: TokenResponse) {
     const name = encodeURIComponent("Pocket_#Drive");
     accessToken = tokenResponse.access_token;

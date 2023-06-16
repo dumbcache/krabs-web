@@ -17,6 +17,7 @@ declare global {
     interface GoogleFile {
         id: string;
         name: string;
+        description: string;
         parents?: string[];
         thumbnailLink?: string;
         appProperties?: {
@@ -33,6 +34,7 @@ declare global {
     interface ImgMeta {
         name?: string;
         mimeType?: string;
+        description: string;
         parents?: [string];
         appProperties?: {
             origin?: string;

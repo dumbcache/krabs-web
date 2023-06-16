@@ -4,23 +4,17 @@ import {
     activeImgs,
     activeParentId,
     dataCacheName,
-    isLoggedin,
     recents,
     refreshClicked,
     sessionTimeout,
 } from "./stores";
-import {
-    getToken,
-    colorPalette,
-    checkLoginStatus,
-    isTokenExpired,
-} from "./utils";
+import { colorPalette, checkLoginStatus } from "./utils";
 
 export const DIR_MIME_TYPE = "application/vnd.google-apps.folder";
 export const IMG_MIME_TYPE = "image/";
 export const FILE_API = "https://www.googleapis.com/drive/v3/files";
 export const FIELDS_REQUIRED =
-    "files(id,name,appProperties(origin),thumbnailLink)";
+    "files(id,name,description,appProperties(origin),thumbnailLink,starred)";
 
 export const wait = (s: number) => new Promise((res) => setTimeout(res, s));
 
