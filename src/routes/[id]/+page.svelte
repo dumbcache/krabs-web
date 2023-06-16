@@ -21,6 +21,7 @@
     import deleteIcon from "$lib/assets/delete.svg?raw";
     import closeIcon from "$lib/assets/close.svg?raw";
     import moveIcon from "$lib/assets/move.svg?raw";
+    import editIcon from "$lib/assets/edit.svg?raw";
     import selectallIcon from "$lib/assets/selectall.svg?raw";
     import Confirm from "$lib/components/actions/Confirm.svelte";
 
@@ -72,6 +73,9 @@
                     class="delelte-button btn"
                     title="select all"
                     on:click={() => {}}>{@html selectallIcon}</button
+                >
+                <button class="btn" title="move" on:click={() => {}}
+                    >{@html editIcon}</button
                 >
                 <button class="btn" title="move" on:click={() => {}}
                     >{@html moveIcon}</button
