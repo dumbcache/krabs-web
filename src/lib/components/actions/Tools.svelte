@@ -3,9 +3,13 @@
     import goToDrive from "$lib/assets/drive.svg?raw";
     import folderCreate from "$lib/assets/folderCreate.svg?raw";
     import searchIcon from "$lib/assets/search.svg?raw";
+    import favoriteIcon from "$lib/assets/favorite.svg?raw";
     import refresh from "$lib/assets/refresh.svg?raw";
     import swapIcon from "$lib/assets/swap.svg?raw";
-    import { previewAndSetDropItems } from "$lib/scripts/utils";
+    import {
+        previewAndSetDropItems,
+        handleFavorites,
+    } from "$lib/scripts/utils";
     import {
         activeDirs,
         activeImgs,
@@ -21,6 +25,8 @@
     import History from "$lib/components/actions/History.svelte";
 
     let dirCreateToggle = false;
+    let favClicked = false;
+    let reverseClicked = false;
     function imgPickerHandler(e: InputEvent) {
         e.preventDefault();
         // clearDropItems();
@@ -35,9 +41,19 @@
 
 <div class="tools">
     <button
-        class="button__reverse btn"
+        class="fav-button btn {favClicked && 'clicked'}"
+        title="favorites"
+        on:click={() => {
+            $mode = $mode === "favorites" ? "" : "favorites";
+            favClicked = !favClicked;
+            handleFavorites();
+        }}>{@html favoriteIcon}</button
+    >
+    <button
+        class="reverse-button btn {reverseClicked && 'clicked'}"
         title="search"
         on:click={() => {
+            reverseClicked = !reverseClicked;
             $activeDirs = $activeDirs?.reverse();
             $activeImgs = $activeImgs?.reverse();
         }}
@@ -46,7 +62,7 @@
     </button>
     <EditIcon />
     <button
-        class="button__search btn"
+        class="search-button btn"
         title="search"
         on:click={() => ($mode = $mode === "search" ? "" : "search")}
     >
@@ -72,7 +88,7 @@
         on:change={imgPickerHandler}
     />
     <button
-        class="button__create-folder btn"
+        class="folder-button btn"
         title="create folder"
         on:click={() => (dirCreateToggle = !dirCreateToggle)}
     >
@@ -104,6 +120,9 @@
     }
     #img-picker {
         display: none;
+    }
+    .clicked :global(svg) {
+        fill: red;
     }
     @keyframes spin {
         0% {

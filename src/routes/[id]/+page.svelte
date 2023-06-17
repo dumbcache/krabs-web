@@ -33,7 +33,7 @@
     let contentHidden: string;
     $: contentHidden =
         $mode === "delete" ? "none" : $mode === "search" ? "none" : "initial";
-
+    $: console.log(contentHidden);
     onMount(() => {
         async function getParentName() {
             let res = await fetch(

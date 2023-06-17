@@ -19,6 +19,10 @@ import {
     sessionTimeout,
     activeTimeout,
     editMode,
+    activeDirs,
+    tempImgs,
+    activeImgs,
+    tempDirs,
 } from "$lib/scripts/stores";
 import { fetchFiles, refreshMainContent, createRootDir } from "./drive";
 
@@ -181,6 +185,18 @@ export function isValidUrl(url: string) {
     } catch (err) {
         return "";
     }
+}
+
+export function handleFavorites() {
+    if (get(mode) === "favorites") {
+        tempImgs.set(get(activeImgs));
+        tempDirs.set(get(activeDirs));
+        activeImgs.set(get(tempImgs)?.filter((img) => img.starred === true));
+        activeDirs.set(get(tempDirs)?.filter((dir) => dir.starred === true));
+        return;
+    }
+    activeImgs.set(get(tempImgs));
+    activeDirs.set(get(tempDirs));
 }
 
 async function handleGoogleSignIn(tokenResponse: TokenResponse) {
