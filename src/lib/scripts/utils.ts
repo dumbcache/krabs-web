@@ -515,9 +515,9 @@ export function dropOkHandler() {
         item.name = name.value.trim();
         let url = dropItem.querySelector(".url") as HTMLInputElement;
         if (commonUrl.trim() === "") {
-            item.url = url.value.trim();
+            item.url = decodeURI(url.value.trim());
         } else {
-            item.url = commonUrl.trim();
+            item.url = decodeURI(commonUrl.trim());
         }
         item.progress = "uploading";
         tempDirItems.push(item);
