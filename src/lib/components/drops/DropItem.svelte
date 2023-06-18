@@ -5,7 +5,7 @@
     import failureIcon from "$lib/assets/failure.svg?raw";
     import { removeDropEntry } from "$lib/scripts/utils";
     export let item: DropItem;
-    $: console.log(item.progress);
+
     let progressIcon: string;
     $: item.progress === "uploading"
         ? (progressIcon = loadingIcon)

@@ -42,6 +42,7 @@
 
 <style>
     .cover {
+        position: relative;
         border: 1px solid var(--cover-border-color);
         background-color: var(--cover-background-color);
         width: var(--dir-width);
@@ -89,7 +90,7 @@
     .favorite {
         position: absolute;
         right: 1rem;
-        bottom: 3rem;
+        bottom: 1rem;
         /* opacity: 0; */
         transition: opacity 0.3s linear;
         width: var(--size-small);
@@ -98,7 +99,7 @@
     @media (max-width: 600px) {
         .favorite {
             right: 0.5rem;
-            bottom: 2rem;
+            bottom: 0.5rem;
             width: var(--size-default);
             height: var(--size-default);
         }

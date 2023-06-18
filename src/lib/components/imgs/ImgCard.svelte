@@ -7,16 +7,16 @@
         editItems,
         mode,
         previewItem,
+        selectAll,
         selectedCount,
     } from "$lib/scripts/stores";
     import imgPlaceholder from "$lib/assets/imgPlaceholder.svg";
-    import { updateResource } from "$lib/scripts/drive";
     import Favorite from "../actions/Favorite.svelte";
     export let img: GoogleFile;
-    let selectedForDelete: Boolean;
-
+    let selected: Boolean;
+    $: selected = $selectAll;
     function handleImgclick(e) {
-        if ($mode === "") {
+        if ($mode !== "select") {
             $dropMini = true;
             if ($previewItem?.id !== img.id) {
                 const { url } = e.currentTarget.dataset;
@@ -28,8 +28,8 @@
                 fetchImgPreview($previewItem.id);
             }
         } else {
-            selectedForDelete = !selectedForDelete;
-            if (selectedForDelete) {
+            selected = !selected;
+            if (selected) {
                 $selectedCount = $selectedCount + 1;
                 let temp = [...$editItems, img.id];
                 $editItems = temp;
@@ -52,7 +52,7 @@
         src={img.thumbnailLink}
         alt="thumbnail to link"
         class="img {$mode === 'delete' ? 'delete' : ''}"
-        class:select={selectedForDelete}
+        class:select={selected}
         loading="lazy"
         height="200"
         width="200"

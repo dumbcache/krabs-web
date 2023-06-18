@@ -4,12 +4,11 @@
     import DirCreate from "$lib/components/actions/DirCreate.svelte";
     import { onDestroy, onMount } from "svelte";
     import { FILE_API } from "$lib/scripts/drive";
-    import { childWorker, getToken } from "$lib/scripts/utils";
+    import { childWorker } from "$lib/scripts/utils";
     import {
         activeParentId,
         activeParentName,
         editItems,
-        selectedCount,
         activeDirs,
         activeImgs,
         previewItem,
@@ -19,12 +18,8 @@
         isLoggedin,
         editMode,
     } from "$lib/scripts/stores";
-    import deleteIcon from "$lib/assets/delete.svg?raw";
-    import closeIcon from "$lib/assets/close.svg?raw";
-    import moveIcon from "$lib/assets/move.svg?raw";
-    import editIcon from "$lib/assets/edit.svg?raw";
-    import selectallIcon from "$lib/assets/selectall.svg?raw";
     import Confirm from "$lib/components/actions/Confirm.svelte";
+    import EditMode from "$lib/components/actions/EditMode.svelte";
 
     let type: "update" | "delete";
     let dirToggle = false;
@@ -32,8 +27,7 @@
     let activeName = "";
     let contentHidden: string;
     $: contentHidden =
-        $mode === "delete" ? "none" : $mode === "search" ? "none" : "initial";
-    $: console.log(contentHidden);
+        $mode === "select" ? "none" : $mode === "search" ? "none" : "initial";
     onMount(() => {
         async function getParentName() {
             let res = await fetch(
@@ -68,41 +62,7 @@
 
 {#if $activeDirs?.length !== 0 || $activeImgs?.length !== 0}
     {#if $editMode}
-        <div class="edit-mode">
-            <p>seleted : {$selectedCount}</p>
-            <div class="edit-buttons">
-                <button
-                    class="delelte-button btn"
-                    title="select all"
-                    on:click={() => {}}>{@html selectallIcon}</button
-                >
-                <button class="btn" title="move" on:click={() => {}}
-                    >{@html editIcon}</button
-                >
-                <button class="btn" title="move" on:click={() => {}}
-                    >{@html moveIcon}</button
-                >
-                <button
-                    class="delelte-button btn"
-                    disabled={$selectedCount === 0}
-                    title="delete"
-                    on:click={() => {
-                        // $mode = "delete";
-                        $editConfirm = true;
-                    }}>{@html deleteIcon}</button
-                >
-                <button
-                    class="btn"
-                    title="close"
-                    on:click={() => {
-                        $mode = "";
-                        $editMode = false;
-                        $selectedCount = 0;
-                        $editItems = [];
-                    }}>{@html closeIcon}</button
-                >
-            </div>
-        </div>
+        <EditMode />
         {#if $activeImgs?.length !== 0}
             <Imgs imgs={$activeImgs} />
         {/if}
@@ -185,40 +145,11 @@
         left: 50%;
         transform: translate(-50%, -50%);
     }
-    .edit-mode {
-        position: sticky;
-        top: 0rem;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 2rem;
-        padding: 1rem 5rem;
-        background-color: var(--primary-bg-color);
-        /* width: fit-content;
-        margin-left: auto;
-        margin-right: 5rem; */
-        z-index: 1;
-    }
-    .edit-buttons {
-        display: flex;
-        align-items: center;
-        gap: 2rem;
-    }
 
-    .btn:disabled :global(svg),
-    .btn:disabled {
-        cursor: not-allowed;
-    }
     @media (max-width: 600px) {
         .count {
             margin-right: 1rem;
             font-size: 1.3rem;
-        }
-        .edit-mode {
-            padding: 1rem 1rem;
-        }
-        .edit-buttons {
-            gap: 1.5rem;
         }
     }
 </style>

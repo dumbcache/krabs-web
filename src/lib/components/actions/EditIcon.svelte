@@ -8,7 +8,7 @@
     title="edit mode"
     on:click={() => {
         $editMode = true;
-        $mode = "delete";
+        $mode = "select";
     }}
 >
     {@html editIcon}

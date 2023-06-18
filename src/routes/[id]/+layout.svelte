@@ -78,9 +78,11 @@
                         <Nav />
                     </div>
                 {/if}
-                <div class="back">
-                    <BackButton />
-                </div>
+                {#if !$editMode}
+                    <div class="back">
+                        <BackButton />
+                    </div>
+                {/if}
                 {#if $mode === "search"}
                     <div class="search">
                         <Search />
