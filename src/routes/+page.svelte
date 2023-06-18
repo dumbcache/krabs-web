@@ -4,6 +4,17 @@
     import LoadIndicator from "$lib/components/actions/LoadIndicator.svelte";
     import { getOauthToken } from "$lib/scripts/utils";
     import googleIcon from "$lib/assets/google.png";
+    import { loadGSIScript } from "$lib/scripts/utils";
+    import { onMount } from "svelte";
+
+    // console.log($isLoggedin);
+    onMount(() => {
+        try {
+            loadGSIScript();
+        } catch (error) {
+            console.warn(error);
+        }
+    });
 </script>
 
 {#if $navigating}
