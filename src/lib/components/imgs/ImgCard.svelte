@@ -119,8 +119,6 @@
     }
     .img-link:hover :global(svg) {
         fill: red;
-        stroke: var(--color-black);
-        stroke-width: 1rem;
     }
     .img-link {
         display: block;
