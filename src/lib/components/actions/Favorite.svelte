@@ -36,6 +36,11 @@
         width: 100%;
         display: block;
     }
+    .btn :global(svg) {
+        stroke: var(--color-black);
+        stroke-width: 2rem;
+        fill: var(--color-white-level-one);
+    }
     .starred :global(svg) {
         fill: red;
     }

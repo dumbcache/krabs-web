@@ -47,6 +47,8 @@
         justify-content: center;
     }
     .btn :global(svg) {
+        stroke: var(--color-black);
+        stroke-width: 1rem;
         fill: var(--color-white-level-one);
         width: var(--secondary-icon-size);
     }

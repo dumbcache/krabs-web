@@ -96,6 +96,9 @@
         width: var(--size-small);
         height: var(--size-small);
     }
+    /* .favorite :global(svg) {
+        fill: var(--primary-bg-color);
+    } */
     @media (max-width: 600px) {
         .favorite {
             right: 0.5rem;
