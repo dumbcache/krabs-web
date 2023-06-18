@@ -10,6 +10,9 @@ export let activeDirs = writable<GoogleFile[] | undefined>();
 
 export let recents = writable<{ name: string; id: string }[]>([]);
 export let searchItems = writable<GoogleFile[] | undefined>();
+export let globalSearch = writable(false);
+export let reverseActive = writable(false);
+export let favoritesActive = writable(false);
 
 export let editMode = writable(false);
 export let mode = writable("");

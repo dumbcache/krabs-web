@@ -24,6 +24,9 @@ import {
     activeImgs,
     tempDirs,
     blobLocations,
+    globalSearch,
+    reverseActive,
+    favoritesActive,
 } from "$lib/scripts/stores";
 import { fetchFiles, refreshMainContent, createRootDir } from "./drive";
 
@@ -649,6 +652,21 @@ export function shortcutHandler(e) {
             break;
         case "s":
             mode.set("search");
+            if (e.shiftKey) globalSearch.set(true);
+            break;
+        case "S":
+            mode.set("search");
+            globalSearch.set(true);
+            break;
+        case "R":
+            reverseActive.set(!get(reverseActive));
+            activeDirs.set(get(activeDirs)?.reverse());
+            activeImgs.set(get(activeImgs)?.reverse());
+            break;
+        case "D":
+            favoritesActive.set(!get(favoritesActive));
+            mode.set(get(mode) === "favorites" ? "" : "favorites");
+            handleFavorites();
             break;
         case "ArrowRight":
         case "ArrowLeft":

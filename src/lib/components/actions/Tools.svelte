@@ -15,9 +15,11 @@
         activeImgs,
         activeParentId,
         dropMini,
+        favoritesActive,
         mode,
         previewItem,
         refreshClicked,
+        reverseActive,
     } from "$lib/scripts/stores";
     import DirCreate from "$lib/components/actions/DirCreate.svelte";
     import { refreshCache } from "$lib/scripts/drive";
@@ -25,8 +27,10 @@
     import History from "$lib/components/actions/History.svelte";
 
     let dirCreateToggle = false;
-    let favClicked = false;
-    let reverseClicked = false;
+    let favClicked: Boolean;
+    let reverseClicked: Boolean;
+    $: favClicked = $favoritesActive;
+    $: reverseClicked = $reverseActive;
     function imgPickerHandler(e: InputEvent) {
         e.preventDefault();
         // clearDropItems();

@@ -6,6 +6,7 @@ import {
     dataCacheName,
     recents,
     refreshClicked,
+    searchItems,
     sessionTimeout,
 } from "./stores";
 import { colorPalette, checkLoginStatus } from "./utils";
@@ -47,10 +48,34 @@ function constructAPI(
 //         resolve(data);
 //     });
 // }
+export async function searchHandler(token: string, search: string) {
+    const res = await fetch(
+        FILE_API +
+            `?q=mimeType contains '${DIR_MIME_TYPE}' and name contains '${search}'&pageSize=1000&fields=${FIELDS_REQUIRED}&orderBy=createdTime desc`,
+        {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+    );
+    const { status, statusText } = res;
+    if (status !== 200) {
+        console.log(
+            `error while creating root dir ${status} ${statusText}`,
+            await res.json()
+        );
+        if (status === 401) {
+            get(sessionTimeout) === false && sessionTimeout.set(true);
+            return;
+        }
+    }
+    searchItems.set((await res.json()).files);
+    console.log(get(searchItems));
+}
 
 export const createRootDir = async (accessToken: string) => {
-    const url = "https://www.googleapis.com/drive/v3/files/";
-    let req = await fetch(url, {
+    let req = await fetch(FILE_API, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
