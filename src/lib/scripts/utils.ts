@@ -23,6 +23,7 @@ import {
     tempImgs,
     activeImgs,
     tempDirs,
+    blobLocations,
 } from "$lib/scripts/stores";
 import { fetchFiles, refreshMainContent, createRootDir } from "./drive";
 
@@ -45,6 +46,8 @@ if (browser) {
                 const url = URL.createObjectURL(blob);
                 previewImg.src = url;
                 target.dataset.url = url;
+                blobLocations.set({ ...get(blobLocations), [id]: url });
+
                 return;
 
             case "IMG_PREVIEW_FAILED":

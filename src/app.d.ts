@@ -25,6 +25,7 @@ declare global {
             origin: string;
             src: string;
         };
+        url?: string;
     }
 
     interface GoogleFileRes {

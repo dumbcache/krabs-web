@@ -24,6 +24,7 @@ export let dataCacheName = writable("");
 export let refreshClicked = writable(false);
 
 export let previewItem: Writable<PreviewItem | undefined> = writable(undefined);
+export let blobLocations = writable({});
 export let dropMini = writable(false);
 export let dropItems: Writable<DropItem[]> = writable([]);
 export let touchCoords: Writable<TouchCoords> = writable({});

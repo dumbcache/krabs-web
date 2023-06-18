@@ -1,8 +1,8 @@
 <script lang="ts">
     import linkIcon from "$lib/assets/link.svg?raw";
-    import favoriteIcon from "$lib/assets/favorite.svg?raw";
     import { fetchImgPreview, isValidUrl } from "$lib/scripts/utils";
     import {
+        blobLocations,
         dropMini,
         editItems,
         mode,
@@ -12,14 +12,17 @@
     } from "$lib/scripts/stores";
     import imgPlaceholder from "$lib/assets/imgPlaceholder.svg";
     import Favorite from "../actions/Favorite.svelte";
+
     export let img: GoogleFile;
     let selected: Boolean;
     $: selected = $selectAll;
+
     function handleImgclick(e) {
         if ($mode !== "select") {
             $dropMini = true;
             if ($previewItem?.id !== img.id) {
-                const { url } = e.currentTarget.dataset;
+                // const { url } = e.currentTarget.dataset;
+                let url = $blobLocations[img.id] || "";
                 if (url) {
                     $previewItem = { id: img.id, src: img.thumbnailLink!, url };
                     return;
@@ -44,7 +47,7 @@
 <div
     class="img-card"
     data-id={img.id}
-    data-url=""
+    data-url={$blobLocations[img.id] || ""}
     on:click={handleImgclick}
     on:keypress={handleImgclick}
 >
@@ -116,6 +119,8 @@
     }
     .img-link:hover :global(svg) {
         fill: red;
+        stroke: var(--color-black);
+        stroke-width: 1rem;
     }
     .img-link {
         display: block;
