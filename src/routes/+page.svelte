@@ -1,6 +1,5 @@
 <script>
     import ColorScheme from "$lib/components/actions/ColorScheme.svelte";
-    import LoginButton from "$lib/components/actions/LoginButton.svelte";
     import { navigating } from "$app/stores";
     import LoadIndicator from "$lib/components/actions/LoadIndicator.svelte";
     import { getOauthToken } from "$lib/scripts/utils";
@@ -12,7 +11,6 @@
 {:else}
     <header class="header">
         <ColorScheme />
-        <LoginButton />
         <button on:click={getOauthToken} class="signin"
             ><img src={googleIcon} alt="signin" /></button
         >
@@ -27,10 +25,10 @@
         padding: 2rem;
         display: flex;
         align-items: center;
-        gap: 1rem;
+        gap: 3rem;
     }
     .signin {
-        width: var(--primary-icon-size);
+        width: var(--size-large);
         background-color: white;
         border-radius: 50%;
         display: flex;
@@ -52,6 +50,12 @@
     }
 
     @media (max-width: 600px) {
+        .header {
+            gap: 2rem;
+        }
+        /* .signin {
+            width: var(--size-large);
+        } */
         .home-title {
             font-size: 5rem;
         }
