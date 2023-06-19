@@ -67,8 +67,8 @@
         min-width: 50%;
         height: 100vh;
         background-color: var(--primary-backdrop-color);
-        backdrop-filter: blur(1rem);
-        -webkit-backdrop-filter: blur(1rem);
+        backdrop-filter: blur(2rem);
+        -webkit-backdrop-filter: blur(2rem);
         z-index: 2;
     }
     .preview-img {

@@ -13,33 +13,46 @@
 </script>
 
 <div class="move" on:keydown={() => {}} on:click={() => ($mode = "select")}>
-    <div class="selection" on:click|stopPropagation on:keydown={() => {}}>
-        <button class="btn">/r</button>
-        <button
-            class="selected"
-            data-id={selectedId}
-            on:click={() => (recentsClicked = !recentsClicked)}
-        >
-            {selectedName}
-            <button class="done-button btn">{@html doneIcon}</button>
-            {#if recentsClicked}
-                <div class="recents">
-                    {#if $recents}
-                        {#each $recents as recent}
-                            <button
-                                class="recent"
-                                data-id={recent.id}
-                                on:click={() => {
-                                    selectedId = recent.id;
-                                    selectedName = recent.name;
-                                    recentsClicked = false;
-                                }}>{recent.name}</button
-                            >
-                        {/each}
-                    {/if}
-                </div>
-            {/if}
-        </button>
+    <div
+        class="wrapper"
+        on:click|stopPropagation={() => {
+            recentsClicked = false;
+        }}
+        on:keydown={() => {}}
+    >
+        <div class="tools">
+            <button class="btn root" title="root">/R</button>
+            <button class="btn root" title="history">/H</button>
+        </div>
+        <div class="selection">
+            <div class="label">Select folder to move</div>
+            <button
+                class="selected"
+                data-id={selectedId}
+                on:click|stopPropagation={() =>
+                    (recentsClicked = !recentsClicked)}
+            >
+                {selectedName}
+                <button class="done-button btn">{@html doneIcon}</button>
+                {#if recentsClicked}
+                    <div class="recents">
+                        {#if $recents}
+                            {#each $recents as recent}
+                                <button
+                                    class="recent"
+                                    data-id={recent.id}
+                                    on:click|stopPropagation={() => {
+                                        selectedId = recent.id;
+                                        selectedName = recent.name;
+                                        recentsClicked = false;
+                                    }}>{recent.name}</button
+                                >
+                            {/each}
+                        {/if}
+                    </div>
+                {/if}
+            </button>
+        </div>
     </div>
 </div>
 
@@ -54,20 +67,38 @@
         place-content: center;
         color: var(--color-white);
         background-color: var(--primary-backdrop-color);
-        backdrop-filter: blur(3rem);
-        -webkit-backdrop-filter: blur(3rem);
+        backdrop-filter: blur(5rem);
+        -webkit-backdrop-filter: blur(5rem);
         z-index: 3;
         user-select: none;
     }
-    .selection {
-        position: relative;
+    .tools {
+        display: flex;
+        flex-flow: column;
+        gap: 1rem;
+    }
+    .root {
+        color: red;
+    }
+    .wrapper {
         background-color: var(--primary-backdrop-color);
-        padding: 1rem;
+        padding: 2rem;
         border-radius: 1rem;
         display: flex;
         align-items: center;
+    }
+    .label {
+        text-align: start;
+        color: var(--color-white-level-five);
+    }
+    .selection {
+        position: relative;
+        padding: 1rem;
+        border-radius: 1rem;
+        display: flex;
+        flex-flow: column;
         max-width: fit-content;
-        /* gap: 1rem; */
+        gap: 1rem;
     }
     button {
         text-align: start;
@@ -92,14 +123,16 @@
         position: relative;
     }
     .recents {
+        height: 21rem;
         position: absolute;
         top: 4rem;
         left: 0rem;
         display: flex;
         flex-flow: column;
+        overflow: scroll;
     }
     .recent {
-        padding: 0.5rem 1rem;
+        padding: 0.8rem 1rem;
     }
     .recent:hover {
         filter: none;
