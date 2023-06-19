@@ -26,8 +26,7 @@
     let activeId = "";
     let activeName = "";
     let contentHidden: string;
-    $: contentHidden =
-        $mode === "select" ? "none" : $mode === "search" ? "none" : "initial";
+    $: contentHidden = $editMode === true ? "none" : "initial";
     onMount(() => {
         async function getParentName() {
             let res = await fetch(

@@ -13,6 +13,7 @@
         activeImgs,
         selectAll,
     } from "$lib/scripts/stores";
+    import Move from "./Move.svelte";
 </script>
 
 <div class="edit-mode">
@@ -28,11 +29,17 @@
                     $selectAll === true ? $activeImgs.map((img) => img.id) : [];
             }}>{@html selectallIcon}</button
         >
-        <button class="btn" title="move" on:click={() => {}}
+        <button class="btn" title="edit" on:click={() => {}}
             >{@html editIcon}</button
         >
-        <button class="btn" title="move" on:click={() => {}}
-            >{@html moveIcon}</button
+        <button
+            class="btn"
+            title="move"
+            on:click={() => {
+                if ($selectedCount !== 0) {
+                    $mode = "move";
+                }
+            }}>{@html moveIcon}</button
         >
         <button
             class="delelte-button btn"
@@ -56,6 +63,9 @@
             }}>{@html closeIcon}</button
         >
     </div>
+    {#if $mode === "move"}
+        <Move />
+    {/if}
 </div>
 
 <style>
