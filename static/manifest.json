@@ -36,13 +36,19 @@
         "method": "POST",
         "enctype": "multipart/form-data",
         "params": {
-            "title": "photos",
-            "text": "description",
-            "url": "link",
+            "title": "title",
+            "text": "text",
+            "url": "url",
             "files": [
                 {
                     "name": "photos",
-                    "accept": ["image/*"]
+                    "accept": [
+                        "image/jpeg",
+                        "image/png",
+                        "image/webp",
+                        "image/gif",
+                        "image/avif"
+                    ]
                 }
             ]
         }
