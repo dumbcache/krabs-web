@@ -5,6 +5,7 @@
         blobLocations,
         dropMini,
         editItems,
+        editMode,
         mode,
         previewItem,
         selectAll,
@@ -16,7 +17,6 @@
     export let img: GoogleFile;
     let selected: Boolean;
     $: selected = $selectAll;
-
     function handleImgclick(e) {
         if ($mode !== "select") {
             $dropMini = true;
@@ -48,6 +48,7 @@
     class="img-card"
     data-id={img.id}
     data-url={$blobLocations[img.id] || ""}
+    class:edit-mode={$editMode}
     on:click={handleImgclick}
     on:keypress={handleImgclick}
 >
@@ -95,6 +96,10 @@
         height: fit-content;
         max-height: 50rem;
         overflow: hidden;
+        cursor: zoom-in;
+    }
+    .edit-mode {
+        cursor: pointer;
     }
     .img-card:hover .img {
         filter: brightness(0.5);
@@ -136,9 +141,6 @@
         max-width: var(--img-width);
         border-radius: 1rem;
         border: none;
-    }
-    .img:hover {
-        cursor: zoom-in;
     }
 
     .delete:hover {
