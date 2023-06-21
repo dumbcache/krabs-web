@@ -3,7 +3,7 @@
     import Imgs from "$lib/components/imgs/Imgs.svelte";
     import DirCreate from "$lib/components/actions/DirCreate.svelte";
     import { onDestroy, onMount } from "svelte";
-    import { FILE_API, getResource } from "$lib/scripts/drive";
+    import { getResource } from "$lib/scripts/drive";
     import { childWorker } from "$lib/scripts/utils";
     import {
         activeParentId,
@@ -18,6 +18,8 @@
         isLoggedin,
         editMode,
         activeGrandParentId,
+        tempImgs,
+        tempDirs,
     } from "$lib/scripts/stores";
     import Confirm from "$lib/components/actions/Confirm.svelte";
     import EditMode from "$lib/components/actions/EditMode.svelte";
@@ -27,13 +29,16 @@
     let activeId = "";
     let activeName = "";
     let contentHidden: string;
-    $: contentHidden = $editMode === true ? "none" : "initial";
+    $: contentHidden =
+        $editMode === true || $mode === "search" ? "none" : "initial";
     onMount(() => {
         if ($isLoggedin) {
             getResource($activeParentId).then(({ name, parents }) => {
                 $activeParentName = name;
                 $activeGrandParentId = parents![0];
             });
+            $tempImgs = $activeImgs;
+            $tempDirs = $activeDirs;
         }
     });
     onDestroy(() => {

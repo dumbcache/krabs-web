@@ -206,8 +206,6 @@ export function isValidUrl(url: string) {
 
 export function handleFavorites() {
     if (get(mode) === "favorites") {
-        tempImgs.set(get(activeImgs));
-        tempDirs.set(get(activeDirs));
         activeImgs.set(get(tempImgs)?.filter((img) => img.starred === true));
         activeDirs.set(get(tempDirs)?.filter((dir) => dir.starred === true));
         return;
