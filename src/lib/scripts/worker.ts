@@ -58,6 +58,33 @@ export const createImgMetadata = (
     });
 };
 
+export const updateResource = async (
+    id: string,
+    imgMeta: ImgMeta,
+    token: string
+): Promise<any> => {
+    return new Promise(async (resolve, reject) => {
+        const url = `https://www.googleapis.com/drive/v3/files/${id}`;
+        let req = await fetch(url, {
+            method: "PATCH",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(imgMeta),
+        });
+        let { status, statusText } = req;
+        let data = (await req.json()) as CreateResourceResponse;
+        if (status !== 200) {
+            console.log(
+                `error while updating resource ${status} ${statusText}`,
+                data
+            );
+            reject({ status });
+        }
+        resolve({ status, data });
+    });
+};
+
 export const moveResource = async (
     id: string,
     parent: string,
@@ -128,6 +155,15 @@ export const moveImgs = (parent: string, imgs: string[], token: string) => {
     }
     Promise.allSettled(proms).then(() => {
         postMessage({ context: "MOVE_IMGS", parent });
+    });
+};
+export const editImgs = (url: string, imgs: string[], token: string) => {
+    let proms = [];
+    for (let id of imgs) {
+        proms.push(updateResource(id, { description: url }, token));
+    }
+    Promise.allSettled(proms).then(() => {
+        postMessage({ context: "EDIT_IMGS" });
     });
 };
 
@@ -243,6 +279,9 @@ onmessage = ({ data }) => {
             return;
         case "MOVE_IMGS":
             moveImgs(data.parent, data.imgs, data.token);
+            return;
+        case "EDIT_IMGS":
+            editImgs(data.url, data.imgs, data.token);
             return;
         case "DROP_SAVE":
             dropSave(data.dropItems, data.token);

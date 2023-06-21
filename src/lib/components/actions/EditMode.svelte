@@ -32,7 +32,9 @@
             class="edit-button btn"
             title="edit"
             disabled={$selectedCount === 0}
-            on:click={() => {}}>{@html editIcon}</button
+            on:click={() => {
+                $mode = "edit";
+            }}>{@html editIcon}</button
         >
         <button
             class="move-button btn"

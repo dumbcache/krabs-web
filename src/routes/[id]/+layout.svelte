@@ -29,6 +29,7 @@
     import Confirm from "$lib/components/actions/Confirm.svelte";
     import { goto } from "$app/navigation";
     import Move from "$lib/components/actions/Move.svelte";
+    import EditUrl from "$lib/components/actions/EditUrl.svelte";
 
     let draggedOver = false;
     export function imgDropHandler(e: DragEvent) {
@@ -91,6 +92,9 @@
                 {/if}
                 {#if $mode === "move"}
                     <Move />
+                {/if}
+                {#if $mode === "edit"}
+                    <EditUrl />
                 {/if}
                 <slot />
             </div>

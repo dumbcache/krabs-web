@@ -106,6 +106,14 @@ if (browser) {
                 );
                 fetchFiles(data.parent, "imgs", 1000, true);
                 return;
+            case "EDIT_IMGS":
+                refreshMainContent(get(activeParentId), "imgs").then(() => {
+                    editItems.set([]);
+                    selectedCount.set(0);
+                    mode.set("");
+                    editMode.set(false);
+                });
+                return;
             case "IDB_RELOAD_REQUIRED":
                 return;
         }

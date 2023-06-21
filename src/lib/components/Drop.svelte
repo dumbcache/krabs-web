@@ -77,8 +77,6 @@
         border-bottom-right-radius: 0.5rem;
         padding: 0.5rem;
         font-size: 1.6rem;
-        color: #000;
-        background-color: var(--color-white-level-two);
         color: var(--primary-color);
         background-color: var(--input-background);
         border-bottom: 2px solid var(--color-black);
