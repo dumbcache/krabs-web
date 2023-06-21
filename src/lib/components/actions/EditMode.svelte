@@ -28,12 +28,16 @@
                     $selectAll === true ? $activeImgs.map((img) => img.id) : [];
             }}>{@html selectallIcon}</button
         >
-        <button class="btn" title="edit" on:click={() => {}}
-            >{@html editIcon}</button
+        <button
+            class="edit-button btn"
+            title="edit"
+            disabled={$selectedCount === 0}
+            on:click={() => {}}>{@html editIcon}</button
         >
         <button
-            class="btn"
+            class="move-button btn"
             title="move"
+            disabled={$selectedCount === 0}
             on:click={() => {
                 if ($selectedCount !== 0) {
                     $mode = "move";

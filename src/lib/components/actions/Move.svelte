@@ -206,6 +206,9 @@
         cursor: not-allowed;
         filter: invert(0.5);
     }
+    .done-button:disabled :global(svg) {
+        cursor: not-allowed;
+    }
     @keyframes spin {
         0% {
             transform: translate(0%, -50%) rotate(0deg);
