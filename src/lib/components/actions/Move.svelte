@@ -12,9 +12,11 @@
     } from "$lib/scripts/stores";
     import { onDestroy, onMount } from "svelte";
     import { childWorker } from "$lib/scripts/utils";
+    import Confirm from "./Confirm.svelte";
 
     let recentsClicked = false;
     let progress = false;
+    let moveConfirm = false;
     let selectedName = $activeParentName;
     let selectedId = $activeParentId;
     let selectedIdParent = $activeGrandParentId;
@@ -85,13 +87,7 @@
                         class="done-button btn"
                         disabled={selectedId === $activeParentId}
                         on:click|stopPropagation={() => {
-                            progress = true;
-                            childWorker.postMessage({
-                                context: "MOVE_IMGS",
-                                parent: selectedId,
-                                imgs: $editItems,
-                                token,
-                            });
+                            moveConfirm = true;
                             recentsClicked = false;
                         }}>{@html doneIcon}</button
                     >
@@ -120,6 +116,24 @@
         </div>
     </div>
 </div>
+{#if moveConfirm}
+    <Confirm
+        text={"you sure want to move?"}
+        on:confirmCloseNO={() => {
+            moveConfirm = false;
+        }}
+        on:confirmCloseOK={() => {
+            progress = true;
+            moveConfirm = false;
+            childWorker.postMessage({
+                context: "MOVE_IMGS",
+                parent: selectedId,
+                imgs: $editItems,
+                token,
+            });
+        }}
+    />
+{/if}
 
 <style>
     .move {

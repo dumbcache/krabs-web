@@ -63,4 +63,8 @@
         flex-flow: column;
         gap: 1rem;
     }
+    span {
+        display: flex;
+        justify-content: space-evenly;
+    }
 </style>
