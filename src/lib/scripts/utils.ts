@@ -476,6 +476,7 @@ export function previewChange(
 }
 
 export function previewShortcutHandler(e: KeyboardEvent) {
+    console.trace();
     let targetId = get(previewItem)!.id;
     if (!targetId) return;
     if (e.altKey || e.metaKey || e.ctrlKey) {
@@ -689,7 +690,9 @@ export function shortcutHandler(e) {
         case "ArrowLeft":
         case "ArrowDown":
         case "ArrowUp":
-            previewShortcutHandler(e);
+            if (get(previewItem)) {
+                previewShortcutHandler(e);
+            }
             break;
         default:
             break;

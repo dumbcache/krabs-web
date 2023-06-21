@@ -27,10 +27,7 @@
     import History from "$lib/components/actions/History.svelte";
 
     let dirCreateToggle = false;
-    let favClicked: Boolean;
-    let reverseClicked: Boolean;
-    $: favClicked = $favoritesActive;
-    $: reverseClicked = $reverseActive;
+
     function imgPickerHandler(e: InputEvent) {
         e.preventDefault();
         // clearDropItems();
@@ -45,19 +42,19 @@
 
 <div class="tools">
     <button
-        class="fav-button btn {favClicked && 'clicked'}"
+        class="fav-button btn {$favoritesActive === true ? 'clicked' : ''}"
         title="favorites"
         on:click={() => {
             $mode = $mode === "favorites" ? "" : "favorites";
-            favClicked = !favClicked;
+            $favoritesActive = !$favoritesActive;
             handleFavorites();
         }}>{@html favoriteIcon}</button
     >
     <button
-        class="reverse-button btn {reverseClicked && 'clicked'}"
+        class="reverse-button btn {$reverseActive === true ? 'clicked' : ''}"
         title="search"
         on:click={() => {
-            reverseClicked = !reverseClicked;
+            $reverseActive = !$reverseActive;
             $activeDirs = $activeDirs?.reverse();
             $activeImgs = $activeImgs?.reverse();
         }}
@@ -78,8 +75,8 @@
         title="refresh files"
         on:click={() => {
             refreshCache();
-            favClicked = false;
-            reverseClicked = false;
+            $favoritesActive = false;
+            $reverseActive = false;
         }}
     >
         {@html refresh}
@@ -125,6 +122,10 @@
         display: flex;
         flex-flow: column nowrap;
         gap: 1rem;
+    }
+    .reverse-button,
+    .fav-button {
+        filter: none;
     }
     #img-picker {
         display: none;

@@ -20,6 +20,8 @@
         activeGrandParentId,
         tempImgs,
         tempDirs,
+        favoritesActive,
+        reverseActive,
     } from "$lib/scripts/stores";
     import Confirm from "$lib/components/actions/Confirm.svelte";
     import EditMode from "$lib/components/actions/EditMode.svelte";
@@ -44,6 +46,8 @@
     onDestroy(() => {
         $previewItem = undefined;
         $mode = "";
+        $favoritesActive = false;
+        $reverseActive = false;
     });
 </script>
 
