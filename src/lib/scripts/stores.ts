@@ -2,6 +2,7 @@ import { writable, type Writable } from "svelte/store";
 
 export let activeParentId = writable("");
 export let activeParentName = writable("");
+export let activeGrandParentId = writable("");
 
 export let tempImgs = writable<GoogleFile[] | undefined>();
 export let tempDirs = writable<GoogleFile[] | undefined>();

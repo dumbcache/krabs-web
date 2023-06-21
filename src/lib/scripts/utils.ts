@@ -95,6 +95,17 @@ if (browser) {
                     })
                 );
                 return;
+            case "MOVE_IMGS":
+                fetchFiles(get(activeParentId), "imgs", 1000, true).then(() =>
+                    refreshMainContent(get(activeParentId), "imgs").then(() => {
+                        editItems.set([]);
+                        selectedCount.set(0);
+                        mode.set("");
+                        editMode.set(false);
+                    })
+                );
+                fetchFiles(data.parent, "imgs", 1000, true);
+                return;
             case "IDB_RELOAD_REQUIRED":
                 return;
         }

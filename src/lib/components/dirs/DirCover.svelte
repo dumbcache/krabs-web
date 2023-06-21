@@ -9,7 +9,7 @@
     export let starred: Boolean;
     let pics: GoogleFile[] = [];
 
-    (fetchFiles(id, "covers", 3) as Promise<GoogleFileRes>)
+    $: (fetchFiles(id, "covers", 3) as Promise<GoogleFileRes>)
         .then(({ files }) => {
             pics = files;
         })

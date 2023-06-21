@@ -3,7 +3,7 @@
     import Imgs from "$lib/components/imgs/Imgs.svelte";
     import DirCreate from "$lib/components/actions/DirCreate.svelte";
     import { onDestroy, onMount } from "svelte";
-    import { FILE_API } from "$lib/scripts/drive";
+    import { FILE_API, getResource } from "$lib/scripts/drive";
     import { childWorker } from "$lib/scripts/utils";
     import {
         activeParentId,
@@ -17,6 +17,7 @@
         mode,
         isLoggedin,
         editMode,
+        activeGrandParentId,
     } from "$lib/scripts/stores";
     import Confirm from "$lib/components/actions/Confirm.svelte";
     import EditMode from "$lib/components/actions/EditMode.svelte";
@@ -28,29 +29,11 @@
     let contentHidden: string;
     $: contentHidden = $editMode === true ? "none" : "initial";
     onMount(() => {
-        async function getParentName() {
-            let res = await fetch(
-                `${FILE_API}/${$activeParentId}?fields=name`,
-                {
-                    method: "GET",
-                    headers: {
-                        Authorization: `Bearer ${window.localStorage.getItem(
-                            "token"
-                        )}`,
-                    },
-                }
-            );
-            if (res.status !== 200) {
-                console.log(await res.text());
-                if (res.status === 401) {
-                }
-                return;
-            }
-            const { name } = await res.json();
-            $activeParentName = name;
-        }
         if ($isLoggedin) {
-            getParentName();
+            getResource($activeParentId).then(({ name, parents }) => {
+                $activeParentName = name;
+                $activeGrandParentId = parents![0];
+            });
         }
     });
     onDestroy(() => {

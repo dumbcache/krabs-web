@@ -150,6 +150,29 @@ export const updateDir = async (
     fetchFiles(parent, "dirs", 1000, true);
 };
 
+export const getResource = async (id: string): Promise<GoogleFile> => {
+    let res = await fetch(`${FILE_API}/${id}?fields=id,name,parents`, {
+        method: "GET",
+        headers: {
+            Authorization: `Bearer ${window.localStorage.getItem("token")}`,
+        },
+    });
+    let { status, statusText } = res;
+    let data = (await res.json()) as CreateResourceResponse;
+    if (status !== 200) {
+        console.log(
+            `error while updating resource ${status} ${statusText}`,
+            data
+        );
+        if (res.status === 401) {
+            get(sessionTimeout) === false && sessionTimeout.set(true);
+            return;
+        }
+        return;
+    }
+    return data;
+};
+
 export const updateResource = async (
     id: string,
     imgMeta: ImgMeta,

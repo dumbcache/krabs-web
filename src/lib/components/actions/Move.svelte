@@ -1,18 +1,52 @@
 <script lang="ts">
     import doneIcon from "$lib/assets/done.svg?raw";
+    import beforeIcon from "$lib/assets/beforeNavigate.svg?raw";
+    import progressIcon from "$lib/assets/progress.svg?raw";
+    import { fetchFiles, getResource } from "$lib/scripts/drive";
     import {
+        activeGrandParentId,
         activeParentId,
         activeParentName,
+        editItems,
         mode,
-        recents,
     } from "$lib/scripts/stores";
+    import { onDestroy, onMount } from "svelte";
+    import { childWorker } from "$lib/scripts/utils";
 
     let recentsClicked = false;
+    let progress = false;
     let selectedName = $activeParentName;
     let selectedId = $activeParentId;
+    let selectedIdParent = $activeGrandParentId;
+    let childs: GoogleFile[] = [];
+    const root = window.localStorage.getItem("root");
+    const token = window.localStorage.getItem("token");
+
+    async function beforeFetchDirs(id: string) {
+        getResource(id).then(({ id, name, parents }) => {
+            selectedIdParent = parents[0];
+            selectedId = id;
+            selectedName = name;
+            fetchDirs();
+        });
+    }
+
+    async function fetchDirs() {
+        let { files } = await fetchFiles(selectedId, "dirs", 1000, false);
+        childs = files;
+    }
+
+    onMount(() => {
+        fetchDirs();
+    });
+    onDestroy(() => {});
 </script>
 
-<div class="move" on:keydown={() => {}} on:click={() => ($mode = "select")}>
+<div
+    class="move"
+    on:keydown={() => {}}
+    on:click={() => progress || ($mode = "select")}
+>
     <div
         class="wrapper"
         on:click|stopPropagation={() => {
@@ -21,8 +55,21 @@
         on:keydown={() => {}}
     >
         <div class="tools">
-            <button class="btn root" title="root">/R</button>
-            <button class="btn root" title="history">/H</button>
+            <button
+                class="btn root"
+                title="root"
+                on:click|stopPropagation={() => beforeFetchDirs(root)}
+                >/R</button
+            >
+            {#if selectedId !== root}
+                <button
+                    class="btn prev"
+                    title="previous"
+                    on:click|stopPropagation={() => {
+                        beforeFetchDirs(selectedIdParent);
+                    }}>{@html beforeIcon}</button
+                >
+            {/if}
         </div>
         <div class="selection">
             <div class="label">Select folder to move</div>
@@ -33,19 +80,37 @@
                     (recentsClicked = !recentsClicked)}
             >
                 {selectedName}
-                <button class="done-button btn">{@html doneIcon}</button>
+                {#if !progress}
+                    <button
+                        class="done-button btn"
+                        disabled={selectedId === $activeParentId}
+                        on:click|stopPropagation={() => {
+                            progress = true;
+                            childWorker.postMessage({
+                                context: "MOVE_IMGS",
+                                parent: selectedId,
+                                imgs: $editItems,
+                                token,
+                            });
+                            recentsClicked = false;
+                        }}>{@html doneIcon}</button
+                    >
+                {/if}
+                {#if progress}
+                    <button class="progress-button btn"
+                        >{@html progressIcon}</button
+                    >
+                {/if}
                 {#if recentsClicked}
                     <div class="recents">
-                        {#if $recents}
-                            {#each $recents as recent}
+                        {#if childs}
+                            {#each childs as child}
                                 <button
                                     class="recent"
-                                    data-id={recent.id}
-                                    on:click|stopPropagation={() => {
-                                        selectedId = recent.id;
-                                        selectedName = recent.name;
-                                        recentsClicked = false;
-                                    }}>{recent.name}</button
+                                    data-id={child.id}
+                                    on:click|stopPropagation={() =>
+                                        beforeFetchDirs(child.id)}
+                                    >{child.name}</button
                                 >
                             {/each}
                         {/if}
@@ -80,6 +145,9 @@
     .root {
         color: red;
     }
+    .prev :global(svg) {
+        fill: red;
+    }
     .wrapper {
         background-color: var(--primary-backdrop-color);
         padding: 2rem;
@@ -112,24 +180,52 @@
         cursor: pointer;
         border-radius: 0.5rem;
     }
-    .done-button {
+    .done-button,
+    .progress-button {
         position: absolute;
         right: 0.5rem;
         top: 50%;
         transform: translate(0%, -50%);
+        filter: none;
+    }
+    .done-button:disabled {
+        cursor: not-allowed;
+        filter: invert(0.5);
+    }
+    @keyframes spin {
+        0% {
+            transform: translate(0%, -50%) rotate(0deg);
+        }
+        50% {
+            transform: translate(0%, -50%) rotate(180deg);
+        }
+        100% {
+            transform: translate(0%, -50%) rotate(360deg);
+        }
+    }
+
+    .progress-button {
+        -webkit-animation: spin 1.5s linear 0s infinite;
+        animation: spin 1s linear 0s infinite;
+    }
+    .done-button:hover :global(svg) {
+        fill: #3af;
+    }
+    .done-button :global(svg) {
+        fill: #0ff;
     }
     .selected {
         padding: 1rem;
         position: relative;
     }
     .recents {
-        height: 21rem;
+        max-height: 21rem;
         position: absolute;
         top: 4rem;
         left: 0rem;
         display: flex;
         flex-flow: column;
-        overflow: scroll;
+        overflow-y: scroll;
     }
     .recent {
         padding: 0.8rem 1rem;
