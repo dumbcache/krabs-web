@@ -28,6 +28,7 @@
     import Search from "$lib/components/actions/Search.svelte";
     import Confirm from "$lib/components/actions/Confirm.svelte";
     import { goto } from "$app/navigation";
+    import Move from "$lib/components/actions/Move.svelte";
 
     let draggedOver = false;
     export function imgDropHandler(e: DragEvent) {
@@ -87,6 +88,9 @@
                     <div class="search">
                         <Search />
                     </div>
+                {/if}
+                {#if $mode === "move"}
+                    <Move />
                 {/if}
                 <slot />
             </div>

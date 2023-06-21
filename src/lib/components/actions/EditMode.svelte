@@ -13,7 +13,6 @@
         activeImgs,
         selectAll,
     } from "$lib/scripts/stores";
-    import Move from "./Move.svelte";
 </script>
 
 <div class="edit-mode">
@@ -63,9 +62,6 @@
             }}>{@html closeIcon}</button
         >
     </div>
-    {#if $mode === "move"}
-        <Move />
-    {/if}
 </div>
 
 <style>
