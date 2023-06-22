@@ -46,6 +46,7 @@
 
 <div
     class="img-card"
+    class:select={selected}
     data-id={img.id}
     data-url={$blobLocations[img.id] || ""}
     class:edit-mode={$editMode}
@@ -56,7 +57,6 @@
         src={img.thumbnailLink}
         alt="thumbnail to link"
         class="img {$mode === 'delete' ? 'delete' : ''}"
-        class:select={selected}
         loading="lazy"
         height="200"
         width="200"
@@ -146,9 +146,11 @@
     .delete:hover {
         cursor: pointer;
     }
-    .select {
+    .select .img,
+    .select:hover .img {
         filter: brightness(0.2);
     }
+
     .anchor {
         display: inline-block;
         height: 5px;
