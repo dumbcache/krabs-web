@@ -476,7 +476,6 @@ export function previewChange(
 }
 
 export function previewShortcutHandler(e: KeyboardEvent) {
-    console.trace();
     let targetId = get(previewItem)!.id;
     if (!targetId) return;
     if (e.altKey || e.metaKey || e.ctrlKey) {
