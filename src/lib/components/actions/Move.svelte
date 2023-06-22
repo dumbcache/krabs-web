@@ -99,7 +99,7 @@
                 {/if}
                 {#if recentsClicked}
                     <div class="recents">
-                        {#if childs}
+                        {#if childs.length > 0}
                             {#each childs as child}
                                 <button
                                     class="recent"
@@ -234,7 +234,6 @@
     .selected {
         padding: 1rem;
         position: relative;
-        overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
     }
