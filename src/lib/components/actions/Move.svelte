@@ -234,8 +234,6 @@
     .selected {
         padding: 1rem;
         position: relative;
-        text-overflow: ellipsis;
-        white-space: nowrap;
     }
     .recents {
         max-height: 21rem;
@@ -244,13 +242,11 @@
         left: 0rem;
         display: flex;
         flex-flow: column;
+        overflow-x: hidden;
         overflow-y: scroll;
     }
     .recent {
         padding: 0.8rem 1rem;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
     }
     .recent:hover {
         filter: none;
