@@ -71,10 +71,6 @@
         align-items: center;
         justify-content: center;
     }
-    .btn {
-        width: var(--secondary-icon-size);
-        height: var(--secondary-icon-size);
-    }
     @media (max-width: 600px) {
         .common-url {
             max-width: 15rem;
