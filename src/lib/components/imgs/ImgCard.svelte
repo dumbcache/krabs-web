@@ -63,7 +63,7 @@
         on:error={(e) => (e.target.src = imgPlaceholder)}
     />
     <button class="anchor">.</button>
-    {#if $mode !== "delete"}
+    {#if !$editMode}
         {#if img.appProperties?.origin || img.description}
             <a
                 href={isValidUrl(img.appProperties?.origin) ||
