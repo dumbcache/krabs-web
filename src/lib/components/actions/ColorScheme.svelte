@@ -74,8 +74,8 @@
         display: flex;
         align-items: center;
         border-radius: 1.5rem;
-        width: calc(2 * var(--primary-icon-size));
-        height: var(--primary-icon-size);
+        width: calc(2 * var(--secondary-icon-size));
+        height: var(--secondary-icon-size);
         justify-content: space-between;
         border: 1px solid var(--theme-button-outline);
         overflow: hidden;
