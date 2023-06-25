@@ -1,5 +1,5 @@
 import { goto } from "$app/navigation";
-import { PUBLIC_KRAB_API, PUBLIC_KRAB_CLIENT_ID } from "$env/static/public";
+import { PUBLIC_KRAB_CLIENT_ID } from "$env/static/public";
 import { get } from "svelte/store";
 import { browser } from "$app/environment";
 import ChildWorker from "$lib/scripts/worker.ts?worker";
@@ -346,26 +346,26 @@ export const colorPalette = {
 //     goto("/r");
 // };
 
-export const getToken = async () => {
-    const secret = window.localStorage.getItem("secret");
-    const res = await fetch(`${PUBLIC_KRAB_API}/auth`, {
-        headers: {
-            Authorization: `Bearer ${secret}`,
-        },
-    });
-    if (res.status !== 200) {
-        if (res.status === 401) {
-            console.log("session timeout");
-            signUserOut();
-            return;
-        }
-        console.warn(res.status, await res.text());
-        return;
-    }
-    const { token } = await res.json();
-    localStorage.setItem("token", token);
-    return true;
-};
+// export const getToken = async () => {
+//     const secret = window.localStorage.getItem("secret");
+//     const res = await fetch(`${PUBLIC_KRAB_API}/auth`, {
+//         headers: {
+//             Authorization: `Bearer ${secret}`,
+//         },
+//     });
+//     if (res.status !== 200) {
+//         if (res.status === 401) {
+//             console.log("session timeout");
+//             signUserOut();
+//             return;
+//         }
+//         console.warn(res.status, await res.text());
+//         return;
+//     }
+//     const { token } = await res.json();
+//     localStorage.setItem("token", token);
+//     return true;
+// };
 
 export function checkLoginStatus() {
     if (browser) {
