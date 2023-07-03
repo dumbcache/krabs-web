@@ -234,6 +234,7 @@ function checkForImgLocal(id: string, token: string) {
 }
 
 async function dropSave(dropItems: DropItem[], token: string) {
+    let proms = [];
     for (let item of dropItems) {
         const { id, name, url, mimeType, bytes, parent } = item;
         const imgMeta: ImgMeta = {
@@ -243,28 +244,39 @@ async function dropSave(dropItems: DropItem[], token: string) {
             description: url || "",
             // appProperties: { origin: url || "" },
         };
-        createImgMetadata(imgMeta, token)
-            .then(async (location) => {
-                const { status } = await uploadImg(location, bytes);
-                status === 200
-                    ? postMessage({
-                          context: "DROP_SAVE",
-                          id,
-                      })
-                    : postMessage({
-                          context: "DROP_SAVE_FAILED",
-                          id,
-                          status,
-                      });
+        proms.push(
+            new Promise((resolve, reject) => {
+                createImgMetadata(imgMeta, token)
+                    .then(async (location) => {
+                        const { status } = await uploadImg(location, bytes);
+                        status === 200
+                            ? postMessage({
+                                  context: "DROP_SAVE",
+                                  id,
+                              })
+                            : postMessage({
+                                  context: "DROP_SAVE_FAILED",
+                                  id,
+                                  status,
+                              });
+                        resolve("");
+                    })
+                    .catch((e) => {
+                        postMessage({
+                            context: "DROP_SAVE_FAILED",
+                            id,
+                            status: e.status,
+                        });
+                        reject();
+                    });
             })
-            .catch((e) => {
-                postMessage({
-                    context: "DROP_SAVE_FAILED",
-                    id,
-                    status: e.status,
-                });
-            });
+        );
     }
+    Promise.allSettled(proms).then(() => {
+        postMessage({
+            context: "DROP_SAVE_COMPLETE",
+        });
+    });
 }
 onmessage = ({ data }) => {
     switch (data.context) {

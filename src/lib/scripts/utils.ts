@@ -67,23 +67,19 @@ if (browser) {
                         return item;
                     })
                 );
-                console.log(get(dropItems).length);
-                if (get(dropItems).length === 0) {
-                    fetchFiles(get(activeParentId), "imgs", 1000, true).then(
-                        () =>
-                            // window.location.reload();
-                            // console.log("refresh")
-                            refreshMainContent(
-                                get(activeParentId),
-                                "imgs"
-                            ).then(() => {
-                                editItems.set([]);
-                                selectedCount.set(0);
-                                mode.set("");
-                                editMode.set(false);
-                            })
-                    );
-                }
+                return;
+
+            case "DROP_SAVE_COMPLETE":
+                fetchFiles(get(activeParentId), "imgs", 1000, true).then(() =>
+                    // window.location.reload();
+                    // console.log("refresh")
+                    refreshMainContent(get(activeParentId), "imgs").then(() => {
+                        editItems.set([]);
+                        selectedCount.set(0);
+                        mode.set("");
+                        editMode.set(false);
+                    })
+                );
                 return;
 
             case "DROP_SAVE_FAILED":
