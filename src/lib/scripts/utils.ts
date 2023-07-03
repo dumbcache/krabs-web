@@ -50,7 +50,6 @@ if (browser) {
                 previewImg.src = url;
                 target.dataset.url = url;
                 blobLocations.set({ ...get(blobLocations), [id]: url });
-
                 return;
 
             case "IMG_PREVIEW_FAILED":
@@ -70,16 +69,7 @@ if (browser) {
                 return;
 
             case "DROP_SAVE_COMPLETE":
-                fetchFiles(get(activeParentId), "imgs", 1000, true).then(() =>
-                    // window.location.reload();
-                    // console.log("refresh")
-                    refreshMainContent(get(activeParentId), "imgs").then(() => {
-                        editItems.set([]);
-                        selectedCount.set(0);
-                        mode.set("");
-                        editMode.set(false);
-                    })
-                );
+                refreshImgs();
                 return;
 
             case "DROP_SAVE_FAILED":
@@ -96,29 +86,14 @@ if (browser) {
                 return;
 
             case "IMG_DELETE":
-                // console.log("deleted")
-                fetchFiles(get(activeParentId), "imgs", 1000, true).then(() =>
-                    // window.location.reload();
-                    // console.log("refresh")
-                    refreshMainContent(get(activeParentId), "imgs").then(() => {
-                        editItems.set([]);
-                        selectedCount.set(0);
-                        mode.set("");
-                        editMode.set(false);
-                    })
-                );
+                refreshImgs();
                 return;
+
             case "MOVE_IMGS":
-                fetchFiles(get(activeParentId), "imgs", 1000, true).then(() =>
-                    refreshMainContent(get(activeParentId), "imgs").then(() => {
-                        editItems.set([]);
-                        selectedCount.set(0);
-                        mode.set("");
-                        editMode.set(false);
-                    })
-                );
+                refreshImgs();
                 fetchFiles(data.parent, "imgs", 1000, true);
                 return;
+
             case "EDIT_IMGS":
                 refreshMainContent(get(activeParentId), "imgs").then(() => {
                     editItems.set([]);
@@ -127,10 +102,22 @@ if (browser) {
                     editMode.set(false);
                 });
                 return;
+
             case "IDB_RELOAD_REQUIRED":
                 return;
         }
     };
+}
+
+function refreshImgs() {
+    fetchFiles(get(activeParentId), "imgs", 1000, true).then(() =>
+        refreshMainContent(get(activeParentId), "imgs").then(() => {
+            editItems.set([]);
+            selectedCount.set(0);
+            mode.set("");
+            editMode.set(false);
+        })
+    );
 }
 
 export async function setCacheName() {
