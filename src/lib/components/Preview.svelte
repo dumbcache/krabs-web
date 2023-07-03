@@ -69,7 +69,7 @@
         background-color: var(--primary-backdrop-color);
         backdrop-filter: blur(2rem);
         -webkit-backdrop-filter: blur(2rem);
-        z-index: 2;
+        z-index: 1;
     }
     .preview-img {
         width: 100%;
@@ -117,6 +117,11 @@
         top: 0;
         align-self: start;
         border-left: 1px solid var(--primary-color);
+    }
+    @media (max-width: 800px) {
+        .preview {
+            z-index: 2;
+        }
     }
     @media (max-width: 600px) {
         .preview-tools {

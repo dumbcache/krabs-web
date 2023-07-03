@@ -36,7 +36,7 @@
         bottom: 1rem;
         right: 0;
         background-color: #043;
-        z-index: 2;
+        z-index: 1;
         filter: none;
         border-top-left-radius: 1rem;
         border-bottom-left-radius: 1rem;
@@ -49,7 +49,7 @@
         overflow-y: scroll;
         padding: 0rem 1rem 1rem 1rem;
         max-width: 50%;
-        z-index: 2;
+        z-index: 1;
         min-width: 50%;
         height: 100vh;
         backdrop-filter: blur(1rem);
@@ -95,6 +95,12 @@
     }
     .btn :global(svg) {
         fill: var(--color-white);
+    }
+    @media (max-width: 800px) {
+        .drop-mini,
+        .drop {
+            z-index: 2;
+        }
     }
     @media (max-width: 600px) {
         .drop-items {

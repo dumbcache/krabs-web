@@ -67,6 +67,23 @@ if (browser) {
                         return item;
                     })
                 );
+                console.log(get(dropItems).length);
+                if (get(dropItems).length === 0) {
+                    fetchFiles(get(activeParentId), "imgs", 1000, true).then(
+                        () =>
+                            // window.location.reload();
+                            // console.log("refresh")
+                            refreshMainContent(
+                                get(activeParentId),
+                                "imgs"
+                            ).then(() => {
+                                editItems.set([]);
+                                selectedCount.set(0);
+                                mode.set("");
+                                editMode.set(false);
+                            })
+                    );
+                }
                 return;
 
             case "DROP_SAVE_FAILED":
@@ -393,7 +410,7 @@ export async function clearFiles() {
 
 export function handleTouchStart(e: TouchEvent) {
     if (e.touches.length >= 2) return;
-    e.stopPropagation();
+    // e.stopPropagation();
     if (e.changedTouches.length === 0) return;
     const { screenX, screenY } = e.changedTouches[0];
     touchCoords.set({ startX: screenX, startY: screenY });
@@ -401,7 +418,7 @@ export function handleTouchStart(e: TouchEvent) {
 export function handleTouchEnd(e: TouchEvent, targetId: string | undefined) {
     if (!targetId) return;
     if (e.touches.length >= 2) return;
-    e.stopPropagation();
+    // e.stopPropagation();
     if (e.changedTouches.length === 0) return;
     const { screenX, screenY } = e.changedTouches[0];
     touchCoords.set({ ...get(touchCoords), endX: screenX, endY: screenY });
@@ -410,10 +427,9 @@ export function handleTouchEnd(e: TouchEvent, targetId: string | undefined) {
 export function handleTouchMove(e: TouchEvent) {
     if (e.touches.length >= 2) return;
     e.preventDefault();
-    e.stopPropagation();
+    // e.stopPropagation();
 }
 function checkDirection(targetId: string) {
-    console.log(get(touchCoords));
     const { endX, endY, startX, startY } = get(touchCoords);
     if (endX && endY && startX && startY) {
         if (Math.abs(startX - endX) > 40) {
