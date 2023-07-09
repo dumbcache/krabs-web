@@ -27,6 +27,8 @@ import {
     globalSearch,
     reverseActive,
     favoritesActive,
+    selectAll,
+    editProgress,
 } from "$lib/scripts/stores";
 import { fetchFiles, refreshMainContent, createRootDir } from "./drive";
 
@@ -86,6 +88,8 @@ if (browser) {
                 return;
 
             case "IMG_DELETE":
+                selectAll.set(false);
+                editProgress.set(false);
                 refreshImgs();
                 return;
 

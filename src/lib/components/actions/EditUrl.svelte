@@ -14,34 +14,39 @@
     onMount(() => urlField.focus());
 </script>
 
-<div
-    class="edit-url"
-    on:keydown={() => {}}
-    on:click={() => progress || ($mode = "select")}
->
-    <div class="wrapper" on:click|stopPropagation on:keydown={() => {}}>
-        <input
-            type="text"
-            class="url"
-            placeholder="enter new url"
-            bind:value={urlValue}
-            bind:this={urlField}
-        />
-        {#if !progress}
-            <button
-                class="done-button btn"
-                disabled={urlValue.trim() === ""}
-                on:click|stopPropagation={() => {
-                    editConfirm = true;
-                }}>{@html doneIcon}</button
-            >
-        {/if}
-        {#if progress}
-            <button class="progress-button btn">{@html progressIcon}</button>
-        {/if}
+{#if !editConfirm}
+    <div
+        class="edit-url"
+        on:keydown={() => {}}
+        on:click={() => progress || ($mode = "select")}
+    >
+        <form
+            class="wrapper"
+            on:click|stopPropagation
+            on:keydown={() => {}}
+            on:submit|preventDefault={() => (editConfirm = true)}
+        >
+            <input
+                type="text"
+                class="url"
+                placeholder="enter new url"
+                bind:value={urlValue}
+                bind:this={urlField}
+            />
+            {#if !progress}
+                <button
+                    type="submit"
+                    class="done-button btn"
+                    disabled={urlValue.trim() === ""}>{@html doneIcon}</button
+                >
+            {/if}
+            {#if progress}
+                <button class="progress-button btn">{@html progressIcon}</button
+                >
+            {/if}
+        </form>
     </div>
-</div>
-{#if editConfirm}
+{:else}
     <Confirm
         text={"you sure want to update?"}
         on:confirmCloseNO={() => {
@@ -71,8 +76,8 @@
         place-content: center;
         color: var(--color-white);
         background-color: var(--primary-backdrop-color);
-        backdrop-filter: blur(5rem);
-        -webkit-backdrop-filter: blur(5rem);
+        backdrop-filter: blur(1rem);
+        -webkit-backdrop-filter: blur(1rem);
         z-index: 3;
         user-select: none;
     }

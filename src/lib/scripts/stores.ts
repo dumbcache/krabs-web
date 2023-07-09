@@ -19,6 +19,7 @@ export let editMode = writable(false);
 export let mode = writable("");
 export let editItems = writable<string[]>([]);
 export let editConfirm = writable(false);
+export let editProgress = writable(false);
 export let selectAll = writable(false);
 export let selectedCount = writable(0);
 export let isLoggedin = writable(false);

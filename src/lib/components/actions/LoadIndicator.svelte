@@ -19,10 +19,6 @@
         }
     }
     .load-indicator {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
         width: 5rem;
         -webkit-animation: spin 1.5s linear 0s infinite;
         animation: spin 1s linear 0s infinite;

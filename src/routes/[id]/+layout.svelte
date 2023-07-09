@@ -64,7 +64,9 @@
 <div class="layout">
     <Header />
     {#if $navigating}
-        <LoadIndicator />
+        <div class="loading">
+            <LoadIndicator />
+        </div>
     {:else}
         <main
             class="main {draggedOver === true ? 'dragover' : ''}"
@@ -144,8 +146,11 @@
         background-color: inherit;
         width: 100%;
     }
-    .main {
-        /* overflow-x: hidden; */
+    .loading {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
     }
     .dragover {
         background-color: #55f5;

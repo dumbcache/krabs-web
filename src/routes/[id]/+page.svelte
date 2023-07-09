@@ -22,9 +22,12 @@
         tempDirs,
         favoritesActive,
         reverseActive,
+        selectAll,
+        editProgress,
     } from "$lib/scripts/stores";
     import Confirm from "$lib/components/actions/Confirm.svelte";
     import EditMode from "$lib/components/actions/EditMode.svelte";
+    import LoadIndicator from "$lib/components/actions/LoadIndicator.svelte";
 
     let type: "update" | "delete";
     let dirToggle = false;
@@ -112,6 +115,7 @@
             $editConfirm = false;
         }}
         on:confirmCloseOK={() => {
+            $editProgress = true;
             childWorker.postMessage({
                 context: "IMG_DELETE",
                 imgs: $editItems,
@@ -120,6 +124,11 @@
             $editConfirm = false;
         }}
     />
+{/if}
+{#if $editProgress}
+    <div class="progress">
+        <LoadIndicator />
+    </div>
 {/if}
 
 <style>
@@ -136,7 +145,19 @@
         left: 50%;
         transform: translate(-50%, -50%);
     }
-
+    .progress {
+        display: grid;
+        place-content: center;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: var(--primary-backdrop-color);
+        backdrop-filter: blur(1rem);
+        -webkit-backdrop-filter: blur(1rem);
+        z-index: 3;
+    }
     @media (max-width: 600px) {
         .count {
             margin-right: 1rem;
