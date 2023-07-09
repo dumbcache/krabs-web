@@ -1,5 +1,6 @@
 <script lang="ts">
     import closeIcon from "$lib/assets/close.svg?raw";
+    import doneIcon from "$lib/assets/done.svg?raw";
     import loadingIcon from "$lib/assets/progress.svg?raw";
     import successIcon from "$lib/assets/success.svg?raw";
     import failureIcon from "$lib/assets/failure.svg?raw";
@@ -19,6 +20,9 @@
     {#if item.progress !== "uploading" && item.progress !== "success"}
         <button class="remove btn" on:click={() => removeDropEntry(item.id)}>
             {@html closeIcon}
+        </button>
+        <button class="done btn" on:click={() => console.log(item.id)}>
+            {@html doneIcon}
         </button>
         <input
             type="text"
@@ -72,9 +76,9 @@
         overflow: hidden;
     }
     .drop-img {
-        height: 15rem;
+        max-height: 30rem;
         max-width: 100%;
-        object-fit: cover;
+        object-fit: contain;
         object-position: top;
         border-top-left-radius: 0.5rem;
         border-top-right-radius: 0.5rem;
@@ -82,16 +86,21 @@
     .drop-item:hover .drop-img {
         filter: brightness(0.5);
     }
-    .remove {
+    .btn {
         position: absolute;
         top: 0.5rem;
-        right: 0.5rem;
         filter: none;
         width: var(--size-small);
         height: var(--size-small);
         z-index: 1;
     }
-    .remove :global(svg) {
+    .remove {
+        left: 0.5rem;
+    }
+    .done {
+        right: 0.5rem;
+    }
+    .btn :global(svg) {
         fill: var(--color-white);
     }
     .progress {
@@ -102,7 +111,7 @@
         top: 0;
         left: 0;
         right: 0;
-        height: 15rem;
+        height: 30rem;
         background-color: var(--primary-backdrop-color);
     }
     .progress :global(svg) {
