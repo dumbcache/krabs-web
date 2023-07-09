@@ -4,7 +4,7 @@
     import loadingIcon from "$lib/assets/progress.svg?raw";
     import successIcon from "$lib/assets/success.svg?raw";
     import failureIcon from "$lib/assets/failure.svg?raw";
-    import { removeDropEntry } from "$lib/scripts/utils";
+    import { dropOkHandlerSingle, removeDropEntry } from "$lib/scripts/utils";
     export let item: DropItem;
 
     let progressIcon: string;
@@ -16,12 +16,30 @@
 </script>
 
 <div class="drop-item" data-id={item.id}>
-    <img src={item.imgRef} class="drop-img" alt="" />
+    <div class="img-wrapper">
+        <img src={item.imgRef} class="drop-img" alt="" />
+        {#if item.progress}
+            <div class="progress">
+                <div
+                    class="progress-icon {item.progress === 'uploading'
+                        ? 'anime uploading'
+                        : ''}"
+                >
+                    {@html progressIcon}
+                </div>
+            </div>
+        {/if}
+    </div>
     {#if item.progress !== "uploading" && item.progress !== "success"}
         <button class="remove btn" on:click={() => removeDropEntry(item.id)}>
             {@html closeIcon}
         </button>
-        <button class="done btn" on:click={() => console.log(item.id)}>
+        <button
+            class="done btn"
+            on:click={() => {
+                dropOkHandlerSingle(item.id);
+            }}
+        >
             {@html doneIcon}
         </button>
         <input
@@ -49,17 +67,6 @@
             on:click={(e) => e.target.select()}
         />
     {/if}
-    {#if item.progress}
-        <div class="progress">
-            <div
-                class="progress-icon {item.progress === 'uploading'
-                    ? 'anime uploading'
-                    : ''}"
-            >
-                {@html progressIcon}
-            </div>
-        </div>
-    {/if}
 </div>
 
 <style>
@@ -74,6 +81,9 @@
         border: 1px solid var(--cover-border-color);
         border-bottom: none;
         overflow: hidden;
+    }
+    .img-wrapper {
+        display: flex;
     }
     .drop-img {
         max-height: 30rem;
@@ -111,7 +121,7 @@
         top: 0;
         left: 0;
         right: 0;
-        height: 30rem;
+        bottom: 0;
         background-color: var(--primary-backdrop-color);
     }
     .progress :global(svg) {
