@@ -549,6 +549,7 @@ export function clearDropItems() {
 }
 
 export function dropOkHandlerSingle(id: string) {
+    clearDropItems();
     let items = get(dropItems).filter((item) => item.id === id);
     const [itemSingle] = setExtraInfo(items);
     items = get(dropItems).map((item) => {
@@ -574,8 +575,8 @@ export function dropOkHandlerSingle(id: string) {
 }
 
 export function dropOkHandler() {
+    clearDropItems();
     const tempDirItems = setExtraInfo(get(dropItems));
-    dropItems.set(tempDirItems);
     const { pathname } = window.location;
     const parent =
         pathname === "/"
@@ -584,7 +585,7 @@ export function dropOkHandler() {
     const token = window.localStorage.getItem("token");
     childWorker.postMessage({
         context: "DROP_SAVE",
-        dropItems: get(dropItems),
+        dropItems: tempDirItems,
         parent,
         token,
     });
