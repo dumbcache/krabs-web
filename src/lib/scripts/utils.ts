@@ -504,6 +504,37 @@ export function previewShortcutHandler(e: KeyboardEvent) {
     }
 }
 
+export function setExtraInfo(items: DropItem[]) {
+    const droppeditems = document.querySelector(
+        ".drop-items"
+    ) as HTMLDivElement;
+    const commonUrl = (
+        document.querySelector(".common-url") as HTMLInputElement
+    ).value;
+    const tempDirItems = [];
+    for (let item of items) {
+        if (item.progress === "success" || item.progress === "uploading")
+            continue;
+        const id = item.id;
+        const dropItem = droppeditems.querySelector(
+            `[data-id='${id}']`
+        ) as HTMLDivElement;
+        let dropImg = dropItem.querySelector(".drop-img") as HTMLImageElement;
+        dropImg.classList.toggle("drop-item-uploading");
+        let name = dropItem.querySelector(".name") as HTMLInputElement;
+        item.name = name.value.trim();
+        let url = dropItem.querySelector(".url") as HTMLInputElement;
+        if (url.value.trim() !== "") {
+            item.url = decodeURI(url.value.trim());
+        } else {
+            item.url = decodeURI(commonUrl.trim());
+        }
+        item.progress = "uploading";
+        tempDirItems.push(item);
+    }
+    return tempDirItems;
+}
+
 export function removeDropEntry(id: string) {
     dropItems.set(get(dropItems).filter((item) => item.id !== id));
 }
@@ -513,37 +544,33 @@ export function clearDropItems() {
     dropItems.set(a);
 }
 
-export function dropOkHandler() {
-    const droppeditems = document.querySelector(
-        ".drop-items"
-    ) as HTMLDivElement;
-    const commonUrl = (
-        document.querySelector(".common-url") as HTMLInputElement
-    ).value;
-    const tempDirItems = [];
-    for (let item of get(dropItems)) {
-        if (item.progress === "success") continue;
-        const id = item.id;
-        const dropItem = droppeditems.querySelector(
-            `[data-id='${id}']`
-        ) as HTMLDivElement;
-        let dropImg = dropItem.querySelector(".drop-img") as HTMLImageElement;
-        dropImg.classList.toggle("drop-item-uploading");
-        // let dropProgress = dropItem.querySelector(
-        //     ".drop-progress"
-        // ) as HTMLImageElement;
-        // dropProgress.hidden = false;
-        let name = dropItem.querySelector(".name") as HTMLInputElement;
-        item.name = name.value.trim();
-        let url = dropItem.querySelector(".url") as HTMLInputElement;
-        if (commonUrl.trim() === "") {
-            item.url = decodeURI(url.value.trim());
+export function dropOkHandlerSingle(id: string) {
+    let items = get(dropItems).filter((item) => item.id === id);
+    const [itemSingle] = setExtraInfo(items);
+    items = get(dropItems).map((item) => {
+        if (item.id === id) {
+            return itemSingle;
         } else {
-            item.url = decodeURI(commonUrl.trim());
+            return item;
         }
-        item.progress = "uploading";
-        tempDirItems.push(item);
-    }
+    });
+    dropItems.set(items);
+    const { pathname } = window.location;
+    const parent =
+        pathname === "/"
+            ? window.localStorage.getItem("root")!
+            : pathname.substring(1);
+    const token = window.localStorage.getItem("token");
+    childWorker.postMessage({
+        context: "DROP_SAVE",
+        dropItems: [itemSingle],
+        parent,
+        token,
+    });
+}
+
+export function dropOkHandler() {
+    const tempDirItems = setExtraInfo(get(dropItems));
     dropItems.set(tempDirItems);
     const { pathname } = window.location;
     const parent =

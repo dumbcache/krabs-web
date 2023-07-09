@@ -4,7 +4,11 @@
     import loadingIcon from "$lib/assets/progress.svg?raw";
     import successIcon from "$lib/assets/success.svg?raw";
     import failureIcon from "$lib/assets/failure.svg?raw";
-    import { dropOkHandlerSingle, removeDropEntry } from "$lib/scripts/utils";
+    import {
+        clearDropItems,
+        dropOkHandlerSingle,
+        removeDropEntry,
+    } from "$lib/scripts/utils";
     export let item: DropItem;
 
     let progressIcon: string;
@@ -37,6 +41,7 @@
         <button
             class="done btn"
             on:click={() => {
+                clearDropItems();
                 dropOkHandlerSingle(item.id);
             }}
         >
