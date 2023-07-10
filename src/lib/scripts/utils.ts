@@ -560,7 +560,6 @@ export function clearDropItems() {
 }
 
 export function dropOkHandlerSingle(id: string) {
-    clearDropItems();
     let items = get(dropItems).filter((item) => item.id === id);
     const [itemSingle] = setExtraInfo(items);
     items = get(dropItems).map((item) => {
