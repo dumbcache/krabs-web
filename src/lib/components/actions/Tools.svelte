@@ -51,7 +51,7 @@
     >
     <button
         class="reverse-button btn {$reverseActive === true ? 'clicked' : ''}"
-        title="search"
+        title="reverse listing"
         on:click={() => {
             $reverseActive = !$reverseActive;
             $activeDirs = $activeDirs?.reverse();
