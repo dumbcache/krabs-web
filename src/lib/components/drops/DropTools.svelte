@@ -3,12 +3,13 @@
     import closeIcon from "$lib/assets/close.svg?raw";
     import doneIcon from "$lib/assets/done.svg?raw";
     import clearIcon from "$lib/assets/clear.svg?raw";
+    import expandIcon from "$lib/assets/expand.svg?raw";
     import doubleRightIcon from "$lib/assets/doubleRight.svg?raw";
     import {
         dropOkHandler,
         // clearDropItems,
     } from "$lib/scripts/utils";
-    import { dropItems, dropMini } from "$lib/scripts/stores";
+    import { dropFull, dropItems, dropMini } from "$lib/scripts/stores";
 
     export function clearDropItems() {
         const a = $dropItems.filter((item) => item.progress !== "success");
@@ -21,19 +22,42 @@
         <button
             class="drop-cancel btn"
             title="close"
-            on:click={() => ($dropItems = [])}
+            on:click={() => {
+                const running = $dropItems.filter(
+                    (item) => item.progress === "uploading"
+                );
+                if (running.length === 0) {
+                    $dropFull = false;
+                    $dropItems = [];
+                } else {
+                    $dropMini = !$dropMini;
+                    $dropFull = false;
+                }
+            }}
         >
             {@html closeIcon}
+        </button>
+        <button class="btn" title="clear completed" on:click={clearDropItems}>
+            {@html clearIcon}
         </button>
         <button
             class="btn"
             title="minimize to right"
-            on:click={() => ($dropMini = !$dropMini)}
+            on:click={() => {
+                $dropMini = !$dropMini;
+                $dropFull = false;
+            }}
         >
             {@html doubleRightIcon}
         </button>
-        <button class="btn" title="clear completed" on:click={clearDropItems}>
-            {@html clearIcon}
+        <button
+            class="btn"
+            title="expand"
+            on:click={() => {
+                $dropFull = !$dropFull;
+            }}
+        >
+            {@html expandIcon}
         </button>
     </span>
     <!-- <span class="drop-parent">parent</span> -->

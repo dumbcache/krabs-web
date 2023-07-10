@@ -1,5 +1,10 @@
 <script>
-    import { dropItems, dropMini, previewItem } from "$lib/scripts/stores";
+    import {
+        dropFull,
+        dropItems,
+        dropMini,
+        previewItem,
+    } from "$lib/scripts/stores";
     import DropItem from "$lib/components/drops/DropItem.svelte";
     import DropTools from "$lib/components/drops/DropTools.svelte";
     import doubleLeftIcon from "$lib/assets/doubleLeft.svg?raw";
@@ -16,7 +21,10 @@
             }}>{@html doubleLeftIcon}</button
         >
     {:else}
-        <div class="drop" transition:fly={{ duration: 500, x: 500, y: 500 }}>
+        <div
+            class="drop {$dropFull === true ? 'full' : ''}"
+            transition:fly={{ duration: 500, x: 500, y: 500 }}
+        >
             <DropTools />
 
             <div class="drop-items">
@@ -54,6 +62,9 @@
         height: 100vh;
         backdrop-filter: blur(1rem);
         -webkit-backdrop-filter: blur(1rem);
+    }
+    .full {
+        min-width: 100%;
     }
 
     .drop-items {

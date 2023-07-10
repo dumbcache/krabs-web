@@ -15,6 +15,7 @@
         getOauthToken,
     } from "$lib/scripts/utils";
     import {
+        dropFull,
         dropMini,
         editMode,
         isLoggedin,
@@ -76,7 +77,7 @@
             on:dragleave={() => (draggedOver = false)}
             on:drop={imgDropHandler}
         >
-            <div class="content">
+            <div class="content {$dropFull === true ? 'content-hidden' : ''}">
                 {#if !$editMode}
                     <div class="nav">
                         <Nav />
@@ -145,6 +146,9 @@
     .content {
         background-color: inherit;
         width: 100%;
+    }
+    .content-hidden {
+        display: none;
     }
     .loading {
         position: absolute;
