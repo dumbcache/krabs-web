@@ -623,7 +623,7 @@ export function previewAndSetDropItems(
         if (img.type.match("image/")) {
             // previewLoadDropItem(img, dropArea);
             // dropZone.hidden = false;
-            const id = Date.now().toString();
+            const id = Math.round(Math.random() * Date.now()).toString();
             const imgRef = URL.createObjectURL(img);
             if (
                 img.type === "image/gif" ||
