@@ -75,7 +75,7 @@
         justify-content: space-between;
         justify-self: start;
         /* background-color: #eee; */
-        z-index: 1;
+        z-index: 2;
     }
 
     .common-url {
