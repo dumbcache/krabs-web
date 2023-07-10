@@ -46,7 +46,7 @@
 
 <div
     class="move"
-    on:keydown={() => {}}
+    on:keydown|stopPropagation
     on:click={() => progress || ($mode = "select")}
 >
     <div

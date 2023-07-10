@@ -20,13 +20,12 @@
         previewItem,
         refreshClicked,
         reverseActive,
+        dirCreateToggle,
     } from "$lib/scripts/stores";
     import DirCreate from "$lib/components/actions/DirCreate.svelte";
     import { refreshCache } from "$lib/scripts/drive";
     import EditIcon from "$lib/components/actions/EditIcon.svelte";
     import History from "$lib/components/actions/History.svelte";
-
-    let dirCreateToggle = false;
 
     function imgPickerHandler(e: InputEvent) {
         e.preventDefault();
@@ -95,7 +94,7 @@
     <button
         class="folder-button btn"
         title="create folder"
-        on:click={() => (dirCreateToggle = !dirCreateToggle)}
+        on:click={() => ($dirCreateToggle = !$dirCreateToggle)}
     >
         {@html folderCreate}
     </button>
@@ -109,10 +108,10 @@
         {@html goToDrive}
     </a>
 
-    {#if dirCreateToggle}
+    {#if $dirCreateToggle}
         <DirCreate
             type="create"
-            on:dirCreateClose={() => (dirCreateToggle = false)}
+            on:dirCreateClose={() => ($dirCreateToggle = false)}
         />
     {/if}
 </div>

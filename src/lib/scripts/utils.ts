@@ -29,6 +29,7 @@ import {
     favoritesActive,
     selectAll,
     editProgress,
+    dirCreateToggle,
 } from "$lib/scripts/stores";
 import {
     fetchFiles,
@@ -692,39 +693,72 @@ export function previewAndSetDropItems(
 export function shortcutHandler(e) {
     switch (e.key) {
         case "Delete":
-            if (get(mode) === "delete") {
-                get(editItems).length !== 0 && editConfirm.set(true);
+            if (get(editMode) && get(editItems).length !== 0) {
+                mode.set("delete");
+                editConfirm.set(true);
             }
             break;
         case "Escape":
-            if (get(mode) === "delete") {
-                get(editConfirm) === false && mode.set("");
+            if (get(editMode) && get(mode) === "select") {
+                mode.set("");
+                editMode.set(false);
+                selectedCount.set(0);
+                selectAll.set(false);
+                editItems.set([]);
+            }
+            if (get(mode) === "edit") {
                 editConfirm.set(false);
+                mode.set("select");
+            }
+            if (get(mode) === "delete") {
+                editConfirm.set(false);
+                mode.set("select");
             }
             if (get(mode) === "search") {
                 mode.set("");
             }
+            get(dirCreateToggle) && dirCreateToggle.set(false);
             get(previewItem) && previewItem.set(undefined);
             break;
+        case "E":
+            editMode.set(true);
+            mode.set("select");
+            break;
+        case "e":
+            if (get(editMode)) {
+                get(editItems).length !== 0 && mode.set("edit");
+            } else {
+                dirCreateToggle.set(true);
+            }
+            break;
+        case "c":
+            if (get(editMode)) {
+                get(editItems).length !== 0 && mode.set("move");
+            }
+            break;
         case "s":
-            mode.set("search");
-            if (e.shiftKey) globalSearch.set(true);
+            if (!get(editMode)) {
+                mode.set("search");
+                if (e.shiftKey) globalSearch.set(true);
+            }
             break;
         case "S":
-            mode.set("search");
-            globalSearch.set(true);
+            if (!get(editMode)) {
+                mode.set("search");
+                globalSearch.set(true);
+            }
             break;
         case "r":
             if (e.altKey) {
-                reverseActive.set(!get(reverseActive));
-                activeDirs.set(get(activeDirs)?.reverse());
-                activeImgs.set(get(activeImgs)?.reverse());
+                refreshCache();
+                favoritesActive.set(false);
+                reverseActive.set(false);
             }
             break;
         case "R":
-            refreshCache();
-            favoritesActive.set(false);
-            reverseActive.set(false);
+            reverseActive.set(!get(reverseActive));
+            activeDirs.set(get(activeDirs)?.reverse());
+            activeImgs.set(get(activeImgs)?.reverse());
             break;
         case "D":
             favoritesActive.set(!get(favoritesActive));

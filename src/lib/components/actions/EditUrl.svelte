@@ -11,7 +11,12 @@
     let urlField: HTMLInputElement;
     let urlValue = "";
     const token = window.localStorage.getItem("token");
-    onMount(() => urlField.focus());
+    onMount(() => {
+        urlField.focus();
+        setTimeout(() => {
+            urlValue = "";
+        }, 0);
+    });
 </script>
 
 {#if !editConfirm}
@@ -32,6 +37,7 @@
                 placeholder="enter new url"
                 bind:value={urlValue}
                 bind:this={urlField}
+                on:keydown|stopPropagation
             />
             {#if !progress}
                 <button

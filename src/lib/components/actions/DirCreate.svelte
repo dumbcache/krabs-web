@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
+    import { createEventDispatcher, onMount } from "svelte";
     import doneIcon from "$lib/assets/done.svg?raw";
     import { activeParentId } from "$lib/scripts/stores";
     import { createDir, updateDir, deleteDir } from "$lib/scripts/drive";
@@ -9,6 +9,7 @@
     export let id = "";
     export let name = "";
     let placeholder = name || "";
+    let dirField: HTMLInputElement;
     let submitDisabled = true;
     let confirmationVisible = false;
     let inputVisible = true;
@@ -52,6 +53,12 @@
                 : (submitDisabled = false);
         }
     }
+    onMount(() => {
+        dirField.focus();
+        setTimeout(() => {
+            placeholder = "";
+        }, 0);
+    });
 </script>
 
 <form
@@ -86,7 +93,7 @@
                 id="dir-name"
                 placeholder={type === "delete" ? confirmText : "Directory Name"}
                 bind:value={placeholder}
-                autofocus
+                bind:this={dirField}
                 on:click|stopPropagation
                 on:keydown|stopPropagation
                 on:input={checkDisabled}
