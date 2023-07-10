@@ -732,9 +732,19 @@ export function shortcutHandler(e) {
             if (get(mode) === "search") {
                 mode.set("");
             }
+            if (get(dropItems).length !== 0) {
+                dropMini.set(true);
+                dropFull.set(false);
+            }
             get(dirCreateToggle) && dirCreateToggle.set(false);
             get(previewItem) && previewItem.set(undefined);
-            dropCloseHandler();
+            break;
+
+        case "a":
+            if (get(dropItems).length !== 0) {
+                dropMini.set(!get(dropMini));
+                dropFull.set(false);
+            }
             break;
         case "E":
             editMode.set(true);
