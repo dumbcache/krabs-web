@@ -30,6 +30,8 @@ import {
     selectAll,
     editProgress,
     dirCreateToggle,
+    dropFull,
+    dropMini,
 } from "$lib/scripts/stores";
 import {
     fetchFiles,
@@ -600,6 +602,19 @@ export function dropOkHandler() {
     });
 }
 
+export function dropCloseHandler() {
+    const running = get(dropItems).filter(
+        (item) => item.progress === "uploading"
+    );
+    if (running.length === 0) {
+        dropFull.set(false);
+        dropItems.set([]);
+    } else {
+        dropMini.set(!get(dropMini));
+        dropFull.set(false);
+    }
+}
+
 export function previewAndSetDropItems(
     files: FileList,
     parent?: string,
@@ -719,6 +734,7 @@ export function shortcutHandler(e) {
             }
             get(dirCreateToggle) && dirCreateToggle.set(false);
             get(previewItem) && previewItem.set(undefined);
+            dropCloseHandler();
             break;
         case "E":
             editMode.set(true);

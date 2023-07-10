@@ -6,6 +6,7 @@
     import expandIcon from "$lib/assets/expand.svg?raw";
     import doubleRightIcon from "$lib/assets/doubleRight.svg?raw";
     import {
+        dropCloseHandler,
         dropOkHandler,
         // clearDropItems,
     } from "$lib/scripts/utils";
@@ -22,18 +23,7 @@
         <button
             class="drop-cancel btn"
             title="close"
-            on:click={() => {
-                const running = $dropItems.filter(
-                    (item) => item.progress === "uploading"
-                );
-                if (running.length === 0) {
-                    $dropFull = false;
-                    $dropItems = [];
-                } else {
-                    $dropMini = !$dropMini;
-                    $dropFull = false;
-                }
-            }}
+            on:click={dropCloseHandler}
         >
             {@html closeIcon}
         </button>
