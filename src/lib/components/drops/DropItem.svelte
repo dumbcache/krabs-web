@@ -84,6 +84,7 @@
     }
     .img-wrapper {
         display: flex;
+        margin: auto;
     }
     .drop-img {
         max-height: 30rem;

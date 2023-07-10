@@ -30,7 +30,12 @@ import {
     selectAll,
     editProgress,
 } from "$lib/scripts/stores";
-import { fetchFiles, refreshMainContent, createRootDir } from "./drive";
+import {
+    fetchFiles,
+    refreshMainContent,
+    createRootDir,
+    refreshCache,
+} from "./drive";
 
 export let childWorker: Worker;
 export let client, accessToken: string;
@@ -72,6 +77,7 @@ if (browser) {
 
             case "DROP_SAVE_COMPLETE":
                 refreshImgs();
+                fetchFiles(get(activeParentId), "covers", 3, true);
                 return;
 
             case "DROP_SAVE_FAILED":
@@ -91,11 +97,13 @@ if (browser) {
                 selectAll.set(false);
                 editProgress.set(false);
                 refreshImgs();
+                fetchFiles(get(activeParentId), "covers", 3, true);
                 return;
 
             case "MOVE_IMGS":
                 refreshImgs();
                 fetchFiles(data.parent, "imgs", 1000, true);
+                fetchFiles(get(activeParentId), "covers", 3, true);
                 return;
 
             case "EDIT_IMGS":
@@ -706,10 +714,17 @@ export function shortcutHandler(e) {
             mode.set("search");
             globalSearch.set(true);
             break;
+        case "r":
+            if (e.altKey) {
+                reverseActive.set(!get(reverseActive));
+                activeDirs.set(get(activeDirs)?.reverse());
+                activeImgs.set(get(activeImgs)?.reverse());
+            }
+            break;
         case "R":
-            reverseActive.set(!get(reverseActive));
-            activeDirs.set(get(activeDirs)?.reverse());
-            activeImgs.set(get(activeImgs)?.reverse());
+            refreshCache();
+            favoritesActive.set(false);
+            reverseActive.set(false);
             break;
         case "D":
             favoritesActive.set(!get(favoritesActive));
