@@ -67,6 +67,7 @@
     .drop-tools {
         position: sticky;
         top: 0;
+        right: o;
         background-color: inherit;
         display: flex;
         align-items: center;
