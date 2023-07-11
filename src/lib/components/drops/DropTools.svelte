@@ -4,13 +4,19 @@
     import doneIcon from "$lib/assets/done.svg?raw";
     import clearIcon from "$lib/assets/clear.svg?raw";
     import expandIcon from "$lib/assets/expand.svg?raw";
+    import toggleIcon from "$lib/assets/toggle.svg?raw";
     import doubleRightIcon from "$lib/assets/doubleRight.svg?raw";
     import {
         dropCloseHandler,
         dropOkHandler,
         // clearDropItems,
     } from "$lib/scripts/utils";
-    import { dropFull, dropItems, dropMini } from "$lib/scripts/stores";
+    import {
+        autosave,
+        dropFull,
+        dropItems,
+        dropMini,
+    } from "$lib/scripts/stores";
 
     export function clearDropItems() {
         const a = $dropItems.filter((item) => item.progress !== "success");
@@ -49,6 +55,15 @@
         >
             {@html expandIcon}
         </button>
+        <button
+            class="btn {$autosave === true ? 'autosave' : ''}"
+            title="toggle autosave"
+            on:click={() => {
+                $autosave = !$autosave;
+            }}
+        >
+            {@html toggleIcon}
+        </button>
     </span>
     <!-- <span class="drop-parent">parent</span> -->
     <input
@@ -76,6 +91,12 @@
         justify-self: start;
         /* background-color: #eee; */
         z-index: 2;
+    }
+    .autosave :global(svg) {
+        fill: red;
+    }
+    .autosave {
+        filter: none;
     }
 
     .common-url {

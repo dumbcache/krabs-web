@@ -28,6 +28,7 @@ export let sessionTimeout = writable(false);
 export let dataCacheName = writable("");
 export let refreshClicked = writable(false);
 export let dirCreateToggle = writable(false);
+export let autosave = writable(false);
 
 export let previewItem: Writable<PreviewItem | undefined> = writable(undefined);
 export let blobLocations = writable({});

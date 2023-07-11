@@ -32,6 +32,7 @@ import {
     dirCreateToggle,
     dropFull,
     dropMini,
+    autosave,
 } from "$lib/scripts/stores";
 import {
     fetchFiles,
@@ -608,6 +609,7 @@ export function dropCloseHandler() {
     if (running.length === 0) {
         dropFull.set(false);
         dropItems.set([]);
+        autosave.set(false);
     } else {
         dropMini.set(!get(dropMini));
         dropFull.set(false);
@@ -682,24 +684,6 @@ export function previewAndSetDropItems(
                 image.crossOrigin = ""; // if from different origin
                 image.src = imgRef;
             }
-            // const reader = new FileReader();
-            // reader.onload = (e) => {
-            //     const result = e.target?.result! as ArrayBuffer;
-            //     const bytes = new Uint8Array(result);
-            //     dropItems.set([
-            //         ...get(dropItems),
-            //         {
-            //             id,
-            //             name: img.name,
-            //             mimeType: img.type,
-            //             bytes,
-            //             imgRef,
-            //             parent: get(activeParentId),
-            //             parentName: get(activeParentName),
-            //         },
-            //     ]);
-            // };
-            // reader.readAsArrayBuffer(img);
         }
     }
 }
@@ -734,6 +718,7 @@ export function shortcutHandler(e) {
             if (get(dropItems).length !== 0) {
                 dropMini.set(true);
                 dropFull.set(false);
+                autosave.set(false);
             }
             get(dirCreateToggle) && dirCreateToggle.set(false);
             get(previewItem) && previewItem.set(undefined);

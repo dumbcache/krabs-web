@@ -13,8 +13,10 @@
         loadGSIScript,
         signUserOut,
         getOauthToken,
+        dropOkHandler,
     } from "$lib/scripts/utils";
     import {
+        autosave,
         dropFull,
         dropMini,
         editMode,
@@ -41,6 +43,7 @@
         if (e.dataTransfer?.files) {
             previewAndSetDropItems(e.dataTransfer.files);
         }
+        if ($autosave) dropOkHandler();
     }
     onMount(() => {
         try {
