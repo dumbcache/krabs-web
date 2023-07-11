@@ -50,7 +50,8 @@
         placeholder="Search"
         bind:value={search}
         bind:this={input}
-        on:input={updateSearchItems}
+        on:input|stopPropagation={updateSearchItems}
+        on:keydown|stopPropagation
     />
 </div>
 
