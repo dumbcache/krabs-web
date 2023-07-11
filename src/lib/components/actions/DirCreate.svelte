@@ -56,7 +56,7 @@
     onMount(() => {
         dirField.focus();
         setTimeout(() => {
-            placeholder = "";
+            if (placeholder.length === 1) placeholder = "";
         }, 0);
     });
 </script>
