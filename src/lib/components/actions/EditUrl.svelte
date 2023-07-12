@@ -7,7 +7,6 @@
     import Confirm from "./Confirm.svelte";
 
     let progress = false;
-    let editConfirm = false;
     let urlField: HTMLInputElement;
     let urlValue = "";
     const token = window.localStorage.getItem("token");
@@ -19,48 +18,17 @@
     });
 </script>
 
-{#if !editConfirm}
-    <div
-        class="edit-url"
+<div
+    class="edit-url"
+    on:keydown={() => {}}
+    on:click={() => progress || ($mode = "select")}
+>
+    <form
+        class="wrapper"
+        on:click|stopPropagation
         on:keydown={() => {}}
-        on:click={() => progress || ($mode = "select")}
-    >
-        <form
-            class="wrapper"
-            on:click|stopPropagation
-            on:keydown={() => {}}
-            on:submit|preventDefault={() => (editConfirm = true)}
-        >
-            <input
-                type="text"
-                class="url"
-                placeholder="enter new url"
-                bind:value={urlValue}
-                bind:this={urlField}
-                on:keydown|stopPropagation
-            />
-            {#if !progress}
-                <button
-                    type="submit"
-                    class="done-button btn"
-                    disabled={urlValue.trim() === ""}>{@html doneIcon}</button
-                >
-            {/if}
-            {#if progress}
-                <button class="progress-button btn">{@html progressIcon}</button
-                >
-            {/if}
-        </form>
-    </div>
-{:else}
-    <Confirm
-        text={"you sure want to update?"}
-        on:confirmCloseNO={() => {
-            editConfirm = false;
-        }}
-        on:confirmCloseOK={() => {
+        on:submit|preventDefault={() => {
             progress = true;
-            editConfirm = false;
             childWorker.postMessage({
                 context: "EDIT_IMGS",
                 url: urlValue,
@@ -68,8 +36,27 @@
                 token,
             });
         }}
-    />
-{/if}
+    >
+        <input
+            type="text"
+            class="url"
+            placeholder="enter new url"
+            bind:value={urlValue}
+            bind:this={urlField}
+            on:keydown|stopPropagation
+        />
+        {#if !progress}
+            <button
+                type="submit"
+                class="done-button btn"
+                disabled={urlValue.trim() === ""}>{@html doneIcon}</button
+            >
+        {/if}
+        {#if progress}
+            <button class="progress-button btn">{@html progressIcon}</button>
+        {/if}
+    </form>
+</div>
 
 <style>
     .edit-url {
@@ -96,6 +83,7 @@
         position: relative;
         max-width: 30rem;
         gap: 1rem;
+        box-shadow: 0 0 1px 1px #fff3;
     }
 
     button {
@@ -105,9 +93,9 @@
 
     .done-button:disabled {
         cursor: not-allowed;
-        filter: invert(0.5);
     }
     .done-button:disabled :global(svg) {
+        fill: red;
         cursor: not-allowed;
     }
     .url {
@@ -125,6 +113,9 @@
         border-bottom: 2px solid var(--color-black);
         border-radius: 0.5rem;
         padding-left: 0.5rem;
+    }
+    .url::placeholder {
+        color: var(--color-white-level-four);
     }
     @keyframes spin {
         0% {
