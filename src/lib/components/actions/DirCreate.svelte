@@ -28,7 +28,7 @@
             .split(" ")
             .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
             .join(" ");
-        placeholder = dirName;
+        type !== "delete" && (placeholder = dirName);
         if (type === "create") {
             await createDir(dirName, $activeParentId, token);
             dispatchClose("dirCreateClose");
@@ -54,7 +54,7 @@
         }
     }
     onMount(() => {
-        dirField.focus();
+        dirField?.focus();
         setTimeout(() => {
             if (placeholder.length === 1) placeholder = "";
         }, 0);
