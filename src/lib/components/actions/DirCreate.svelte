@@ -1,28 +1,25 @@
 <script lang="ts">
-    import { createEventDispatcher, onMount } from "svelte";
+    import { createEventDispatcher, onDestroy, onMount } from "svelte";
     import doneIcon from "$lib/assets/done.svg?raw";
+    import progressIcon from "$lib/assets/progress.svg?raw";
     import { activeParentId } from "$lib/scripts/stores";
     import { createDir, updateDir, deleteDir } from "$lib/scripts/drive";
 
-    const confirmText = "type 'confirm'";
+    const confirmText = "confirm";
     export let type: "create" | "update" | "delete";
     export let id = "";
     export let name = "";
     let placeholder = name || "";
     let dirField: HTMLInputElement;
     let submitDisabled = true;
-    let confirmationVisible = false;
-    let inputVisible = true;
-    if (type === "delete") {
-        inputVisible = false;
-        confirmationVisible = true;
-    }
+    let progress = false;
 
     const dispatch = createEventDispatcher();
     function dispatchClose(ctx: string, detail?: any) {
         dispatch(ctx, detail);
     }
     async function dirActionHandler() {
+        progress = true;
         const token = window.localStorage.getItem("token")!;
         let dirName = placeholder
             .split(" ")
@@ -59,6 +56,9 @@
             if (placeholder.length === 1) placeholder = "";
         }, 0);
     });
+    onDestroy(() => {
+        progress = false;
+    });
 </script>
 
 <form
@@ -68,42 +68,37 @@
     on:keypress|stopPropagation
     on:submit|preventDefault={dirActionHandler}
 >
-    {#if confirmationVisible}
-        <div class="wrapper">
-            All files and subfolders will be deleted. You alright in Mind?
-            <button
-                type="button"
-                class="btn"
-                on:click|stopPropagation={() => {
-                    confirmationVisible = false;
-                    inputVisible = true;
-                }}>{@html doneIcon}</button
-            >
-        </div>
-    {/if}
-    {#if inputVisible}
-        <label
-            class="wrapper"
-            for="dir-name"
+    <label
+        class="wrapper"
+        for="dir-name"
+        on:click|stopPropagation
+        on:keypress|stopPropagation
+    >
+        {#if type === "delete"}
+            <p>
+                All files and subfolders will be deleted and cannot be restored,
+                Type ' <span class="h">confirm</span> ' if you want to continue.
+            </p>
+        {/if}
+        <input
+            type="text"
+            id="dir-name"
+            placeholder={type === "delete" ? confirmText : "Directory Name"}
+            bind:value={placeholder}
+            bind:this={dirField}
             on:click|stopPropagation
-            on:keypress|stopPropagation
-        >
-            <input
-                type="text"
-                id="dir-name"
-                placeholder={type === "delete" ? confirmText : "Directory Name"}
-                bind:value={placeholder}
-                bind:this={dirField}
-                on:click|stopPropagation
-                on:keydown|stopPropagation
-                on:input={checkDisabled}
-                autocomplete="off"
-            />
+            on:keydown|stopPropagation
+            on:input={checkDisabled}
+            autocomplete="off"
+        />
+        {#if progress}
+            <span class="btn progress-button">{@html progressIcon}</span>
+        {:else}
             <button type="submit" class="btn" disabled={submitDisabled}
                 >{@html doneIcon}</button
             >
-        </label>
-    {/if}
+        {/if}
+    </label>
 </form>
 
 <style>
@@ -126,21 +121,27 @@
     }
     .btn:disabled :global(svg) {
         fill: red;
+        cursor: not-allowed;
     }
     .wrapper {
-        max-width: 30rem;
+        max-width: 35rem;
         padding: 5rem 4rem;
         background-color: var(--primary-backdrop-color);
         border-radius: 1rem;
         display: flex;
+        flex-flow: row wrap;
         gap: 1rem;
         box-shadow: 0 0 1px 1px #fff3;
         justify-content: space-evenly;
         align-items: center;
+        text-align: center;
+    }
+    .h {
+        color: #0f0;
     }
     input {
         padding: 0.5rem;
-        max-width: 70%;
+        max-width: 80%;
         border-radius: 0.5rem;
         border: none;
         outline: none;
@@ -151,6 +152,29 @@
     .btn :global(svg) {
         fill: #0f0;
         min-width: var(--primary-icon-size);
+    }
+    .btn {
+        filter: none;
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        50% {
+            transform: rotate(180deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .progress-button {
+        -webkit-animation: spin 1.5s linear 0s infinite;
+        animation: spin 1s linear 0s infinite;
+    }
+    .progress-button :global(svg) {
+        fill: var(--color-white-level-two);
     }
     @media (max-width: 600px) {
         .wrapper {
